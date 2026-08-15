@@ -35,118 +35,273 @@
   <main class="app">
 
 
-    <!-- HEADER -->
-
-    <header class="header">
-
-      <div class="greeting">
-
-        <span
-          class="greeting-small"
-          id="currentDate"
-        >
-          Загрузка...
-        </span>
-
-        <h1>
-          Сегодня
-        </h1>
-
-      </div>
-
-
-      <button
-        class="profile-button"
-        type="button"
-        aria-label="Профиль"
-      >
-        •••
-      </button>
-
-    </header>
-
-
-    <!-- PROGRESS -->
+    <!-- =========================
+         HOME PAGE
+    ========================== -->
 
     <section
-      class="progress-card"
-      aria-label="Прогресс дня"
+      id="homePage"
+      class="page"
     >
 
-      <div class="progress-top">
 
-        <span class="progress-title">
-          Прогресс дня
-        </span>
+      <!-- HEADER -->
 
-        <span
-          class="progress-percent"
-          id="progressPercent"
+      <header class="header">
+
+        <div class="greeting">
+
+          <span
+            class="greeting-small"
+            id="currentDate"
+          >
+            Загрузка...
+          </span>
+
+          <h1>
+            Сегодня
+          </h1>
+
+        </div>
+
+
+        <button
+          class="profile-button"
+          type="button"
+          aria-label="Профиль"
         >
-          0%
-        </span>
+          •••
+        </button>
 
-      </div>
+      </header>
 
 
-      <div
-        class="progress-bar"
-        aria-hidden="true"
+      <!-- PROGRESS -->
+
+      <section
+        class="progress-card"
+        aria-label="Прогресс дня"
       >
 
+        <div class="progress-top">
+
+          <span class="progress-title">
+            Прогресс дня
+          </span>
+
+          <span
+            class="progress-percent"
+            id="progressPercent"
+          >
+            0%
+          </span>
+
+        </div>
+
+
         <div
-          class="progress-fill"
-          id="progressFill"
+          class="progress-bar"
+          aria-hidden="true"
+        >
+
+          <div
+            class="progress-fill"
+            id="progressFill"
+          ></div>
+
+        </div>
+
+
+        <div class="progress-bottom">
+
+          <span id="progressTasks">
+            0 из 0 задач
+          </span>
+
+          <span id="progressMessage">
+            Начнём?
+          </span>
+
+        </div>
+
+      </section>
+
+
+      <!-- TASKS -->
+
+      <section>
+
+        <div class="section-header">
+
+          <h2>
+            Задачи
+          </h2>
+
+
+          <button
+            class="section-link"
+            id="clearCompleted"
+            type="button"
+          >
+            Очистить
+          </button>
+
+        </div>
+
+
+        <div
+          class="tasks"
+          id="tasksContainer"
         ></div>
 
-      </div>
+      </section>
 
-
-      <div class="progress-bottom">
-
-        <span id="progressTasks">
-          0 из 0 задач
-        </span>
-
-        <span id="progressMessage">
-          Начнём?
-        </span>
-
-      </div>
 
     </section>
 
 
-    <!-- TASKS -->
+    <!-- =========================
+         CALENDAR PAGE
+    ========================== -->
 
-    <section>
+    <section
+      id="calendarPage"
+      class="page"
+      hidden
+    >
 
-      <div class="section-header">
 
-        <h2>
-          Задачи
-        </h2>
+      <header class="page-header">
+
+        <div>
+
+          <div class="page-eyebrow">
+            Планирование
+          </div>
+
+          <h1>
+            Календарь
+          </h1>
+
+        </div>
 
 
         <button
-          class="section-link"
-          id="clearCompleted"
+          class="today-button"
+          id="calendarToday"
           type="button"
         >
-          Очистить
+          Сегодня
         </button>
 
-      </div>
+      </header>
 
 
-      <div
-        class="tasks"
-        id="tasksContainer"
-      >
+      <!-- MONTH -->
 
-        <!-- Tasks are rendered by app.js -->
+      <section class="calendar-card">
 
-      </div>
+
+        <div class="calendar-header">
+
+          <button
+            class="calendar-arrow"
+            id="previousMonth"
+            type="button"
+            aria-label="Предыдущий месяц"
+          >
+            ‹
+          </button>
+
+
+          <h2
+            id="calendarMonth"
+          >
+            Август 2026
+          </h2>
+
+
+          <button
+            class="calendar-arrow"
+            id="nextMonth"
+            type="button"
+            aria-label="Следующий месяц"
+          >
+            ›
+          </button>
+
+        </div>
+
+
+        <!-- WEEK DAYS -->
+
+        <div class="calendar-weekdays">
+
+          <span>Пн</span>
+          <span>Вт</span>
+          <span>Ср</span>
+          <span>Чт</span>
+          <span>Пт</span>
+          <span>Сб</span>
+          <span>Вс</span>
+
+        </div>
+
+
+        <!-- DAYS -->
+
+        <div
+          class="calendar-grid"
+          id="calendarGrid"
+        ></div>
+
+
+      </section>
+
+
+      <!-- SELECTED DAY -->
+
+      <section class="selected-day">
+
+
+        <div class="selected-day-header">
+
+          <div>
+
+            <div
+              class="page-eyebrow"
+              id="selectedDayWeekday"
+            >
+              Сегодня
+            </div>
+
+            <h2
+              id="selectedDayTitle"
+            >
+              15 августа
+            </h2>
+
+          </div>
+
+
+          <div
+            class="day-stat"
+            id="selectedDayStat"
+          >
+            0 / 0
+          </div>
+
+        </div>
+
+
+        <div
+          class="tasks"
+          id="calendarTasks"
+        ></div>
+
+
+      </section>
+
 
     </section>
 
@@ -154,7 +309,9 @@
   </main>
 
 
-  <!-- ADD TASK -->
+  <!-- =========================
+       ADD BUTTON
+  ========================== -->
 
   <button
     class="add-button"
@@ -166,12 +323,15 @@
   </button>
 
 
-  <!-- BOTTOM NAVIGATION -->
+  <!-- =========================
+       BOTTOM NAVIGATION
+  ========================== -->
 
   <nav
     class="bottom-nav"
     aria-label="Основная навигация"
   >
+
 
     <button
       class="nav-item active"
@@ -252,10 +412,13 @@
 
     </button>
 
+
   </nav>
 
 
-  <!-- CREATE TASK MODAL -->
+  <!-- =========================
+       CREATE TASK MODAL
+  ========================== -->
 
   <div
     class="modal-overlay"
@@ -265,18 +428,15 @@
     aria-labelledby="modalTitle"
   >
 
+
     <div class="modal">
 
-
-      <!-- MODAL HANDLE -->
 
       <div
         class="modal-handle"
         aria-hidden="true"
       ></div>
 
-
-      <!-- MODAL HEADER -->
 
       <div class="modal-header">
 
@@ -296,8 +456,6 @@
 
       </div>
 
-
-      <!-- FORM -->
 
       <form id="taskForm">
 
@@ -422,8 +580,6 @@
 
         </div>
 
-
-        <!-- SAVE -->
 
         <button
           class="save-button"
