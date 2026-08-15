@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
+  >
 
-  <meta name="theme-color" content="#f5f5f3" />
+  <meta name="theme-color" content="#f5f5f3">
 
   <title>Трекер</title>
 
@@ -18,11 +18,13 @@
       --card: #ffffff;
       --text: #171717;
       --secondary: #777777;
-      --border: #e8e8e5;
+      --border: #e7e7e3;
       --accent: #d86f3d;
-      --accent-soft: #f5dfd3;
+      --accent-soft: #f4ddd1;
       --success: #5d8b6b;
-      --nav: rgba(255, 255, 255, 0.88);
+      --danger: #c85b5b;
+      --nav: rgba(255,255,255,.9);
+      --overlay: rgba(0,0,0,.35);
     }
 
     * {
@@ -49,28 +51,34 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    button {
+    button,
+    input,
+    select {
       font: inherit;
+    }
+
+    button {
+      cursor: pointer;
     }
 
     .app {
       width: 100%;
       max-width: 520px;
       min-height: 100vh;
-      margin: 0 auto;
+      margin: auto;
 
       padding:
         calc(24px + env(safe-area-inset-top))
         18px
-        calc(92px + env(safe-area-inset-bottom));
+        calc(100px + env(safe-area-inset-bottom));
     }
 
     /* HEADER */
 
     .header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
 
       margin-bottom: 28px;
     }
@@ -89,27 +97,20 @@
     .greeting h1 {
       font-size: 30px;
       line-height: 1.1;
-      font-weight: 700;
-      letter-spacing: -0.7px;
+      letter-spacing: -.7px;
     }
 
     .profile-button {
       width: 42px;
       height: 42px;
 
-      border: 1px solid var(--border);
       border-radius: 50%;
+      border: 1px solid var(--border);
 
       background: var(--card);
       color: var(--text);
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 17px;
-
-      cursor: pointer;
+      font-size: 16px;
     }
 
     /* PROGRESS */
@@ -128,14 +129,13 @@
     .progress-top {
       display: flex;
       justify-content: space-between;
-      align-items: center;
 
       margin-bottom: 20px;
     }
 
     .progress-title {
-      font-size: 15px;
-      opacity: 0.7;
+      font-size: 14px;
+      opacity: .65;
     }
 
     .progress-percent {
@@ -146,20 +146,22 @@
     .progress-bar {
       height: 7px;
 
-      background: rgba(255, 255, 255, 0.14);
+      background: rgba(255,255,255,.14);
 
-      border-radius: 20px;
+      border-radius: 10px;
 
       overflow: hidden;
     }
 
     .progress-fill {
-      width: 42%;
+      width: 0%;
       height: 100%;
 
       background: var(--accent);
 
       border-radius: inherit;
+
+      transition: width .3s ease;
     }
 
     .progress-bottom {
@@ -168,24 +170,22 @@
 
       margin-top: 13px;
 
-      font-size: 13px;
-
-      opacity: 0.6;
+      font-size: 12px;
+      opacity: .6;
     }
 
     /* SECTION */
 
     .section-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
 
       margin-bottom: 12px;
     }
 
     .section-header h2 {
       font-size: 19px;
-      letter-spacing: -0.3px;
     }
 
     .section-link {
@@ -195,8 +195,6 @@
       color: var(--accent);
 
       font-size: 13px;
-
-      cursor: pointer;
     }
 
     /* TASKS */
@@ -208,6 +206,10 @@
     }
 
     .task {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+
       background: var(--card);
 
       border: 1px solid var(--border);
@@ -216,39 +218,30 @@
 
       padding: 15px;
 
-      display: flex;
-      align-items: center;
-      gap: 13px;
-
-      transition:
-        transform 0.15s ease,
-        opacity 0.15s ease;
+      transition: .2s;
     }
 
     .task:active {
-      transform: scale(0.985);
+      transform: scale(.985);
     }
 
     .task-check {
       width: 23px;
       height: 23px;
 
-      border: 1.7px solid #cfcfcb;
-
-      border-radius: 50%;
-
-      background: transparent;
-
       flex-shrink: 0;
 
-      cursor: pointer;
+      border-radius: 50%;
+      border: 1.7px solid #cfcfca;
+
+      background: transparent;
 
       position: relative;
     }
 
     .task.completed .task-check {
-      border-color: var(--success);
       background: var(--success);
+      border-color: var(--success);
     }
 
     .task.completed .task-check::after {
@@ -265,8 +258,8 @@
     }
 
     .task-content {
-      min-width: 0;
       flex: 1;
+      min-width: 0;
     }
 
     .task-title {
@@ -274,47 +267,52 @@
       font-weight: 600;
 
       margin-bottom: 5px;
-
-      transition: opacity 0.2s;
     }
 
     .task-time {
-      color: var(--secondary);
-
       font-size: 12px;
+      color: var(--secondary);
     }
 
     .task.completed .task-title {
       text-decoration: line-through;
-      opacity: 0.4;
+      opacity: .4;
     }
 
     .task-repeat {
-      font-size: 11px;
-
       padding: 5px 8px;
 
       border-radius: 8px;
 
       background: var(--accent-soft);
-
       color: var(--accent);
+
+      font-size: 10px;
 
       white-space: nowrap;
     }
 
-    /* EMPTY */
+    .task-delete {
+      border: none;
+      background: none;
+
+      color: #aaa;
+
+      font-size: 17px;
+
+      padding: 3px;
+    }
 
     .empty {
+      text-align: center;
+
+      padding: 34px 20px;
+
       background: var(--card);
 
       border: 1px dashed var(--border);
 
       border-radius: 18px;
-
-      padding: 30px 20px;
-
-      text-align: center;
 
       color: var(--secondary);
 
@@ -339,16 +337,20 @@
       color: white;
 
       font-size: 28px;
-      font-weight: 300;
 
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+      box-shadow:
+        0 10px 25px rgba(0,0,0,.14);
 
-      cursor: pointer;
+      z-index: 30;
 
-      z-index: 20;
+      transition: .2s;
     }
 
-    /* BOTTOM NAV */
+    .add-button:active {
+      transform: scale(.94);
+    }
+
+    /* NAV */
 
     .bottom-nav {
       position: fixed;
@@ -366,7 +368,6 @@
 
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
 
       background: var(--nav);
 
@@ -375,30 +376,27 @@
 
       border-top: 1px solid var(--border);
 
-      z-index: 10;
+      z-index: 20;
     }
 
     .nav-item {
       border: none;
-      background: transparent;
+      background: none;
 
       color: var(--secondary);
-
-      padding: 8px 3px;
 
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 4px;
 
-      font-size: 10px;
+      padding: 7px;
 
-      cursor: pointer;
+      font-size: 10px;
     }
 
     .nav-icon {
       font-size: 20px;
-      line-height: 1;
     }
 
     .nav-item.active {
@@ -406,9 +404,154 @@
       font-weight: 600;
     }
 
-    /* MOBILE */
+    /* MODAL */
+
+    .modal-overlay {
+      position: fixed;
+
+      inset: 0;
+
+      background: var(--overlay);
+
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition: opacity .25s;
+
+      z-index: 100;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      width: min(100%, 520px);
+
+      background: var(--bg);
+
+      border-radius: 28px 28px 0 0;
+
+      padding:
+        12px 18px
+        calc(20px + env(safe-area-inset-bottom));
+
+      transform: translateY(30px);
+
+      transition: transform .25s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-handle {
+      width: 38px;
+      height: 4px;
+
+      border-radius: 10px;
+
+      background: #ccc;
+
+      margin: 0 auto 20px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 22px;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+    }
+
+    .modal-close {
+      width: 34px;
+      height: 34px;
+
+      border: none;
+      border-radius: 50%;
+
+      background: #e8e8e5;
+
+      color: #666;
+
+      font-size: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+
+      margin-bottom: 7px;
+
+      color: var(--secondary);
+
+      font-size: 12px;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+
+      height: 50px;
+
+      border: 1px solid var(--border);
+
+      border-radius: 15px;
+
+      background: var(--card);
+
+      color: var(--text);
+
+      padding: 0 15px;
+
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--accent);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+
+      gap: 10px;
+    }
+
+    .save-button {
+      width: 100%;
+
+      height: 52px;
+
+      border: none;
+      border-radius: 16px;
+
+      background: var(--accent);
+      color: white;
+
+      font-weight: 600;
+
+      margin-top: 6px;
+    }
+
+    /* RESPONSIVE */
 
     @media (max-width: 380px) {
+
       .app {
         padding-left: 14px;
         padding-right: 14px;
@@ -433,18 +576,17 @@
 
   <main class="app">
 
-    <!-- HEADER -->
-
     <header class="header">
 
       <div class="greeting">
-        <span class="greeting-small">
-          Суббота, 15 августа
-        </span>
 
-        <h1>
-          Сегодня
-        </h1>
+        <span
+          class="greeting-small"
+          id="currentDate"
+        ></span>
+
+        <h1>Сегодня</h1>
+
       </div>
 
       <button class="profile-button">
@@ -454,34 +596,40 @@
     </header>
 
 
-    <!-- PROGRESS -->
-
     <section class="progress-card">
 
       <div class="progress-top">
 
-        <div class="progress-title">
+        <span class="progress-title">
           Прогресс дня
-        </div>
+        </span>
 
-        <div class="progress-percent">
-          42%
-        </div>
+        <span
+          class="progress-percent"
+          id="progressPercent"
+        >
+          0%
+        </span>
 
       </div>
 
       <div class="progress-bar">
-        <div class="progress-fill"></div>
+
+        <div
+          class="progress-fill"
+          id="progressFill"
+        ></div>
+
       </div>
 
       <div class="progress-bottom">
 
-        <span>
-          3 из 7 задач
+        <span id="progressTasks">
+          0 из 0 задач
         </span>
 
-        <span>
-          Хорошее начало
+        <span id="progressMessage">
+          Начнём?
         </span>
 
       </div>
@@ -489,187 +637,676 @@
     </section>
 
 
-    <!-- TASKS -->
-
     <section>
 
       <div class="section-header">
 
-        <h2>
-          Задачи
-        </h2>
+        <h2>Задачи</h2>
 
-        <button class="section-link">
-          Все
+        <button
+          class="section-link"
+          id="clearCompleted"
+        >
+          Очистить
         </button>
 
       </div>
 
 
-      <div class="tasks">
-
-        <div class="task completed">
-
-          <button class="task-check"></button>
-
-          <div class="task-content">
-
-            <div class="task-title">
-              Утренняя тренировка
-            </div>
-
-            <div class="task-time">
-              08:00
-            </div>
-
-          </div>
-
-          <span class="task-repeat">
-            каждый день
-          </span>
-
-        </div>
-
-
-        <div class="task completed">
-
-          <button class="task-check"></button>
-
-          <div class="task-content">
-
-            <div class="task-title">
-              Прочитать 20 страниц
-            </div>
-
-            <div class="task-time">
-              14:00
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="task">
-
-          <button class="task-check"></button>
-
-          <div class="task-content">
-
-            <div class="task-title">
-              Изучить английский
-            </div>
-
-            <div class="task-time">
-              19:00
-            </div>
-
-          </div>
-
-          <span class="task-repeat">
-            пн / ср / пт
-          </span>
-
-        </div>
-
-
-        <div class="task">
-
-          <button class="task-check"></button>
-
-          <div class="task-content">
-
-            <div class="task-title">
-              Вечерняя прогулка
-            </div>
-
-            <div class="task-time">
-              21:00
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
+      <div
+        class="tasks"
+        id="tasksContainer"
+      ></div>
 
     </section>
 
   </main>
 
 
-  <!-- ADD -->
-
-  <button class="add-button">
+  <button
+    class="add-button"
+    id="addButton"
+  >
     +
   </button>
 
 
-  <!-- NAVIGATION -->
-
   <nav class="bottom-nav">
 
     <button class="nav-item active">
+
       <span class="nav-icon">⌂</span>
+
       Главная
+
     </button>
 
     <button class="nav-item">
+
       <span class="nav-icon">□</span>
+
       Календарь
+
     </button>
 
     <button class="nav-item">
+
       <span class="nav-icon">◔</span>
+
       Аналитика
+
     </button>
 
     <button class="nav-item">
+
       <span class="nav-icon">⚙</span>
+
       Настройки
+
     </button>
 
   </nav>
 
 
+  <!-- CREATE TASK MODAL -->
+
+  <div
+    class="modal-overlay"
+    id="modalOverlay"
+  >
+
+    <div class="modal">
+
+      <div class="modal-handle"></div>
+
+      <div class="modal-header">
+
+        <h2>Новая задача</h2>
+
+        <button
+          class="modal-close"
+          id="closeModal"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <form id="taskForm">
+
+        <div class="form-group">
+
+          <label class="form-label">
+            Название
+          </label>
+
+          <input
+            class="form-input"
+            id="taskTitle"
+            type="text"
+            placeholder="Например: Прочитать книгу"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label class="form-label">
+              Дата
+            </label>
+
+            <input
+              class="form-input"
+              id="taskDate"
+              type="date"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              Время
+            </label>
+
+            <input
+              class="form-input"
+              id="taskTime"
+              type="time"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label class="form-label">
+            Периодичность
+          </label>
+
+          <select
+            class="form-select"
+            id="taskRepeat"
+          >
+
+            <option value="none">
+              Один раз
+            </option>
+
+            <option value="daily">
+              Каждый день
+            </option>
+
+            <option value="weekdays">
+              По будням
+            </option>
+
+            <option value="weekly">
+              Каждую неделю
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <button
+          class="save-button"
+          type="submit"
+        >
+          Создать задачу
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
   <script>
 
-    // Выполнение задач
+    /* =========================
+       DATA
+    ========================= */
 
-    const tasks = document.querySelectorAll(".task");
+    let tasks =
+      JSON.parse(
+        localStorage.getItem("tracker_tasks")
+      ) || [];
 
-    tasks.forEach(task => {
 
-      const check = task.querySelector(".task-check");
+    /* =========================
+       DATE
+    ========================= */
 
-      check.addEventListener("click", () => {
+    const today =
+      new Date()
+        .toISOString()
+        .split("T")[0];
 
-        task.classList.toggle("completed");
+
+    const dateFormatter =
+      new Intl.DateTimeFormat(
+        "ru-RU",
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        }
+      );
+
+
+    document.getElementById(
+      "currentDate"
+    ).textContent =
+      dateFormatter.format(
+        new Date()
+      );
+
+
+    /* =========================
+       ELEMENTS
+    ========================= */
+
+    const container =
+      document.getElementById(
+        "tasksContainer"
+      );
+
+    const modal =
+      document.getElementById(
+        "modalOverlay"
+      );
+
+    const addButton =
+      document.getElementById(
+        "addButton"
+      );
+
+    const closeModal =
+      document.getElementById(
+        "closeModal"
+      );
+
+    const taskForm =
+      document.getElementById(
+        "taskForm"
+      );
+
+
+    /* =========================
+       STORAGE
+    ========================= */
+
+    function saveTasks() {
+
+      localStorage.setItem(
+        "tracker_tasks",
+        JSON.stringify(tasks)
+      );
+
+    }
+
+
+    /* =========================
+       RENDER
+    ========================= */
+
+    function renderTasks() {
+
+      container.innerHTML = "";
+
+      const todayTasks =
+        tasks.filter(
+          task => task.date === today
+        );
+
+
+      if (!todayTasks.length) {
+
+        container.innerHTML = `
+          <div class="empty">
+            На сегодня задач нет.<br>
+            Самое время добавить первую.
+          </div>
+        `;
+
+        updateProgress([]);
+
+        return;
+
+      }
+
+
+      todayTasks.forEach(task => {
+
+        const element =
+          document.createElement("div");
+
+        element.className =
+          "task" +
+          (task.completed
+            ? " completed"
+            : "");
+
+
+        const repeatText = {
+          none: "",
+          daily: "каждый день",
+          weekdays: "будни",
+          weekly: "каждую неделю"
+        };
+
+
+        element.innerHTML = `
+
+          <button
+            class="task-check"
+            data-id="${task.id}"
+          ></button>
+
+          <div class="task-content">
+
+            <div class="task-title">
+              ${escapeHtml(task.title)}
+            </div>
+
+            <div class="task-time">
+              ${task.time || "Без времени"}
+            </div>
+
+          </div>
+
+          ${
+            task.repeat !== "none"
+              ? `
+                <span class="task-repeat">
+                  ${repeatText[task.repeat]}
+                </span>
+              `
+              : ""
+          }
+
+          <button
+            class="task-delete"
+            data-delete="${task.id}"
+          >
+            ×
+          </button>
+
+        `;
+
+
+        container.appendChild(
+          element
+        );
 
       });
 
-    });
+
+      updateProgress(todayTasks);
+
+    }
 
 
-    // Активная вкладка
+    /* =========================
+       PROGRESS
+    ========================= */
 
-    const navItems = document.querySelectorAll(".nav-item");
+    function updateProgress(todayTasks) {
 
-    navItems.forEach(item => {
+      const total =
+        todayTasks.length;
 
-      item.addEventListener("click", () => {
+      const completed =
+        todayTasks.filter(
+          task => task.completed
+        ).length;
 
-        navItems.forEach(nav => {
-          nav.classList.remove("active");
-        });
 
-        item.classList.add("active");
+      const percent =
+        total === 0
+          ? 0
+          : Math.round(
+              completed / total * 100
+            );
 
-      });
 
-    });
+      document.getElementById(
+        "progressPercent"
+      ).textContent =
+        percent + "%";
 
-  </script>
 
-</body>
-  </html>
+      document.getElementById(
+        "progressFill"
+      ).style.width =
+        percent + "%";
+
+
+      document.getElementById(
+        "progressTasks"
+      ).textContent =
+        `${completed} из ${total} задач`;
+
+
+      let message =
+        "Начнём?";
+
+
+      if (percent === 100) {
+        message = "Все выполнено 🎉";
+      } else if (percent >= 75) {
+        message = "Почти готово";
+      } else if (percent >= 50) {
+        message = "Хороший темп";
+      } else if (percent > 0) {
+        message = "Продолжаем";
+      }
+
+
+      document.getElementById(
+        "progressMessage"
+      ).textContent =
+        message;
+
+    }
+
+
+    /* =========================
+       HTML SAFETY
+    ========================= */
+
+    function escapeHtml(text) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent = text;
+
+      return div.innerHTML;
+
+    }
+
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    function openModal() {
+
+      modal.classList.add("open");
+
+      document.getElementById(
+        "taskDate"
+      ).value = today;
+
+      setTimeout(() => {
+
+        document.getElementById(
+          "taskTitle"
+        ).focus();
+
+      }, 200);
+
+    }
+
+
+    function closeTaskModal() {
+
+      modal.classList.remove(
+        "open"
+      );
+
+      taskForm.reset();
+
+    }
+
+
+    addButton.addEventListener(
+      "click",
+      openModal
+    );
+
+
+    closeModal.addEventListener(
+      "click",
+      closeTaskModal
+    );
+
+
+    modal.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target === modal
+        ) {
+          closeTaskModal();
+        }
+
+      }
+    );
+
+
+    /* =========================
+       CREATE TASK
+    ========================= */
+
+    taskForm.addEventListener(
+      "submit",
+      event => {
+
+        event.preventDefault();
+
+
+        const title =
+          document.getElementById(
+            "taskTitle"
+          ).value.trim();
+
+
+        const date =
+          document.getElementById(
+            "taskDate"
+          ).value;
+
+
+        const time =
+          document.getElementById(
+            "taskTime"
+          ).value;
+
+
+        const repeat =
+          document.getElementById(
+            "taskRepeat"
+          ).value;
+
+
+        if (!title || !date) {
+          return;
+        }
+
+
+        const task = {
+
+          id:
+            Date.now(),
+
+          title,
+
+          date,
+
+          time,
+
+          repeat,
+
+          completed: false
+
+        };
+
+
+        tasks.push(task);
+
+        saveTasks();
+
+        renderTasks();
+
+        closeTaskModal();
+
+      }
+    );
+
+
+    /* =========================
+       TASK ACTIONS
+    ========================= */
+
+    container.addEventListener(
+      "click",
+      event => {
+
+        const check =
+          event.target.closest(
+            ".task-check"
+          );
+
+
+        const deleteButton =
+          event.target.closest(
+            ".task-delete"
+          );
+
+
+        if (check) {
+
+          const id =
+            Number(
+              check.dataset.id
+            );
+
+
+          tasks =
+            tasks.map(task => {
+
+              if (
+                task.id === id
+              ) {
+
+                return {
+                  ...task,
+                  completed:
+                    !task.completed
+                };
+
+              }
+
+              return task;
+
+            });
+
+
+          saveTasks();
+
+          renderTasks();
+
+        }
+
+
+        if (deleteButton) {
+
+          const id =
+            Number(
+              deleteButton.dataset.delete
+            );
+
+
+          tasks =
+            tasks.filter(
+              task => task.id !== id
+            );
+
+
+          saveTasks();
+
+          renderTasks();
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+      
