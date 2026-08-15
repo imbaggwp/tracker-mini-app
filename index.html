@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+
+  <meta name="theme-color" content="#f5f5f3" />
+
+  <title>Трекер</title>
+
+  <style>
+    :root {
+      --bg: #f5f5f3;
+      --card: #ffffff;
+      --text: #171717;
+      --secondary: #777777;
+      --border: #e8e8e5;
+      --accent: #d86f3d;
+      --accent-soft: #f5dfd3;
+      --success: #5d8b6b;
+      --nav: rgba(255, 255, 255, 0.88);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+      background: var(--bg);
+      color: var(--text);
+
+      min-height: 100vh;
+
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      margin: 0 auto;
+
+      padding:
+        calc(24px + env(safe-area-inset-top))
+        18px
+        calc(92px + env(safe-area-inset-bottom));
+    }
+
+    /* HEADER */
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 28px;
+    }
+
+    .greeting {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .greeting-small {
+      color: var(--secondary);
+      font-size: 14px;
+    }
+
+    .greeting h1 {
+      font-size: 30px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.7px;
+    }
+
+    .profile-button {
+      width: 42px;
+      height: 42px;
+
+      border: 1px solid var(--border);
+      border-radius: 50%;
+
+      background: var(--card);
+      color: var(--text);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 17px;
+
+      cursor: pointer;
+    }
+
+    /* PROGRESS */
+
+    .progress-card {
+      background: var(--text);
+      color: white;
+
+      border-radius: 24px;
+
+      padding: 22px;
+
+      margin-bottom: 28px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 20px;
+    }
+
+    .progress-title {
+      font-size: 15px;
+      opacity: 0.7;
+    }
+
+    .progress-percent {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .progress-bar {
+      height: 7px;
+
+      background: rgba(255, 255, 255, 0.14);
+
+      border-radius: 20px;
+
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 42%;
+      height: 100%;
+
+      background: var(--accent);
+
+      border-radius: inherit;
+    }
+
+    .progress-bottom {
+      display: flex;
+      justify-content: space-between;
+
+      margin-top: 13px;
+
+      font-size: 13px;
+
+      opacity: 0.6;
+    }
+
+    /* SECTION */
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: 19px;
+      letter-spacing: -0.3px;
+    }
+
+    .section-link {
+      border: none;
+      background: none;
+
+      color: var(--accent);
+
+      font-size: 13px;
+
+      cursor: pointer;
+    }
+
+    /* TASKS */
+
+    .tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task {
+      background: var(--card);
+
+      border: 1px solid var(--border);
+
+      border-radius: 18px;
+
+      padding: 15px;
+
+      display: flex;
+      align-items: center;
+      gap: 13px;
+
+      transition:
+        transform 0.15s ease,
+        opacity 0.15s ease;
+    }
+
+    .task:active {
+      transform: scale(0.985);
+    }
+
+    .task-check {
+      width: 23px;
+      height: 23px;
+
+      border: 1.7px solid #cfcfcb;
+
+      border-radius: 50%;
+
+      background: transparent;
+
+      flex-shrink: 0;
+
+      cursor: pointer;
+
+      position: relative;
+    }
+
+    .task.completed .task-check {
+      border-color: var(--success);
+      background: var(--success);
+    }
+
+    .task.completed .task-check::after {
+      content: "✓";
+
+      position: absolute;
+
+      color: white;
+
+      font-size: 14px;
+
+      left: 4px;
+      top: 1px;
+    }
+
+    .task-content {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .task-title {
+      font-size: 15px;
+      font-weight: 600;
+
+      margin-bottom: 5px;
+
+      transition: opacity 0.2s;
+    }
+
+    .task-time {
+      color: var(--secondary);
+
+      font-size: 12px;
+    }
+
+    .task.completed .task-title {
+      text-decoration: line-through;
+      opacity: 0.4;
+    }
+
+    .task-repeat {
+      font-size: 11px;
+
+      padding: 5px 8px;
+
+      border-radius: 8px;
+
+      background: var(--accent-soft);
+
+      color: var(--accent);
+
+      white-space: nowrap;
+    }
+
+    /* EMPTY */
+
+    .empty {
+      background: var(--card);
+
+      border: 1px dashed var(--border);
+
+      border-radius: 18px;
+
+      padding: 30px 20px;
+
+      text-align: center;
+
+      color: var(--secondary);
+
+      font-size: 14px;
+    }
+
+    /* ADD */
+
+    .add-button {
+      position: fixed;
+
+      right: max(20px, calc((100vw - 520px) / 2 + 18px));
+      bottom: calc(82px + env(safe-area-inset-bottom));
+
+      width: 56px;
+      height: 56px;
+
+      border: none;
+      border-radius: 18px;
+
+      background: var(--accent);
+      color: white;
+
+      font-size: 28px;
+      font-weight: 300;
+
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+
+      cursor: pointer;
+
+      z-index: 20;
+    }
+
+    /* BOTTOM NAV */
+
+    .bottom-nav {
+      position: fixed;
+
+      left: 50%;
+      bottom: 0;
+
+      transform: translateX(-50%);
+
+      width: min(100%, 520px);
+
+      padding:
+        9px 10px
+        calc(9px + env(safe-area-inset-bottom));
+
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+
+      background: var(--nav);
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      border-top: 1px solid var(--border);
+
+      z-index: 10;
+    }
+
+    .nav-item {
+      border: none;
+      background: transparent;
+
+      color: var(--secondary);
+
+      padding: 8px 3px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+
+      font-size: 10px;
+
+      cursor: pointer;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 380px) {
+      .app {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .greeting h1 {
+        font-size: 27px;
+      }
+
+      .task {
+        padding: 13px;
+      }
+
+      .task-repeat {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="app">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+      <div class="greeting">
+        <span class="greeting-small">
+          Суббота, 15 августа
+        </span>
+
+        <h1>
+          Сегодня
+        </h1>
+      </div>
+
+      <button class="profile-button">
+        •••
+      </button>
+
+    </header>
+
+
+    <!-- PROGRESS -->
+
+    <section class="progress-card">
+
+      <div class="progress-top">
+
+        <div class="progress-title">
+          Прогресс дня
+        </div>
+
+        <div class="progress-percent">
+          42%
+        </div>
+
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+
+      <div class="progress-bottom">
+
+        <span>
+          3 из 7 задач
+        </span>
+
+        <span>
+          Хорошее начало
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- TASKS -->
+
+    <section>
+
+      <div class="section-header">
+
+        <h2>
+          Задачи
+        </h2>
+
+        <button class="section-link">
+          Все
+        </button>
+
+      </div>
+
+
+      <div class="tasks">
+
+        <div class="task completed">
+
+          <button class="task-check"></button>
+
+          <div class="task-content">
+
+            <div class="task-title">
+              Утренняя тренировка
+            </div>
+
+            <div class="task-time">
+              08:00
+            </div>
+
+          </div>
+
+          <span class="task-repeat">
+            каждый день
+          </span>
+
+        </div>
+
+
+        <div class="task completed">
+
+          <button class="task-check"></button>
+
+          <div class="task-content">
+
+            <div class="task-title">
+              Прочитать 20 страниц
+            </div>
+
+            <div class="task-time">
+              14:00
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="task">
+
+          <button class="task-check"></button>
+
+          <div class="task-content">
+
+            <div class="task-title">
+              Изучить английский
+            </div>
+
+            <div class="task-time">
+              19:00
+            </div>
+
+          </div>
+
+          <span class="task-repeat">
+            пн / ср / пт
+          </span>
+
+        </div>
+
+
+        <div class="task">
+
+          <button class="task-check"></button>
+
+          <div class="task-content">
+
+            <div class="task-title">
+              Вечерняя прогулка
+            </div>
+
+            <div class="task-time">
+              21:00
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ADD -->
+
+  <button class="add-button">
+    +
+  </button>
+
+
+  <!-- NAVIGATION -->
+
+  <nav class="bottom-nav">
+
+    <button class="nav-item active">
+      <span class="nav-icon">⌂</span>
+      Главная
+    </button>
+
+    <button class="nav-item">
+      <span class="nav-icon">□</span>
+      Календарь
+    </button>
+
+    <button class="nav-item">
+      <span class="nav-icon">◔</span>
+      Аналитика
+    </button>
+
+    <button class="nav-item">
+      <span class="nav-icon">⚙</span>
+      Настройки
+    </button>
+
+  </nav>
+
+
+  <script>
+
+    // Выполнение задач
+
+    const tasks = document.querySelectorAll(".task");
+
+    tasks.forEach(task => {
+
+      const check = task.querySelector(".task-check");
+
+      check.addEventListener("click", () => {
+
+        task.classList.toggle("completed");
+
+      });
+
+    });
+
+
+    // Активная вкладка
+
+    const navItems = document.querySelectorAll(".nav-item");
+
+    navItems.forEach(item => {
+
+      item.addEventListener("click", () => {
+
+        navItems.forEach(nav => {
+          nav.classList.remove("active");
+        });
+
+        item.classList.add("active");
+
+      });
+
+    });
+
+  </script>
+
+</body>
+  </html>
