@@ -1358,6 +1358,68 @@
       }
     }
 
+
+    .summaries-section { margin-bottom: 24px; }
+
+    .summary-setting-card {
+      display: flex; align-items: center; gap: 11px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(128,128,128,.13);
+    }
+
+    .summary-setting-icon {
+      width: 34px; height: 34px; flex: 0 0 34px;
+      border-radius: 11px; display: grid; place-items: center;
+      background: rgba(128,128,128,.10);
+    }
+
+    .summary-setting-info { min-width: 0; flex: 1; }
+    .summary-setting-title { font-size: 14px; font-weight: 650; }
+    .summary-setting-subtitle {
+      margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.25;
+    }
+
+    .summary-time {
+      width: 72px; border: 0; background: var(--card); color: inherit;
+      font: inherit; font-weight: 650; padding: 7px 4px; text-align: right; outline: none;
+    }
+
+    .switch {
+      position: relative; width: 42px; height: 25px; flex: 0 0 42px; display: inline-block;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0; border-radius: 999px;
+      background: rgba(128,128,128,.25); cursor: pointer; transition: .2s ease;
+    }
+    .slider:before {
+      content: ""; position: absolute; width: 19px; height: 19px;
+      left: 3px; top: 3px; border-radius: 50%; background: white;
+      transition: .2s ease; box-shadow: 0 1px 3px rgba(0,0,0,.18);
+    }
+    .switch input:checked + .slider { background: var(--accent); }
+    .switch input:checked + .slider:before { transform: translateX(17px); }
+
+    .summary-preview { margin-top: 18px; }
+    .summary-preview-label { color: var(--muted); font-size: 11px; margin-bottom: 7px; }
+    .summary-preview-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 18px; padding: 15px;
+    }
+    .summary-preview-heading { font-size: 14px; font-weight: 700; }
+    .summary-preview-text {
+      margin-top: 5px; font-size: 12px; line-height: 1.45; color: var(--muted);
+    }
+    .summary-preview-divider {
+      height: 1px; background: rgba(128,128,128,.13); margin: 14px 0;
+    }
+    .summary-preview-row {
+      margin-top: 10px; padding-top: 10px;
+      border-top: 1px solid rgba(128,128,128,.13);
+      display: flex; justify-content: space-between; gap: 12px; font-size: 12px;
+    }
+    .summary-preview-row span { color: var(--muted); }
+
 </style>
 </head>
 
@@ -1627,6 +1689,57 @@
     id="page-settings"
     class="page"
   >
+    <section class="settings-section summaries-section">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Сводки</div>
+          <div class="section-subtitle">Настрой удобное время напоминаний</div>
+        </div>
+      </div>
+
+      <div class="summary-setting-card">
+        <div class="summary-setting-icon">☀️</div>
+        <div class="summary-setting-info">
+          <div class="summary-setting-title">Утренняя сводка</div>
+          <div class="summary-setting-subtitle">Задачи и планы на сегодня</div>
+        </div>
+        <input id="morningSummaryTime" class="summary-time" type="time" value="08:00"
+          onchange="saveSummarySettings()" />
+        <label class="switch">
+          <input id="morningSummaryEnabled" type="checkbox" checked onchange="saveSummarySettings()" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="summary-setting-card">
+        <div class="summary-setting-icon">🌙</div>
+        <div class="summary-setting-info">
+          <div class="summary-setting-title">Вечерняя сводка</div>
+          <div class="summary-setting-subtitle">Итоги дня и задачи на завтра</div>
+        </div>
+        <input id="eveningSummaryTime" class="summary-time" type="time" value="21:00"
+          onchange="saveSummarySettings()" />
+        <label class="switch">
+          <input id="eveningSummaryEnabled" type="checkbox" checked onchange="saveSummarySettings()" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="summary-setting-card">
+        <div class="summary-setting-icon">📅</div>
+        <div class="summary-setting-info">
+          <div class="summary-setting-title">Задачи на завтра</div>
+          <div class="summary-setting-subtitle">Показывать их в вечерней сводке</div>
+        </div>
+        <label class="switch">
+          <input id="showTomorrowInSummary" type="checkbox" checked onchange="saveSummarySettings()" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="summary-preview" id="summaryPreview"></div>
+    </section>
+
 
     <div class="section-header">
       <div class="section-title">
@@ -2032,6 +2145,124 @@
 
 
 <script>
+
+
+  const SUMMARY_SETTINGS_KEY = "tracker_summary_settings";
+
+  const defaultSummarySettings = {
+    morningEnabled: true,
+    morningTime: "08:00",
+    eveningEnabled: true,
+    eveningTime: "21:00",
+    showTomorrow: true
+  };
+
+  function getSummarySettings() {
+    try {
+      return {
+        ...defaultSummarySettings,
+        ...(JSON.parse(localStorage.getItem(SUMMARY_SETTINGS_KEY) || "null") || {})
+      };
+    } catch {
+      return { ...defaultSummarySettings };
+    }
+  }
+
+  function saveSummarySettings() {
+    const settings = {
+      morningEnabled: document.getElementById("morningSummaryEnabled")?.checked ?? true,
+      morningTime: document.getElementById("morningSummaryTime")?.value || "08:00",
+      eveningEnabled: document.getElementById("eveningSummaryEnabled")?.checked ?? true,
+      eveningTime: document.getElementById("eveningSummaryTime")?.value || "21:00",
+      showTomorrow: document.getElementById("showTomorrowInSummary")?.checked ?? true
+    };
+
+    localStorage.setItem(SUMMARY_SETTINGS_KEY, JSON.stringify(settings));
+    renderSummaryPreview();
+  }
+
+  function loadSummarySettings() {
+    const settings = getSummarySettings();
+
+    const morningEnabled = document.getElementById("morningSummaryEnabled");
+    const morningTime = document.getElementById("morningSummaryTime");
+    const eveningEnabled = document.getElementById("eveningSummaryEnabled");
+    const eveningTime = document.getElementById("eveningSummaryTime");
+    const showTomorrow = document.getElementById("showTomorrowInSummary");
+
+    if (morningEnabled) morningEnabled.checked = settings.morningEnabled;
+    if (morningTime) morningTime.value = settings.morningTime;
+    if (eveningEnabled) eveningEnabled.checked = settings.eveningEnabled;
+    if (eveningTime) eveningTime.value = settings.eveningTime;
+    if (showTomorrow) showTomorrow.checked = settings.showTomorrow;
+
+    renderSummaryPreview();
+  }
+
+  function getTomorrowSummaryStats() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const dateString = formatDate(tomorrow);
+    const list = getTasksForDate(dateString);
+
+    return {
+      total: list.length,
+      important: list.filter(task => task.important).length
+    };
+  }
+
+  function renderSummaryPreview() {
+    const container = document.getElementById("summaryPreview");
+    if (!container) return;
+
+    const settings = getSummarySettings();
+    const todayStats = getDayStats(formatDate(new Date()));
+    const tomorrow = getTomorrowSummaryStats();
+
+    container.innerHTML = `
+      <div class="summary-preview-label">Предпросмотр</div>
+      <div class="summary-preview-box">
+        <div class="summary-preview-heading">
+          ${settings.morningEnabled ? "☀️ Доброе утро" : "☀️ Утренняя сводка выключена"}
+        </div>
+
+        ${
+          settings.morningEnabled
+            ? `<div class="summary-preview-text">
+                 Сегодня ${todayStats.total} задач,
+                 выполнено ${todayStats.completed}.
+               </div>`
+            : ""
+        }
+
+        <div class="summary-preview-divider"></div>
+
+        <div class="summary-preview-heading">
+          ${settings.eveningEnabled ? "🌙 Итоги дня" : "🌙 Вечерняя сводка выключена"}
+        </div>
+
+        ${
+          settings.eveningEnabled
+            ? `
+              <div class="summary-preview-text">
+                Выполнено ${todayStats.completed} из ${todayStats.total}
+                · эффективность ${todayStats.percent}%.
+              </div>
+              ${
+                settings.showTomorrow
+                  ? `<div class="summary-preview-row">
+                       <span>Завтра</span>
+                       <strong>${tomorrow.total} задач${tomorrow.important ? ` · ⭐ ${tomorrow.important}` : ""}</strong>
+                     </div>`
+                  : ""
+              }
+            `
+            : ""
+        }
+      </div>
+    `;
+  }
 
   /* =========================================
      TELEGRAM
