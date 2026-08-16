@@ -145,6 +145,377 @@ function getWeekdayShort(
 }
 
 
+
+/* =========================================================
+   CLOUDFLARE D1 API
+========================================================= */
+
+const API_BASE =
+  "https://tracker-api.asiya30092013.workers.dev/api";
+
+
+function getTelegramUserId() {
+
+  try {
+
+    const id =
+      window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+
+    if (id) {
+      return String(id);
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Telegram user id unavailable:",
+      error
+    );
+
+  }
+
+
+  const saved =
+    localStorage.getItem(
+      "tracker_user_id"
+    );
+
+
+  if (saved) {
+    return saved;
+  }
+
+
+  /*
+   * Только для локальной проверки.
+   * В Telegram будет использоваться
+   * настоящий Telegram ID.
+   */
+
+  return "418541686";
+
+}
+
+
+async function apiRequest(
+  path,
+  options = {}
+) {
+
+  const headers = {
+
+    "Content-Type":
+      "application/json",
+
+    "X-Telegram-User-Id":
+      getTelegramUserId(),
+
+    ...(options.headers || {})
+
+  };
+
+
+  const response =
+    await fetch(
+      `${API_BASE}${path}`,
+      {
+        ...options,
+        headers
+      }
+    );
+
+
+  const text =
+    await response.text();
+
+
+  let data = {};
+
+
+  try {
+
+    data =
+      text
+        ? JSON.parse(text)
+        : {};
+
+  } catch {
+
+    data = {
+      raw: text
+    };
+
+  }
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      data?.error ||
+      data?.message ||
+      `HTTP ${response.status}`
+    );
+
+  }
+
+
+  if (
+    data?.success === false
+  ) {
+
+    throw new Error(
+      data.error ||
+      "API error"
+    );
+
+  }
+
+
+  return data;
+
+}
+
+
+/* -------------------------
+   LOAD TASKS
+------------------------- */
+
+async function loadTasksFromApi() {
+
+  try {
+
+    const data =
+      await apiRequest(
+        "/tasks",
+        {
+          method: "GET"
+        }
+      );
+
+
+    const list =
+      Array.isArray(data)
+        ? data
+        : Array.isArray(data.tasks)
+          ? data.tasks
+          : Array.isArray(data.results)
+            ? data.results
+            : Array.isArray(data.data)
+              ? data.data
+              : [];
+
+
+    tasks =
+      list.map(
+        item => ({
+
+          id:
+            Number(item.id),
+
+          title:
+            String(
+              item.title || ""
+            ),
+
+          description:
+            String(
+              item.description || ""
+            ),
+
+          date:
+            item.date ||
+            item.due_date ||
+            getToday(),
+
+          time:
+            item.time ||
+            "",
+
+          repeat:
+            item.repeat ||
+            item.repeat_type ||
+            "none",
+
+          repeatDays:
+            Array.isArray(
+              item.repeatDays
+            )
+              ? item.repeatDays
+              : [],
+
+          repeatEnd:
+            item.repeatEnd ||
+            null,
+
+          important:
+            Boolean(
+              item.important
+            ),
+
+          completedDates:
+            Array.isArray(
+              item.completedDates
+            )
+              ? item.completedDates
+              : []
+
+        })
+      );
+
+
+    saveTasks();
+
+    renderAll();
+
+
+    console.log(
+      "D1: loaded",
+      tasks.length,
+      "tasks"
+    );
+
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "D1 GET /tasks failed:",
+      error
+    );
+
+
+    return false;
+
+  }
+
+}
+
+
+/* -------------------------
+   CREATE TASK
+------------------------- */
+
+async function createTaskInApi(
+  task
+) {
+
+  const result =
+    await apiRequest(
+      "/tasks",
+      {
+
+        method: "POST",
+
+        body:
+          JSON.stringify({
+
+            title:
+              task.title,
+
+            description:
+              task.description || "",
+
+            date:
+              task.date || null,
+
+            time:
+              task.time || null,
+
+            repeat_type:
+              task.repeat || "none",
+
+            important:
+              task.important
+                ? 1
+                : 0
+
+          })
+
+      }
+    );
+
+
+  console.log(
+    "D1: task created",
+    result
+  );
+
+
+  return result;
+
+}
+
+
+/* -------------------------
+   UPDATE TASK
+------------------------- */
+
+async function updateTaskInApi(
+  task
+) {
+
+  return apiRequest(
+    `/tasks/${encodeURIComponent(task.id)}`,
+    {
+
+      method: "PATCH",
+
+      body:
+        JSON.stringify({
+
+          title:
+            task.title,
+
+          description:
+            task.description || "",
+
+          date:
+            task.date || null,
+
+          time:
+            task.time || null,
+
+          repeat_type:
+            task.repeat || "none",
+
+          important:
+            task.important
+              ? 1
+              : 0,
+
+          completed:
+            task.completedDates &&
+            task.completedDates.length
+              ? 1
+              : 0
+
+        })
+
+    }
+  );
+
+}
+
+
+/* -------------------------
+   DELETE TASK
+------------------------- */
+
+async function deleteTaskFromApi(
+  taskId
+) {
+
+  return apiRequest(
+    `/tasks/${encodeURIComponent(taskId)}`,
+    {
+      method: "DELETE"
+    }
+  );
+
+}
+
+
 /* =========================================================
    STORAGE
 ========================================================= */
@@ -420,7 +791,7 @@ function isTaskCompleted(
 }
 
 
-function toggleTaskCompletion(
+async function toggleTaskCompletion(
   taskId,
   dateString
 ) {
@@ -473,6 +844,21 @@ function toggleTaskCompletion(
   saveTasks();
 
   renderAll();
+
+  try {
+
+    await updateTaskInApi(
+      task
+    );
+
+  } catch (error) {
+
+    console.error(
+      "D1 update failed:",
+      error
+    );
+
+  }
 
 }
 
@@ -1860,7 +2246,7 @@ weekdayButtons.forEach(
 
 taskForm.addEventListener(
   "submit",
-  event => {
+  async event => {
 
     event.preventDefault();
 
@@ -1928,7 +2314,7 @@ taskForm.addEventListener(
     }
 
 
-    tasks.push({
+    const localTask = {
 
       id:
         Date.now(),
@@ -1951,14 +2337,83 @@ taskForm.addEventListener(
 
       completedDates: []
 
-    });
+    };
 
 
-    saveTasks();
+    try {
 
-    renderAll();
+      const result =
+        await createTaskInApi(
+          localTask
+        );
 
-    closeModal();
+
+      /*
+       * Worker может вернуть
+       * созданную запись в разных
+       * форматах. Если ID пришёл —
+       * используем его.
+       */
+
+      const createdId =
+        Number(
+          result?.id ??
+          result?.task?.id ??
+          result?.data?.id ??
+          localTask.id
+        );
+
+
+      localTask.id =
+        Number.isFinite(
+          createdId
+        )
+          ? createdId
+          : localTask.id;
+
+
+      tasks.push(
+        localTask
+      );
+
+
+      saveTasks();
+
+      renderAll();
+
+      closeModal();
+
+    } catch (error) {
+
+      console.error(
+        "D1 create failed:",
+        error
+      );
+
+
+      /*
+       * Не теряем задачу, если API
+       * временно недоступен.
+       */
+
+      tasks.push(
+        localTask
+      );
+
+      saveTasks();
+
+      renderAll();
+
+      closeModal();
+
+
+      alert(
+        "Задача сохранена локально, " +
+        "но не отправлена в D1.\n\n" +
+        error.message
+      );
+
+    }
 
   }
 );
@@ -2029,6 +2484,20 @@ document
         saveTasks();
 
         renderAll();
+
+
+        deleteTaskFromApi(
+          id
+        ).catch(
+          error => {
+
+            console.error(
+              "D1 delete failed:",
+              error
+            );
+
+          }
+        );
 
       }
 
@@ -2551,3 +3020,13 @@ renderAll();
 showPage(
   "home"
 );
+
+
+/*
+ * После первого рендера пытаемся
+ * загрузить актуальные задачи из D1.
+ * Если API недоступен — остаёмся
+ * на локальных данных.
+ */
+
+loadTasksFromApi();
