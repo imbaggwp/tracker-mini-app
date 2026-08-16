@@ -19,9 +19,10 @@
     :root {
       --bg: #f5f6f8;
       --card: #ffffff;
+      --card-soft: #f1f2f4;
       --text: #17191c;
       --secondary: #7d838b;
-      --border: #e8eaed;
+      --border: #e5e7ea;
 
       --accent: #ff7a45;
       --accent-soft: #fff0e9;
@@ -30,6 +31,33 @@
       --danger: #e05252;
 
       --shadow: 0 8px 30px rgba(20, 25, 30, 0.06);
+
+      --nav-bg: rgba(255, 255, 255, 0.94);
+    }
+
+    /* =========================
+       DARK THEME
+    ========================= */
+
+    body.dark {
+      --bg: #111315;
+      --card: #1a1d20;
+      --card-soft: #22262a;
+      --text: #f2f3f4;
+      --secondary: #9299a2;
+      --border: #2a2e33;
+
+      --accent: #ff8654;
+      --accent-soft: #30231d;
+
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
+
+      --nav-bg: rgba(25, 28, 31, 0.94);
+    }
+
+    html,
+    body {
+      min-height: 100%;
     }
 
     body {
@@ -47,17 +75,27 @@
       min-height: 100vh;
 
       padding-bottom: 90px;
+
+      transition:
+        background 0.2s ease,
+        color 0.2s ease;
     }
 
     button,
-    input {
+    input,
+    select {
       font: inherit;
     }
 
     button {
       border: 0;
       cursor: pointer;
+      color: inherit;
     }
+
+    /* =========================
+       APP
+    ========================= */
 
     .app {
       width: 100%;
@@ -74,7 +112,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-
       margin-bottom: 28px;
     }
 
@@ -100,7 +137,9 @@
       width: 46px;
       height: 46px;
       border-radius: 50%;
+
       background: var(--card);
+
       box-shadow: var(--shadow);
 
       display: flex;
@@ -138,7 +177,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-
       margin-bottom: 14px;
     }
 
@@ -154,7 +192,7 @@
 
     .progress-bar {
       height: 9px;
-      background: #eceef0;
+      background: var(--card-soft);
       border-radius: 20px;
       overflow: hidden;
     }
@@ -168,14 +206,13 @@
     }
 
     /* =========================
-       SECTIONS
+       SECTION
     ========================= */
 
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-
       margin-bottom: 13px;
     }
 
@@ -240,6 +277,10 @@
       transition: all 0.2s ease;
     }
 
+    body.dark .task-check {
+      border-color: #565c63;
+    }
+
     .task.completed .task-check {
       background: var(--accent);
       border-color: var(--accent);
@@ -281,11 +322,10 @@
     .delete-task {
       width: 32px;
       height: 32px;
-
       border-radius: 10px;
 
       background: transparent;
-      color: #a1a6ac;
+      color: var(--secondary);
 
       font-size: 17px;
 
@@ -295,7 +335,7 @@
     }
 
     .delete-task:active {
-      background: #f1f2f3;
+      background: var(--card-soft);
       color: var(--danger);
     }
 
@@ -373,11 +413,8 @@
     .calendar-card {
       background: var(--card);
       border-radius: 22px;
-
       padding: 18px;
-
       box-shadow: var(--shadow);
-
       margin-bottom: 18px;
     }
 
@@ -385,7 +422,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-
       margin-bottom: 18px;
     }
 
@@ -402,12 +438,8 @@
     .calendar-arrow {
       width: 36px;
       height: 36px;
-
       border-radius: 11px;
-
-      background: #f1f2f3;
-
-      color: var(--text);
+      background: var(--card-soft);
 
       display: flex;
       align-items: center;
@@ -419,13 +451,11 @@
     .calendar-weekdays {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-
       margin-bottom: 8px;
     }
 
     .weekday {
       text-align: center;
-
       font-size: 11px;
       color: var(--secondary);
       font-weight: 600;
@@ -439,7 +469,6 @@
 
     .calendar-day {
       min-height: 58px;
-
       border-radius: 13px;
 
       background: transparent;
@@ -452,16 +481,6 @@
       justify-content: flex-start;
 
       padding-top: 7px;
-
-      transition: all 0.15s ease;
-    }
-
-    .calendar-day.empty-day {
-      pointer-events: none;
-    }
-
-    .calendar-day:not(.empty-day):active {
-      transform: scale(0.94);
     }
 
     .calendar-day.today {
@@ -482,16 +501,13 @@
       display: flex;
       align-items: center;
       gap: 3px;
-
       margin-top: 6px;
     }
 
     .calendar-dot {
       width: 5px;
       height: 5px;
-
       border-radius: 50%;
-
       background: var(--accent);
     }
 
@@ -499,20 +515,17 @@
       background: white;
     }
 
-    .calendar-count {
+    .calendar-count,
+    .calendar-complete {
       font-size: 9px;
       color: var(--secondary);
     }
 
-    .calendar-day.selected .calendar-count {
-      color: white;
-    }
-
     .calendar-complete {
-      font-size: 9px;
       color: var(--success);
     }
 
+    .calendar-day.selected .calendar-count,
     .calendar-day.selected .calendar-complete {
       color: white;
     }
@@ -524,9 +537,7 @@
     .selected-day-card {
       background: var(--card);
       border-radius: 22px;
-
       padding: 20px;
-
       box-shadow: var(--shadow);
     }
 
@@ -534,7 +545,6 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-
       margin-bottom: 17px;
     }
 
@@ -571,11 +581,8 @@
     .analytics-summary {
       background: var(--card);
       border-radius: 22px;
-
       padding: 20px;
-
       box-shadow: var(--shadow);
-
       margin-bottom: 18px;
     }
 
@@ -583,7 +590,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-
       margin-bottom: 16px;
     }
 
@@ -601,51 +607,36 @@
     .analytics-summary-subtitle {
       font-size: 13px;
       color: var(--secondary);
-
       margin-bottom: 13px;
     }
 
     .week-progress {
       height: 9px;
-
-      background: #eceef0;
-
+      background: var(--card-soft);
       border-radius: 20px;
-
       overflow: hidden;
     }
 
     .week-progress-fill {
       height: 100%;
-
       width: 0%;
-
       background: var(--accent);
-
       border-radius: 20px;
-
-      transition: width 0.3s ease;
     }
 
     .week-navigation {
       display: flex;
-
       align-items: center;
       justify-content: space-between;
-
       margin-bottom: 14px;
     }
 
     .week-nav-button {
       width: 38px;
       height: 38px;
-
       border-radius: 12px;
-
       background: var(--card);
-
       box-shadow: var(--shadow);
-
       font-size: 18px;
     }
 
@@ -662,22 +653,9 @@
 
     .week-day {
       background: var(--card);
-
       border-radius: 18px;
-
       padding: 15px;
-
       box-shadow: var(--shadow);
-
-      cursor: pointer;
-
-      transition:
-        transform 0.15s ease,
-        background 0.15s ease;
-    }
-
-    .week-day:active {
-      transform: scale(0.985);
     }
 
     .week-day.today {
@@ -690,19 +668,14 @@
 
     .week-day-top {
       display: flex;
-
       align-items: center;
-
       justify-content: space-between;
-
       margin-bottom: 11px;
     }
 
     .week-day-name {
       display: flex;
-
       align-items: center;
-
       gap: 9px;
     }
 
@@ -724,31 +697,21 @@
 
     .week-day-progress {
       height: 7px;
-
-      background: #eceef0;
-
+      background: var(--card-soft);
       border-radius: 20px;
-
       overflow: hidden;
-
       margin-bottom: 9px;
     }
 
     .week-day-fill {
       height: 100%;
-
       background: var(--accent);
-
       border-radius: 20px;
-
-      transition: width 0.3s ease;
     }
 
     .week-day-bottom {
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
     }
 
@@ -759,24 +722,23 @@
 
     .week-day-stat strong {
       color: var(--text);
-      font-weight: 700;
     }
 
     .week-day-badge {
       font-size: 10px;
-
       padding: 4px 8px;
-
       border-radius: 8px;
-
-      background: #f1f2f3;
-
+      background: var(--card-soft);
       color: var(--secondary);
     }
 
     .week-day-badge.complete {
       background: #e9f7ee;
       color: var(--success);
+    }
+
+    body.dark .week-day-badge.complete {
+      background: #193323;
     }
 
     .analytics-day-details {
@@ -786,12 +748,225 @@
     .analytics-details-title {
       font-size: 18px;
       font-weight: 750;
-
       margin-bottom: 12px;
     }
 
     /* =========================
-       NAV
+       SETTINGS
+    ========================= */
+
+    .settings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .settings-group-title {
+      font-size: 12px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 700;
+
+      margin: 22px 5px 8px;
+    }
+
+    .settings-group-title:first-child {
+      margin-top: 0;
+    }
+
+    .settings-card {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .settings-row {
+      min-height: 64px;
+
+      padding: 13px 16px;
+
+      display: flex;
+      align-items: center;
+      gap: 13px;
+
+      border-bottom: 1px solid var(--border);
+    }
+
+    .settings-row:last-child {
+      border-bottom: 0;
+    }
+
+    .settings-icon {
+      width: 38px;
+      height: 38px;
+
+      border-radius: 12px;
+
+      background: var(--accent-soft);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .settings-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .settings-title {
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .settings-description {
+      font-size: 11px;
+      color: var(--secondary);
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+
+    .settings-control {
+      flex-shrink: 0;
+    }
+
+    /* toggle */
+
+    .switch {
+      position: relative;
+      width: 49px;
+      height: 29px;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .switch-slider {
+      position: absolute;
+      inset: 0;
+
+      border-radius: 30px;
+
+      background: #d6d9dc;
+
+      transition: 0.2s;
+    }
+
+    .switch-slider::before {
+      content: "";
+
+      position: absolute;
+
+      width: 23px;
+      height: 23px;
+
+      left: 3px;
+      top: 3px;
+
+      border-radius: 50%;
+
+      background: white;
+
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+
+      transition: 0.2s;
+    }
+
+    .switch input:checked + .switch-slider {
+      background: var(--accent);
+    }
+
+    .switch input:checked + .switch-slider::before {
+      transform: translateX(20px);
+    }
+
+    /* time */
+
+    .time-input {
+      border: 0;
+      outline: none;
+
+      background: var(--card-soft);
+
+      color: var(--text);
+
+      border-radius: 11px;
+
+      padding: 8px 9px;
+
+      font-size: 14px;
+    }
+
+    /* select */
+
+    .settings-select {
+      border: 0;
+      outline: none;
+
+      background: var(--card-soft);
+      color: var(--text);
+
+      border-radius: 11px;
+
+      padding: 9px 28px 9px 10px;
+
+      font-size: 13px;
+
+      max-width: 145px;
+    }
+
+    /* theme */
+
+    .theme-options {
+      display: flex;
+      gap: 6px;
+
+      background: var(--card-soft);
+
+      padding: 4px;
+
+      border-radius: 12px;
+    }
+
+    .theme-option {
+      padding: 7px 9px;
+
+      border-radius: 9px;
+
+      background: transparent;
+
+      color: var(--secondary);
+
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .theme-option.active {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    }
+
+    .settings-note {
+      margin-top: 18px;
+
+      text-align: center;
+
+      font-size: 11px;
+
+      color: var(--secondary);
+
+      line-height: 1.5;
+    }
+
+    /* =========================
+       NAVIGATION
     ========================= */
 
     .bottom-nav {
@@ -803,7 +978,7 @@
 
       height: 70px;
 
-      background: rgba(255, 255, 255, 0.94);
+      background: var(--nav-bg);
 
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
@@ -811,7 +986,6 @@
       border-top: 1px solid var(--border);
 
       display: flex;
-
       justify-content: center;
 
       z-index: 15;
@@ -885,7 +1059,6 @@
       animation: slideUp 0.22s ease;
 
       max-height: 90vh;
-
       overflow-y: auto;
     }
 
@@ -905,7 +1078,7 @@
 
       border-radius: 10px;
 
-      background: #d9dcdf;
+      background: var(--border);
 
       margin: 0 auto 22px;
     }
@@ -913,7 +1086,6 @@
     .modal-title {
       font-size: 22px;
       font-weight: 750;
-
       margin-bottom: 20px;
     }
 
@@ -933,7 +1105,9 @@
 
       outline: none;
 
-      background: #f7f8f9;
+      background: var(--card-soft);
+
+      color: var(--text);
 
       border-radius: 15px;
 
@@ -951,37 +1125,28 @@
     .repeat-title {
       font-size: 14px;
       font-weight: 650;
-
       margin-bottom: 10px;
     }
 
     .repeat-options {
       display: flex;
-
       flex-direction: column;
-
       gap: 8px;
-
       margin-bottom: 20px;
     }
 
     .repeat-option {
-      position: relative;
-
       display: flex;
       align-items: center;
-
       gap: 12px;
 
       padding: 13px 14px;
 
-      background: #f7f8f9;
+      background: var(--card-soft);
 
       border: 1px solid transparent;
 
       border-radius: 14px;
-
-      cursor: pointer;
     }
 
     .repeat-option:has(input:checked) {
@@ -992,14 +1157,12 @@
     .repeat-option input {
       width: 18px;
       height: 18px;
-
       accent-color: var(--accent);
     }
 
     .repeat-label {
       display: flex;
       flex-direction: column;
-
       gap: 2px;
     }
 
@@ -1030,7 +1193,7 @@
     }
 
     .cancel-button {
-      background: #f0f1f2;
+      background: var(--card-soft);
       color: var(--text);
     }
 
@@ -1073,12 +1236,10 @@
 
     .toast.show {
       opacity: 1;
-
       transform: translate(-50%, 0);
     }
 
     @media (min-width: 700px) {
-
       .app {
         padding-top: 40px;
       }
@@ -1423,20 +1584,234 @@
     </header>
 
 
-    <div class="empty">
+    <div class="settings-list">
 
-      <div class="empty-icon">
-        ⚙️
+      <!-- NOTIFICATIONS -->
+
+      <div class="settings-group-title">
+        Уведомления
       </div>
 
-      <div class="empty-title">
-        Настройки
+      <div class="settings-card">
+
+        <div class="settings-row">
+
+          <div class="settings-icon">
+            🔔
+          </div>
+
+          <div class="settings-content">
+
+            <div class="settings-title">
+              Уведомления
+            </div>
+
+            <div class="settings-description">
+              Разрешить напоминания
+            </div>
+
+          </div>
+
+          <div class="settings-control">
+
+            <label class="switch">
+
+              <input
+                type="checkbox"
+                id="notificationsToggle"
+              />
+
+              <span class="switch-slider"></span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <div class="settings-row">
+
+          <div class="settings-icon">
+            ☀️
+          </div>
+
+          <div class="settings-content">
+
+            <div class="settings-title">
+              Утренняя сводка
+            </div>
+
+            <div class="settings-description">
+              План задач на сегодня
+            </div>
+
+          </div>
+
+          <div class="settings-control">
+
+            <input
+              class="time-input"
+              type="time"
+              id="morningTime"
+              value="08:00"
+            />
+
+          </div>
+
+        </div>
+
+
+        <div class="settings-row">
+
+          <div class="settings-icon">
+            🌙
+          </div>
+
+          <div class="settings-content">
+
+            <div class="settings-title">
+              Вечерняя сводка
+            </div>
+
+            <div class="settings-description">
+              Итоги вашего дня
+            </div>
+
+          </div>
+
+          <div class="settings-control">
+
+            <input
+              class="time-input"
+              type="time"
+              id="eveningTime"
+              value="21:00"
+            />
+
+          </div>
+
+        </div>
+
       </div>
 
-      <div class="empty-text">
-        Уведомления, тема,
-        утренняя и вечерняя сводка
-        появятся здесь.
+
+      <!-- CALENDAR -->
+
+      <div class="settings-group-title">
+        Календарь
+      </div>
+
+      <div class="settings-card">
+
+        <div class="settings-row">
+
+          <div class="settings-icon">
+            📅
+          </div>
+
+          <div class="settings-content">
+
+            <div class="settings-title">
+              Первый день недели
+            </div>
+
+            <div class="settings-description">
+              Как отображать календарь
+            </div>
+
+          </div>
+
+          <div class="settings-control">
+
+            <select
+              class="settings-select"
+              id="firstDay"
+            >
+
+              <option value="monday">
+                Понедельник
+              </option>
+
+              <option value="sunday">
+                Воскресенье
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- APPEARANCE -->
+
+      <div class="settings-group-title">
+        Внешний вид
+      </div>
+
+      <div class="settings-card">
+
+        <div class="settings-row">
+
+          <div class="settings-icon">
+            🎨
+          </div>
+
+          <div class="settings-content">
+
+            <div class="settings-title">
+              Тема
+            </div>
+
+            <div class="settings-description">
+              Выберите оформление приложения
+            </div>
+
+          </div>
+
+          <div class="settings-control">
+
+            <div class="theme-options">
+
+              <button
+                class="theme-option"
+                data-theme="system"
+              >
+                Система
+              </button>
+
+              <button
+                class="theme-option"
+                data-theme="light"
+              >
+                Светлая
+              </button>
+
+              <button
+                class="theme-option"
+                data-theme="dark"
+              >
+                Тёмная
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="settings-note">
+
+        Настройки сохраняются автоматически.
+        <br />
+        Уведомления Telegram подключим на следующем этапе.
+
       </div>
 
     </div>
@@ -1470,8 +1845,15 @@
       class="nav-button active"
       data-page="home"
     >
-      <span class="nav-icon">⌂</span>
-      <span>Сегодня</span>
+
+      <span class="nav-icon">
+        ⌂
+      </span>
+
+      <span>
+        Сегодня
+      </span>
+
     </button>
 
 
@@ -1479,8 +1861,15 @@
       class="nav-button"
       data-page="calendar"
     >
-      <span class="nav-icon">▣</span>
-      <span>Календарь</span>
+
+      <span class="nav-icon">
+        ▣
+      </span>
+
+      <span>
+        Календарь
+      </span>
+
     </button>
 
 
@@ -1488,8 +1877,15 @@
       class="nav-button"
       data-page="analytics"
     >
-      <span class="nav-icon">◒</span>
-      <span>Аналитика</span>
+
+      <span class="nav-icon">
+        ◒
+      </span>
+
+      <span>
+        Аналитика
+      </span>
+
     </button>
 
 
@@ -1497,8 +1893,15 @@
       class="nav-button"
       data-page="settings"
     >
-      <span class="nav-icon">⚙</span>
-      <span>Настройки</span>
+
+      <span class="nav-icon">
+        ⚙
+      </span>
+
+      <span>
+        Настройки
+      </span>
+
     </button>
 
   </div>
@@ -1507,7 +1910,7 @@
 
 
 <!-- =========================
-     MODAL
+     ADD TASK MODAL
 ========================= -->
 
 <div
@@ -1666,6 +2069,10 @@
 </div>
 
 
+<!-- =========================
+     TOAST
+========================= -->
+
 <div
   class="toast"
   id="toast"
@@ -1674,12 +2081,15 @@
 
 <script>
 
-  /* =========================
+  /* =====================================================
      STORAGE
-  ========================= */
+  ===================================================== */
 
   const STORAGE_KEY =
     "tracker_tasks";
+
+  const SETTINGS_KEY =
+    "tracker_settings";
 
 
   let tasks = JSON.parse(
@@ -1689,9 +2099,37 @@
   );
 
 
-  /* =========================
+  const defaultSettings = {
+
+    notifications: true,
+
+    morningTime: "08:00",
+
+    eveningTime: "21:00",
+
+    firstDay: "monday",
+
+    theme: "system"
+
+  };
+
+
+  let settings = {
+
+    ...defaultSettings,
+
+    ...JSON.parse(
+      localStorage.getItem(
+        SETTINGS_KEY
+      ) || "{}"
+    )
+
+  };
+
+
+  /* =====================================================
      ELEMENTS
-  ========================= */
+  ===================================================== */
 
   const tasksContainer =
     document.getElementById(
@@ -1749,9 +2187,9 @@
     );
 
 
-  /* =========================
-     CALENDAR
-  ========================= */
+  /* =====================================================
+     DATE
+  ===================================================== */
 
   const today =
     new Date();
@@ -1769,10 +2207,6 @@
     getDateKey(today);
 
 
-  /* =========================
-     ANALYTICS
-  ========================= */
-
   let analyticsWeekStart =
     getMonday(today);
 
@@ -1781,13 +2215,7 @@
     getDateKey(today);
 
 
-  /* =========================
-     DATE
-  ========================= */
-
-  function getDateKey(
-    date
-  ) {
+  function getDateKey(date) {
 
     const year =
       date.getFullYear();
@@ -1808,9 +2236,7 @@
   }
 
 
-  function parseDate(
-    key
-  ) {
+  function parseDate(key) {
 
     const [
       year,
@@ -1838,9 +2264,26 @@
   }
 
 
-  function getMonday(
-    date
+  function addDays(
+    date,
+    amount
   ) {
+
+    const result =
+      new Date(date);
+
+
+    result.setDate(
+      result.getDate() + amount
+    );
+
+
+    return result;
+
+  }
+
+
+  function getMonday(date) {
 
     const result =
       new Date(date);
@@ -1874,25 +2317,6 @@
   }
 
 
-  function addDays(
-    date,
-    amount
-  ) {
-
-    const result =
-      new Date(date);
-
-
-    result.setDate(
-      result.getDate() + amount
-    );
-
-
-    return result;
-
-  }
-
-
   function formatDate() {
 
     const date =
@@ -1917,9 +2341,9 @@
   }
 
 
-  /* =========================
-     RECURRING
-  ========================= */
+  /* =====================================================
+     TASKS
+  ===================================================== */
 
   function taskAppearsOnDate(
     task,
@@ -1948,16 +2372,14 @@
     ) {
 
       return (
-        task.date ===
-        dateKey
+        task.date === dateKey
       );
 
     }
 
 
     if (
-      task.recurring ===
-      "daily"
+      task.recurring === "daily"
     ) {
 
       return true;
@@ -1966,8 +2388,7 @@
 
 
     if (
-      task.recurring ===
-      "weekdays"
+      task.recurring === "weekdays"
     ) {
 
       const day =
@@ -1983,8 +2404,7 @@
 
 
     if (
-      task.recurring ===
-      "weekly"
+      task.recurring === "weekly"
     ) {
 
       const start =
@@ -2108,9 +2528,142 @@
   }
 
 
-  /* =========================
+  function getRepeatLabel(
+    repeat
+  ) {
+
+    switch (repeat) {
+
+      case "daily":
+        return "🔁 Каждый день";
+
+      case "weekdays":
+        return "🔁 По будням";
+
+      case "weekly":
+        return "🔁 Каждую неделю";
+
+      default:
+        return "Сегодня";
+
+    }
+
+  }
+
+
+  function getTaskWord(
+    number
+  ) {
+
+    const mod10 =
+      number % 10;
+
+    const mod100 =
+      number % 100;
+
+
+    if (
+      mod10 === 1 &&
+      mod100 !== 11
+    ) {
+
+      return "задача";
+
+    }
+
+
+    if (
+      mod10 >= 2 &&
+      mod10 <= 4 &&
+      (
+        mod100 < 10 ||
+        mod100 >= 20
+      )
+    ) {
+
+      return "задачи";
+
+    }
+
+
+    return "задач";
+
+  }
+
+
+  function createTaskElement(
+    task,
+    dateKey
+  ) {
+
+    const completed =
+      isTaskCompleted(
+        task,
+        dateKey
+      );
+
+
+    const element =
+      document.createElement(
+        "div"
+      );
+
+
+    element.className =
+      "task" +
+      (
+        completed
+          ? " completed"
+          : ""
+      );
+
+
+    element.innerHTML = `
+
+      <button
+        class="task-check"
+        data-task-id="${task.id}"
+        data-date="${dateKey}"
+      >
+
+        <span class="check-icon">
+          ✓
+        </span>
+
+      </button>
+
+
+      <div class="task-content">
+
+        <div class="task-name">
+          ${escapeHtml(task.title)}
+        </div>
+
+        <div class="task-meta">
+          ${getRepeatLabel(task.recurring)}
+        </div>
+
+      </div>
+
+
+      <button
+        class="delete-task"
+        data-delete-id="${task.id}"
+      >
+        ×
+      </button>
+
+    `;
+
+
+    return element;
+
+  }
+
+
+  /* =====================================================
      HOME
-  ========================= */
+  ===================================================== */
 
   function renderHome() {
 
@@ -2222,146 +2775,9 @@
   }
 
 
-  /* =========================
-     TASK
-  ========================= */
-
-  function createTaskElement(
-    task,
-    dateKey
-  ) {
-
-    const completed =
-      isTaskCompleted(
-        task,
-        dateKey
-      );
-
-
-    const element =
-      document.createElement(
-        "div"
-      );
-
-
-    element.className =
-      "task" +
-      (
-        completed
-          ? " completed"
-          : ""
-      );
-
-
-    element.innerHTML = `
-
-      <button
-        class="task-check"
-        data-task-id="${task.id}"
-        data-date="${dateKey}"
-      >
-
-        <span class="check-icon">
-          ✓
-        </span>
-
-      </button>
-
-
-      <div class="task-content">
-
-        <div class="task-name">
-          ${escapeHtml(task.title)}
-        </div>
-
-        <div class="task-meta">
-          ${getRepeatLabel(task.recurring)}
-        </div>
-
-      </div>
-
-
-      <button
-        class="delete-task"
-        data-delete-id="${task.id}"
-      >
-        ×
-      </button>
-
-    `;
-
-
-    return element;
-
-  }
-
-
-  function getRepeatLabel(
-    repeat
-  ) {
-
-    switch (repeat) {
-
-      case "daily":
-        return "🔁 Каждый день";
-
-      case "weekdays":
-        return "🔁 По будням";
-
-      case "weekly":
-        return "🔁 Каждую неделю";
-
-      default:
-        return "Сегодня";
-
-    }
-
-  }
-
-
-  function getTaskWord(
-    number
-  ) {
-
-    const mod10 =
-      number % 10;
-
-    const mod100 =
-      number % 100;
-
-
-    if (
-      mod10 === 1 &&
-      mod100 !== 11
-    ) {
-
-      return "задача";
-
-    }
-
-
-    if (
-      mod10 >= 2 &&
-      mod10 <= 4 &&
-      (
-        mod100 < 10 ||
-        mod100 >= 20
-      )
-    ) {
-
-      return "задачи";
-
-    }
-
-
-    return "задач";
-
-  }
-
-
-  /* =========================
+  /* =====================================================
      CALENDAR
-  ========================= */
+  ===================================================== */
 
   function renderCalendar() {
 
@@ -2438,7 +2854,7 @@
 
 
       empty.className =
-        "calendar-day empty-day";
+        "calendar-day";
 
 
       grid.appendChild(
@@ -2828,9 +3244,9 @@
     );
 
 
-  /* =========================
+  /* =====================================================
      ANALYTICS
-  ========================= */
+  ===================================================== */
 
   function getWeekStats(
     weekStart
@@ -2891,13 +3307,9 @@
       days.push({
 
         date,
-
         dateKey,
-
         total,
-
         completed,
-
         percentage
 
       });
@@ -2920,10 +3332,7 @@
 
     const total =
       weekDays.reduce(
-        (
-          sum,
-          day
-        ) =>
+        (sum, day) =>
           sum + day.total,
         0
       );
@@ -2931,10 +3340,7 @@
 
     const completed =
       weekDays.reduce(
-        (
-          sum,
-          day
-        ) =>
+        (sum, day) =>
           sum + day.completed,
         0
       );
@@ -3010,15 +3416,11 @@
       );
 
 
-    const currentMonday =
-      getMonday(
-        new Date()
-      );
-
-
     const currentKey =
       getDateKey(
-        currentMonday
+        getMonday(
+          new Date()
+        )
       );
 
 
@@ -3028,25 +3430,12 @@
       );
 
 
-    let title =
-      `${startText} — ${endText}`;
-
-
-    if (
-      currentKey ===
-      selectedKey
-    ) {
-
-      title =
-        "Эта неделя";
-
-    }
-
-
     document.getElementById(
       "weekTitle"
     ).textContent =
-      title;
+      currentKey === selectedKey
+        ? "Эта неделя"
+        : `${startText} — ${endText}`;
 
   }
 
@@ -3070,6 +3459,7 @@
 
 
     const names = [
+
       "Понедельник",
       "Вторник",
       "Среда",
@@ -3077,6 +3467,7 @@
       "Пятница",
       "Суббота",
       "Воскресенье"
+
     ];
 
 
@@ -3179,13 +3570,17 @@
           <div class="week-day-bottom">
 
             <span class="week-day-stat">
+
               <strong>
                 ${day.completed}
               </strong>
+
               выполнено из
+
               <strong>
                 ${day.total}
               </strong>
+
             </span>
 
             ${badge}
@@ -3432,9 +3827,9 @@
     );
 
 
-  /* =========================
+  /* =====================================================
      MODAL
-  ========================= */
+  ===================================================== */
 
   function openModal() {
 
@@ -3502,7 +3897,7 @@
       getTodayKey();
 
 
-    const newTask = {
+    tasks.push({
 
       id:
         Date.now().toString(),
@@ -3526,12 +3921,7 @@
       createdAt:
         new Date().toISOString()
 
-    };
-
-
-    tasks.push(
-      newTask
-    );
+    });
 
 
     saveTasks();
@@ -3556,9 +3946,51 @@
   }
 
 
-  /* =========================
-     TOGGLE
-  ========================= */
+  /* =====================================================
+     TASK EVENTS
+  ===================================================== */
+
+  document.addEventListener(
+    "click",
+    event => {
+
+      const check =
+        event.target.closest(
+          "[data-task-id]"
+        );
+
+
+      if (check) {
+
+        toggleTask(
+          check.dataset.taskId,
+          check.dataset.date
+        );
+
+        return;
+
+      }
+
+
+      const deleteButton =
+        event.target.closest(
+          "[data-delete-id]"
+        );
+
+
+      if (
+        deleteButton
+      ) {
+
+        deleteTask(
+          deleteButton.dataset.deleteId
+        );
+
+      }
+
+    }
+  );
+
 
   function toggleTask(
     id,
@@ -3610,13 +4042,7 @@
   }
 
 
-  /* =========================
-     DELETE
-  ========================= */
-
-  function deleteTask(
-    id
-  ) {
+  function deleteTask(id) {
 
     tasks =
       tasks.filter(
@@ -3642,51 +4068,392 @@
   }
 
 
-  /* =========================
-     EVENTS
-  ========================= */
+  /* =====================================================
+     NAVIGATION
+  ===================================================== */
 
-  document.addEventListener(
-    "click",
-    event => {
+  document
+    .querySelectorAll(
+      ".nav-button"
+    )
+    .forEach(
+      button => {
 
-      const check =
-        event.target.closest(
-          "[data-task-id]"
+        button.addEventListener(
+          "click",
+          () => {
+
+            const page =
+              button.dataset.page;
+
+
+            document
+              .querySelectorAll(
+                ".nav-button"
+              )
+              .forEach(
+                item =>
+                  item.classList.remove(
+                    "active"
+                  )
+              );
+
+
+            button.classList.add(
+              "active"
+            );
+
+
+            document
+              .querySelectorAll(
+                ".page"
+              )
+              .forEach(
+                item =>
+                  item.classList.remove(
+                    "active"
+                  )
+              );
+
+
+            const pageElement =
+              document.getElementById(
+                page + "Page"
+              );
+
+
+            if (pageElement) {
+
+              pageElement.classList.add(
+                "active"
+              );
+
+            }
+
+
+            if (
+              page === "home"
+            ) {
+
+              renderHome();
+
+            }
+
+
+            if (
+              page === "calendar"
+            ) {
+
+              renderCalendar();
+
+            }
+
+
+            if (
+              page === "analytics"
+            ) {
+
+              renderAnalytics();
+
+            }
+
+
+            updateAddButton(
+              page
+            );
+
+          }
         );
-
-
-      if (check) {
-
-        toggleTask(
-          check.dataset.taskId,
-          check.dataset.date
-        );
-
-        return;
 
       }
+    );
 
 
-      const deleteButton =
-        event.target.closest(
-          "[data-delete-id]"
-        );
+  function updateAddButton(
+    page
+  ) {
 
+    if (
+      page === "settings"
+    ) {
 
-      if (
-        deleteButton
-      ) {
+      addButton.style.display =
+        "none";
 
-        deleteTask(
-          deleteButton.dataset.deleteId
-        );
+    } else {
 
-      }
+      addButton.style.display =
+        "flex";
+
+      addButton.style.alignItems =
+        "center";
+
+      addButton.style.justifyContent =
+        "center";
 
     }
-  );
 
+  }
+
+
+  /* =====================================================
+     SETTINGS
+  ===================================================== */
+
+  function saveSettings() {
+
+    localStorage.setItem(
+      SETTINGS_KEY,
+      JSON.stringify(
+        settings
+      )
+    );
+
+  }
+
+
+  function loadSettingsUI() {
+
+    document.getElementById(
+      "notificationsToggle"
+    ).checked =
+      settings.notifications;
+
+
+    document.getElementById(
+      "morningTime"
+    ).value =
+      settings.morningTime;
+
+
+    document.getElementById(
+      "eveningTime"
+    ).value =
+      settings.eveningTime;
+
+
+    document.getElementById(
+      "firstDay"
+    ).value =
+      settings.firstDay;
+
+
+    updateThemeButtons();
+
+  }
+
+
+  document
+    .getElementById(
+      "notificationsToggle"
+    )
+    .addEventListener(
+      "change",
+      event => {
+
+        settings.notifications =
+          event.target.checked;
+
+
+        saveSettings();
+
+
+        showToast(
+          event.target.checked
+            ? "Уведомления включены 🔔"
+            : "Уведомления выключены"
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      "morningTime"
+    )
+    .addEventListener(
+      "change",
+      event => {
+
+        settings.morningTime =
+          event.target.value;
+
+
+        saveSettings();
+
+
+        showToast(
+          "Время утренней сводки сохранено"
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      "eveningTime"
+    )
+    .addEventListener(
+      "change",
+      event => {
+
+        settings.eveningTime =
+          event.target.value;
+
+
+        saveSettings();
+
+
+        showToast(
+          "Время вечерней сводки сохранено"
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      "firstDay"
+    )
+    .addEventListener(
+      "change",
+      event => {
+
+        settings.firstDay =
+          event.target.value;
+
+
+        saveSettings();
+
+
+        showToast(
+          "Настройка календаря сохранена"
+        );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll(
+      ".theme-option"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            settings.theme =
+              button.dataset.theme;
+
+
+            saveSettings();
+
+            applyTheme();
+
+            updateThemeButtons();
+
+            showToast(
+              "Тема изменена"
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  function updateThemeButtons() {
+
+    document
+      .querySelectorAll(
+        ".theme-option"
+      )
+      .forEach(
+        button => {
+
+          button.classList.toggle(
+            "active",
+            button.dataset.theme ===
+              settings.theme
+          );
+
+        }
+      );
+
+  }
+
+
+  function applyTheme() {
+
+    let dark = false;
+
+
+    if (
+      settings.theme ===
+      "dark"
+    ) {
+
+      dark = true;
+
+    }
+
+
+    if (
+      settings.theme ===
+      "system"
+    ) {
+
+      dark =
+        window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+
+    }
+
+
+    document.body.classList.toggle(
+      "dark",
+      dark
+    );
+
+  }
+
+
+  /* =====================================================
+     SYSTEM THEME
+  ===================================================== */
+
+  window
+    .matchMedia(
+      "(prefers-color-scheme: dark)"
+    )
+    .addEventListener(
+      "change",
+      () => {
+
+        if (
+          settings.theme ===
+          "system"
+        ) {
+
+          applyTheme();
+
+        }
+
+      }
+    );
+
+
+  /* =====================================================
+     ADD MODAL
+  ===================================================== */
 
   addButton.addEventListener(
     "click",
@@ -3739,113 +4506,9 @@
   );
 
 
-  /* =========================
-     NAVIGATION
-  ========================= */
-
-  document
-    .querySelectorAll(
-      ".nav-button"
-    )
-    .forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const page =
-              button.dataset.page;
-
-
-            document
-              .querySelectorAll(
-                ".nav-button"
-              )
-              .forEach(
-                item => {
-
-                  item.classList.remove(
-                    "active"
-                  );
-
-                }
-              );
-
-
-            button.classList.add(
-              "active"
-            );
-
-
-            document
-              .querySelectorAll(
-                ".page"
-              )
-              .forEach(
-                item => {
-
-                  item.classList.remove(
-                    "active"
-                  );
-
-                }
-              );
-
-
-            const pageElement =
-              document.getElementById(
-                page + "Page"
-              );
-
-
-            if (
-              pageElement
-            ) {
-
-              pageElement.classList.add(
-                "active"
-              );
-
-            }
-
-
-            if (
-              page === "calendar"
-            ) {
-
-              renderCalendar();
-
-            }
-
-
-            if (
-              page === "analytics"
-            ) {
-
-              renderAnalytics();
-
-            }
-
-
-            if (
-              page === "home"
-            ) {
-
-              renderHome();
-
-            }
-
-          }
-        );
-
-      }
-    );
-
-
-  /* =========================
+  /* =====================================================
      PROFILE
-  ========================= */
+  ===================================================== */
 
   document
     .getElementById(
@@ -3863,23 +4526,25 @@
     );
 
 
-  /* =========================
+  /* =====================================================
      STORAGE
-  ========================= */
+  ===================================================== */
 
   function saveTasks() {
 
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify(tasks)
+      JSON.stringify(
+        tasks
+      )
     );
 
   }
 
 
-  /* =========================
+  /* =====================================================
      TOAST
-  ========================= */
+  ===================================================== */
 
   let toastTimer;
 
@@ -3917,9 +4582,9 @@
   }
 
 
-  /* =========================
+  /* =====================================================
      ESCAPE
-  ========================= */
+  ===================================================== */
 
   function escapeHtml(
     text
@@ -3940,9 +4605,9 @@
   }
 
 
-  /* =========================
-     TELEGRAM
-  ========================= */
+  /* =====================================================
+     TELEGRAM WEB APP
+  ===================================================== */
 
   if (
     window.Telegram &&
@@ -3960,17 +4625,25 @@
   }
 
 
-  /* =========================
+  /* =====================================================
      INIT
-  ========================= */
+  ===================================================== */
 
   formatDate();
+
+  loadSettingsUI();
+
+  applyTheme();
 
   renderHome();
 
   renderCalendar();
 
   renderAnalytics();
+
+  updateAddButton(
+    "home"
+  );
 
 </script>
 
