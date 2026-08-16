@@ -26,6 +26,7 @@
       --accent: #ff7a45;
       --accent-soft: #fff0e9;
 
+      --success: #5dbb7b;
       --danger: #e05252;
 
       --shadow: 0 8px 30px rgba(20, 25, 30, 0.06);
@@ -49,8 +50,7 @@
     }
 
     button,
-    input,
-    select {
+    input {
       font: inherit;
     }
 
@@ -121,6 +121,18 @@
       justify-content: center;
 
       font-size: 20px;
+    }
+
+    /* =========================
+       PAGES
+    ========================= */
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
     }
 
     /* =========================
@@ -412,7 +424,235 @@
     }
 
     /* =========================
-       NAVIGATION
+       CALENDAR
+    ========================= */
+
+    .calendar-card {
+      background: var(--card);
+
+      border-radius: 22px;
+
+      padding: 18px;
+
+      box-shadow: var(--shadow);
+
+      margin-bottom: 18px;
+    }
+
+    .calendar-header {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      margin-bottom: 18px;
+    }
+
+    .calendar-month {
+      font-size: 20px;
+
+      font-weight: 750;
+    }
+
+    .calendar-actions {
+      display: flex;
+
+      gap: 7px;
+    }
+
+    .calendar-arrow {
+      width: 36px;
+      height: 36px;
+
+      border-radius: 11px;
+
+      background: #f1f2f3;
+
+      color: var(--text);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 17px;
+    }
+
+    .calendar-weekdays {
+      display: grid;
+
+      grid-template-columns:
+        repeat(7, 1fr);
+
+      margin-bottom: 8px;
+    }
+
+    .weekday {
+      text-align: center;
+
+      font-size: 11px;
+
+      color: var(--secondary);
+
+      font-weight: 600;
+    }
+
+    .calendar-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(7, 1fr);
+
+      gap: 5px;
+    }
+
+    .calendar-day {
+      min-height: 58px;
+
+      border-radius: 13px;
+
+      background: transparent;
+
+      position: relative;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: flex-start;
+
+      padding-top: 7px;
+
+      transition: all 0.15s ease;
+    }
+
+    .calendar-day.empty-day {
+      pointer-events: none;
+    }
+
+    .calendar-day:not(.empty-day):active {
+      transform: scale(0.94);
+    }
+
+    .calendar-day.today {
+      background: var(--accent-soft);
+    }
+
+    .calendar-day.selected {
+      background: var(--accent);
+
+      color: white;
+    }
+
+    .calendar-number {
+      font-size: 13px;
+
+      font-weight: 650;
+    }
+
+    .calendar-stats {
+      display: flex;
+
+      align-items: center;
+
+      gap: 3px;
+
+      margin-top: 6px;
+    }
+
+    .calendar-dot {
+      width: 5px;
+      height: 5px;
+
+      border-radius: 50%;
+
+      background: var(--accent);
+    }
+
+    .calendar-day.selected .calendar-dot {
+      background: white;
+    }
+
+    .calendar-count {
+      font-size: 9px;
+
+      color: var(--secondary);
+    }
+
+    .calendar-day.selected .calendar-count {
+      color: white;
+    }
+
+    .calendar-complete {
+      font-size: 9px;
+
+      color: var(--success);
+    }
+
+    .calendar-day.selected .calendar-complete {
+      color: white;
+    }
+
+    /* =========================
+       SELECTED DAY
+    ========================= */
+
+    .selected-day-card {
+      background: var(--card);
+
+      border-radius: 22px;
+
+      padding: 20px;
+
+      box-shadow: var(--shadow);
+    }
+
+    .selected-day-header {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: flex-start;
+
+      margin-bottom: 17px;
+    }
+
+    .selected-day-title {
+      font-size: 20px;
+
+      font-weight: 750;
+    }
+
+    .selected-day-subtitle {
+      font-size: 13px;
+
+      color: var(--secondary);
+
+      margin-top: 4px;
+    }
+
+    .day-progress {
+      text-align: right;
+    }
+
+    .day-progress-value {
+      font-size: 20px;
+
+      font-weight: 750;
+
+      color: var(--accent);
+    }
+
+    .day-progress-label {
+      font-size: 10px;
+
+      color: var(--secondary);
+    }
+
+    /* =========================
+       NAV
     ========================= */
 
     .bottom-nav {
@@ -583,10 +823,6 @@
       border-color: var(--accent);
     }
 
-    /* =========================
-       REPEAT
-    ========================= */
-
     .repeat-title {
       font-size: 14px;
 
@@ -659,10 +895,6 @@
 
       color: var(--secondary);
     }
-
-    /* =========================
-       MODAL ACTIONS
-    ========================= */
 
     .modal-actions {
       display: flex;
@@ -769,110 +1001,318 @@
 
 <body>
 
-  <!-- =========================
-       APP
-  ========================= -->
-
   <main class="app">
 
-    <!-- HEADER -->
+    <!-- =========================
+         HOME PAGE
+    ========================= -->
 
-    <header class="header">
+    <section
+      class="page active"
+      id="homePage"
+    >
 
-      <div>
+      <header class="header">
 
-        <div class="greeting">
-          Добрый день 👋
+        <div>
+
+          <div class="greeting">
+            Добрый день 👋
+          </div>
+
+          <h1 class="title">
+            Мой день
+          </h1>
+
+          <div
+            class="date"
+            id="currentDate"
+          ></div>
+
         </div>
 
-        <h1 class="title">
-          Мой день
-        </h1>
-
-        <div
-          class="date"
-          id="currentDate"
-        ></div>
-
-      </div>
-
-      <button
-        class="profile-button"
-        id="profileButton"
-      >
-        👤
-      </button>
-
-    </header>
-
-
-    <!-- PROGRESS -->
-
-    <section class="progress-card">
-
-      <div class="progress-top">
-
-        <span class="progress-label">
-          Прогресс сегодня
-        </span>
-
-        <span
-          class="progress-value"
-          id="progressValue"
+        <button
+          class="profile-button"
+          id="profileButton"
         >
-          0%
-        </span>
+          👤
+        </button>
 
-      </div>
+      </header>
 
-      <div class="progress-bar">
+
+      <section class="progress-card">
+
+        <div class="progress-top">
+
+          <span class="progress-label">
+            Прогресс сегодня
+          </span>
+
+          <span
+            class="progress-value"
+            id="progressValue"
+          >
+            0%
+          </span>
+
+        </div>
+
+        <div class="progress-bar">
+
+          <div
+            class="progress-fill"
+            id="progressFill"
+          ></div>
+
+        </div>
+
+      </section>
+
+
+      <section>
+
+        <div class="section-header">
+
+          <h2 class="section-title">
+            Сегодня
+          </h2>
+
+          <span
+            class="section-count"
+            id="taskCount"
+          >
+            0 задач
+          </span>
+
+        </div>
+
 
         <div
-          class="progress-fill"
-          id="progressFill"
+          class="tasks"
+          id="tasksContainer"
         ></div>
+
+      </section>
+
+    </section>
+
+
+    <!-- =========================
+         CALENDAR PAGE
+    ========================= -->
+
+    <section
+      class="page"
+      id="calendarPage"
+    >
+
+      <header class="header">
+
+        <div>
+
+          <div class="greeting">
+            Планирование
+          </div>
+
+          <h1 class="title">
+            Календарь
+          </h1>
+
+        </div>
+
+        <button
+          class="profile-button"
+          id="calendarTodayButton"
+        >
+          ●
+        </button>
+
+      </header>
+
+
+      <section class="calendar-card">
+
+        <div class="calendar-header">
+
+          <div
+            class="calendar-month"
+            id="calendarMonth"
+          ></div>
+
+
+          <div class="calendar-actions">
+
+            <button
+              class="calendar-arrow"
+              id="prevMonth"
+            >
+              ‹
+            </button>
+
+            <button
+              class="calendar-arrow"
+              id="nextMonth"
+            >
+              ›
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="calendar-weekdays">
+
+          <div class="weekday">
+            Пн
+          </div>
+
+          <div class="weekday">
+            Вт
+          </div>
+
+          <div class="weekday">
+            Ср
+          </div>
+
+          <div class="weekday">
+            Чт
+          </div>
+
+          <div class="weekday">
+            Пт
+          </div>
+
+          <div class="weekday">
+            Сб
+          </div>
+
+          <div class="weekday">
+            Вс
+          </div>
+
+        </div>
+
+
+        <div
+          class="calendar-grid"
+          id="calendarGrid"
+        ></div>
+
+      </section>
+
+
+      <section
+        class="selected-day-card"
+        id="selectedDayCard"
+      ></section>
+
+    </section>
+
+
+    <!-- =========================
+         ANALYTICS
+    ========================= -->
+
+    <section
+      class="page"
+      id="analyticsPage"
+    >
+
+      <header class="header">
+
+        <div>
+
+          <div class="greeting">
+            Ваш результат
+          </div>
+
+          <h1 class="title">
+            Аналитика
+          </h1>
+
+        </div>
+
+      </header>
+
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          📊
+        </div>
+
+        <div class="empty-title">
+          Аналитика уже рядом
+        </div>
+
+        <div class="empty-text">
+          Здесь появится статистика
+          по дням, неделям и месяцам.
+        </div>
 
       </div>
 
     </section>
 
 
-    <!-- TASKS -->
+    <!-- =========================
+         SETTINGS
+    ========================= -->
 
-    <section>
+    <section
+      class="page"
+      id="settingsPage"
+    >
 
-      <div class="section-header">
+      <header class="header">
 
-        <h2 class="section-title">
-          Сегодня
-        </h2>
+        <div>
 
-        <span
-          class="section-count"
-          id="taskCount"
-        >
-          0 задач
-        </span>
+          <div class="greeting">
+            Персонализация
+          </div>
+
+          <h1 class="title">
+            Настройки
+          </h1>
+
+        </div>
+
+      </header>
+
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          ⚙️
+        </div>
+
+        <div class="empty-title">
+          Настройки
+        </div>
+
+        <div class="empty-text">
+          Уведомления, тема,
+          утренняя и вечерняя сводка
+          появятся здесь.
+        </div>
 
       </div>
-
-
-      <div
-        class="tasks"
-        id="tasksContainer"
-      ></div>
 
     </section>
 
   </main>
 
 
-  <!-- ADD BUTTON -->
+  <!-- =========================
+       ADD BUTTON
+  ========================= -->
 
   <button
     class="add-button"
     id="addButton"
-    aria-label="Добавить задачу"
   >
     +
   </button>
@@ -890,6 +1330,7 @@
         class="nav-button active"
         data-page="home"
       >
+
         <span class="nav-icon">
           ⌂
         </span>
@@ -897,6 +1338,7 @@
         <span>
           Сегодня
         </span>
+
       </button>
 
 
@@ -904,6 +1346,7 @@
         class="nav-button"
         data-page="calendar"
       >
+
         <span class="nav-icon">
           ▣
         </span>
@@ -911,6 +1354,7 @@
         <span>
           Календарь
         </span>
+
       </button>
 
 
@@ -918,6 +1362,7 @@
         class="nav-button"
         data-page="analytics"
       >
+
         <span class="nav-icon">
           ◒
         </span>
@@ -925,6 +1370,7 @@
         <span>
           Аналитика
         </span>
+
       </button>
 
 
@@ -932,6 +1378,7 @@
         class="nav-button"
         data-page="settings"
       >
+
         <span class="nav-icon">
           ⚙
         </span>
@@ -939,6 +1386,7 @@
         <span>
           Настройки
         </span>
+
       </button>
 
     </div>
@@ -947,7 +1395,7 @@
 
 
   <!-- =========================
-       ADD TASK MODAL
+       MODAL
   ========================= -->
 
   <div
@@ -979,8 +1427,6 @@
         autocomplete="off"
       />
 
-
-      <!-- REPEAT -->
 
       <div class="repeat-title">
         Периодичность
@@ -1028,7 +1474,7 @@
             </span>
 
             <span class="repeat-description">
-              Задача будет появляться ежедневно
+              Задача появляется ежедневно
             </span>
 
           </div>
@@ -1084,8 +1530,6 @@
       </div>
 
 
-      <!-- ACTIONS -->
-
       <div class="modal-actions">
 
         <button
@@ -1109,8 +1553,6 @@
 
   </div>
 
-
-  <!-- TOAST -->
 
   <div
     class="toast"
@@ -1196,10 +1638,32 @@
 
 
     /* =========================
-       DATE
+       CALENDAR STATE
     ========================= */
 
-    function getDateKey(date = new Date()) {
+    const today =
+      new Date();
+
+
+    let calendarDate =
+      new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        1
+      );
+
+
+    let selectedDate =
+      getDateKey(today);
+
+
+    /* =========================
+       DATE HELPERS
+    ========================= */
+
+    function getDateKey(
+      date
+    ) {
 
       const year =
         date.getFullYear();
@@ -1214,7 +1678,29 @@
           date.getDate()
         ).padStart(2, "0");
 
+
       return `${year}-${month}-${day}`;
+
+    }
+
+
+    function parseDate(
+      key
+    ) {
+
+      const [
+        year,
+        month,
+        day
+      ] =
+        key.split("-").map(Number);
+
+
+      return new Date(
+        year,
+        month - 1,
+        day
+      );
 
     }
 
@@ -1233,6 +1719,7 @@
       const date =
         new Date();
 
+
       const text =
         date.toLocaleDateString(
           "ru-RU",
@@ -1243,6 +1730,7 @@
           }
         );
 
+
       currentDate.textContent =
         text.charAt(0).toUpperCase() +
         text.slice(1);
@@ -1251,47 +1739,23 @@
 
 
     /* =========================
-       DAY OF WEEK
+       RECURRING TASK
     ========================= */
 
-    function getDayOfWeek(date) {
+    function taskAppearsOnDate(
+      task,
+      dateKey
+    ) {
 
-      return date.getDay();
+      const date =
+        parseDate(
+          dateKey
+        );
 
-    }
-
-
-    /* =========================
-       RECURRING TASK LOGIC
-    ========================= */
-
-    function taskShouldAppearToday(task) {
-
-      const today =
-        new Date();
-
-      const todayKey =
-        getTodayKey();
-
-
-      /* обычная задача */
-
-      if (
-        !task.recurring ||
-        task.recurring === "none"
-      ) {
-
-        return task.date === todayKey;
-
-      }
-
-
-      /* задача не должна появляться
-         раньше даты создания */
 
       if (
         task.startDate &&
-        todayKey < task.startDate
+        dateKey < task.startDate
       ) {
 
         return false;
@@ -1299,10 +1763,22 @@
       }
 
 
-      /* каждый день */
+      if (
+        !task.recurring ||
+        task.recurring === "none"
+      ) {
+
+        return (
+          task.date ===
+          dateKey
+        );
+
+      }
+
 
       if (
-        task.recurring === "daily"
+        task.recurring ===
+        "daily"
       ) {
 
         return true;
@@ -1310,14 +1786,14 @@
       }
 
 
-      /* будни */
-
       if (
-        task.recurring === "weekdays"
+        task.recurring ===
+        "weekdays"
       ) {
 
         const day =
-          getDayOfWeek(today);
+          date.getDay();
+
 
         return (
           day >= 1 &&
@@ -1327,22 +1803,20 @@
       }
 
 
-      /* каждую неделю */
-
       if (
-        task.recurring === "weekly"
+        task.recurring ===
+        "weekly"
       ) {
 
         const start =
-          task.startDate
-            ? new Date(
-                task.startDate
-              )
-            : today;
+          parseDate(
+            task.startDate
+          );
+
 
         return (
-          getDayOfWeek(start) ===
-          getDayOfWeek(today)
+          start.getDay() ===
+          date.getDay()
         );
 
       }
@@ -1354,15 +1828,117 @@
 
 
     /* =========================
-       GET TODAY TASKS
+       COMPLETION
+       =========================
+
+       Для обычных задач
+       completed = boolean.
+
+       Для регулярных задач
+       сохраняем выполненные даты
+       в completedDates.
+    */
+
+    function isTaskCompleted(
+      task,
+      dateKey
+    ) {
+
+      if (
+        task.recurring &&
+        task.recurring !== "none"
+      ) {
+
+        return (
+          Array.isArray(
+            task.completedDates
+          ) &&
+          task.completedDates.includes(
+            dateKey
+          )
+        );
+
+      }
+
+
+      return Boolean(
+        task.completed
+      );
+
+    }
+
+
+    function setTaskCompleted(
+      task,
+      dateKey,
+      value
+    ) {
+
+      if (
+        task.recurring &&
+        task.recurring !== "none"
+      ) {
+
+        if (
+          !Array.isArray(
+            task.completedDates
+          )
+        ) {
+
+          task.completedDates = [];
+
+        }
+
+
+        if (value) {
+
+          if (
+            !task.completedDates.includes(
+              dateKey
+            )
+          ) {
+
+            task.completedDates.push(
+              dateKey
+            );
+
+          }
+
+        } else {
+
+          task.completedDates =
+            task.completedDates.filter(
+              date =>
+                date !== dateKey
+            );
+
+        }
+
+
+        return;
+
+      }
+
+
+      task.completed =
+        value;
+
+    }
+
+
+    /* =========================
+       TASKS FOR DATE
     ========================= */
 
-    function getTodayTasks() {
+    function getTasksForDate(
+      dateKey
+    ) {
 
       return tasks.filter(
         task =>
-          taskShouldAppearToday(
-            task
+          taskAppearsOnDate(
+            task,
+            dateKey
           )
       );
 
@@ -1370,16 +1946,23 @@
 
 
     /* =========================
-       RENDER
+       HOME
     ========================= */
 
-    function renderTasks() {
+    function renderHome() {
+
+      const dateKey =
+        getTodayKey();
+
+
+      const todayTasks =
+        getTasksForDate(
+          dateKey
+        );
+
 
       tasksContainer.innerHTML =
         "";
-
-      const todayTasks =
-        getTodayTasks();
 
 
       if (
@@ -1412,69 +1995,11 @@
         todayTasks.forEach(
           task => {
 
-            const element =
-              document.createElement(
-                "div"
-              );
-
-
-            element.className =
-              "task" +
-              (
-                task.completed
-                  ? " completed"
-                  : ""
-              );
-
-
-            element.innerHTML = `
-
-              <button
-                class="task-check"
-                data-id="${task.id}"
-              >
-
-                <span class="check-icon">
-                  ✓
-                </span>
-
-              </button>
-
-
-              <div class="task-content">
-
-                <div class="task-name">
-                  ${escapeHtml(
-                    task.title
-                  )}
-                </div>
-
-
-                <div class="task-meta">
-
-                  ${
-                    getRepeatLabel(
-                      task.recurring
-                    )
-                  }
-
-                </div>
-
-              </div>
-
-
-              <button
-                class="delete-task"
-                data-delete="${task.id}"
-              >
-                ×
-              </button>
-
-            `;
-
-
             tasksContainer.appendChild(
-              element
+              createTaskElement(
+                task,
+                dateKey
+              )
             );
 
           }
@@ -1483,16 +2008,142 @@
       }
 
 
-      updateStats(
-        todayTasks
+      updateHomeStats(
+        todayTasks,
+        dateKey
       );
 
     }
 
 
+    function updateHomeStats(
+      todayTasks,
+      dateKey
+    ) {
+
+      const total =
+        todayTasks.length;
+
+
+      const completed =
+        todayTasks.filter(
+          task =>
+            isTaskCompleted(
+              task,
+              dateKey
+            )
+        ).length;
+
+
+      const percentage =
+        total === 0
+          ? 0
+          : Math.round(
+              (
+                completed /
+                total
+              ) * 100
+            );
+
+
+      progressValue.textContent =
+        `${percentage}%`;
+
+
+      progressFill.style.width =
+        `${percentage}%`;
+
+
+      taskCount.textContent =
+        `${total} ${
+          getTaskWord(total)
+        }`;
+
+    }
+
+
     /* =========================
-       REPEAT LABEL
+       TASK ELEMENT
     ========================= */
+
+    function createTaskElement(
+      task,
+      dateKey
+    ) {
+
+      const completed =
+        isTaskCompleted(
+          task,
+          dateKey
+        );
+
+
+      const element =
+        document.createElement(
+          "div"
+        );
+
+
+      element.className =
+        "task" +
+        (
+          completed
+            ? " completed"
+            : ""
+        );
+
+
+      element.innerHTML = `
+
+        <button
+          class="task-check"
+          data-task-id="${task.id}"
+          data-date="${dateKey}"
+        >
+
+          <span class="check-icon">
+            ✓
+          </span>
+
+        </button>
+
+
+        <div class="task-content">
+
+          <div class="task-name">
+            ${escapeHtml(
+              task.title
+            )}
+          </div>
+
+
+          <div class="task-meta">
+
+            ${
+              getRepeatLabel(
+                task.recurring
+              )
+            }
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="delete-task"
+          data-delete-id="${task.id}"
+        >
+          ×
+        </button>
+
+      `;
+
+
+      return element;
+
+    }
+
 
     function getRepeatLabel(
       repeat
@@ -1513,57 +2164,6 @@
           return "Сегодня";
 
       }
-
-    }
-
-
-    /* =========================
-       STATS
-    ========================= */
-
-    function updateStats(
-      todayTasks
-    ) {
-
-      const total =
-        todayTasks.length;
-
-
-      const completed =
-        todayTasks.filter(
-          task =>
-            task.completed
-        ).length;
-
-
-      let percentage = 0;
-
-
-      if (total > 0) {
-
-        percentage =
-          Math.round(
-            (
-              completed /
-              total
-            ) * 100
-          );
-
-      }
-
-
-      progressValue.textContent =
-        `${percentage}%`;
-
-
-      progressFill.style.width =
-        `${percentage}%`;
-
-
-      taskCount.textContent =
-        `${total} ${
-          getTaskWord(total)
-        }`;
 
     }
 
@@ -1606,6 +2206,501 @@
       return "задач";
 
     }
+
+
+    /* =========================
+       CALENDAR RENDER
+    ========================= */
+
+    function renderCalendar() {
+
+      const year =
+        calendarDate.getFullYear();
+
+
+      const month =
+        calendarDate.getMonth();
+
+
+      const monthName =
+        calendarDate.toLocaleDateString(
+          "ru-RU",
+          {
+            month: "long",
+            year: "numeric"
+          }
+        );
+
+
+      document.getElementById(
+        "calendarMonth"
+      ).textContent =
+        monthName.charAt(0).toUpperCase() +
+        monthName.slice(1);
+
+
+      const grid =
+        document.getElementById(
+          "calendarGrid"
+        );
+
+
+      grid.innerHTML =
+        "";
+
+
+      const firstDay =
+        new Date(
+          year,
+          month,
+          1
+        );
+
+
+      const daysInMonth =
+        new Date(
+          year,
+          month + 1,
+          0
+        ).getDate();
+
+
+      let startDay =
+        firstDay.getDay();
+
+
+      /*
+        JS:
+        воскресенье = 0
+
+        Нам нужно:
+        понедельник = 0
+      */
+
+      startDay =
+        startDay === 0
+          ? 6
+          : startDay - 1;
+
+
+      /* пустые клетки */
+
+      for (
+        let i = 0;
+        i < startDay;
+        i++
+      ) {
+
+        const empty =
+          document.createElement(
+            "div"
+          );
+
+
+        empty.className =
+          "calendar-day empty-day";
+
+
+        grid.appendChild(
+          empty
+        );
+
+      }
+
+
+      /* дни */
+
+      for (
+        let day = 1;
+        day <= daysInMonth;
+        day++
+      ) {
+
+        const date =
+          new Date(
+            year,
+            month,
+            day
+          );
+
+
+        const dateKey =
+          getDateKey(
+            date
+          );
+
+
+        const dayTasks =
+          getTasksForDate(
+            dateKey
+          );
+
+
+        const completed =
+          dayTasks.filter(
+            task =>
+              isTaskCompleted(
+                task,
+                dateKey
+              )
+          ).length;
+
+
+        const total =
+          dayTasks.length;
+
+
+        const dayElement =
+          document.createElement(
+            "button"
+          );
+
+
+        dayElement.className =
+          "calendar-day";
+
+
+        if (
+          dateKey ===
+          getTodayKey()
+        ) {
+
+          dayElement.classList.add(
+            "today"
+          );
+
+        }
+
+
+        if (
+          dateKey ===
+          selectedDate
+        ) {
+
+          dayElement.classList.add(
+            "selected"
+          );
+
+        }
+
+
+        dayElement.dataset.date =
+          dateKey;
+
+
+        dayElement.innerHTML = `
+
+          <span class="calendar-number">
+            ${day}
+          </span>
+
+          ${
+            total > 0
+              ? `
+                <div class="calendar-stats">
+
+                  <span class="calendar-dot"></span>
+
+                  <span class="calendar-count">
+                    ${total}
+                  </span>
+
+                  <span class="calendar-complete">
+                    ${completed}
+                  </span>
+
+                </div>
+              `
+              : ""
+          }
+
+        `;
+
+
+        grid.appendChild(
+          dayElement
+        );
+
+      }
+
+
+      renderSelectedDay();
+
+    }
+
+
+    /* =========================
+       SELECTED DAY
+    ========================= */
+
+    function renderSelectedDay() {
+
+      const card =
+        document.getElementById(
+          "selectedDayCard"
+        );
+
+
+      const date =
+        parseDate(
+          selectedDate
+        );
+
+
+      const dayTasks =
+        getTasksForDate(
+          selectedDate
+        );
+
+
+      const completed =
+        dayTasks.filter(
+          task =>
+            isTaskCompleted(
+              task,
+              selectedDate
+            )
+        ).length;
+
+
+      const total =
+        dayTasks.length;
+
+
+      const percentage =
+        total === 0
+          ? 0
+          : Math.round(
+              (
+                completed /
+                total
+              ) * 100
+            );
+
+
+      const formatted =
+        date.toLocaleDateString(
+          "ru-RU",
+          {
+            weekday: "long",
+            day: "numeric",
+            month: "long"
+          }
+        );
+
+
+      const title =
+        formatted.charAt(0).toUpperCase() +
+        formatted.slice(1);
+
+
+      card.innerHTML = `
+
+        <div class="selected-day-header">
+
+          <div>
+
+            <div class="selected-day-title">
+              ${title}
+            </div>
+
+            <div class="selected-day-subtitle">
+
+              ${total}
+              ${
+                getTaskWord(
+                  total
+                )
+              }
+
+              ·
+
+              ${completed}
+              выполнено
+
+            </div>
+
+          </div>
+
+
+          <div class="day-progress">
+
+            <div class="day-progress-value">
+              ${percentage}%
+            </div>
+
+            <div class="day-progress-label">
+              выполнено
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="tasks"
+          id="selectedDayTasks"
+        ></div>
+
+      `;
+
+
+      const container =
+        document.getElementById(
+          "selectedDayTasks"
+        );
+
+
+      if (
+        dayTasks.length === 0
+      ) {
+
+        container.innerHTML = `
+
+          <div class="empty">
+
+            <div class="empty-icon">
+              🌿
+            </div>
+
+            <div class="empty-title">
+              Нет задач
+            </div>
+
+            <div class="empty-text">
+              На этот день ничего
+              не запланировано.
+            </div>
+
+          </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      dayTasks.forEach(
+        task => {
+
+          container.appendChild(
+            createTaskElement(
+              task,
+              selectedDate
+            )
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =========================
+       CALENDAR NAVIGATION
+    ========================= */
+
+    document
+      .getElementById(
+        "prevMonth"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          calendarDate =
+            new Date(
+              calendarDate.getFullYear(),
+              calendarDate.getMonth() - 1,
+              1
+            );
+
+
+          renderCalendar();
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "nextMonth"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          calendarDate =
+            new Date(
+              calendarDate.getFullYear(),
+              calendarDate.getMonth() + 1,
+              1
+            );
+
+
+          renderCalendar();
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "calendarTodayButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          const now =
+            new Date();
+
+
+          calendarDate =
+            new Date(
+              now.getFullYear(),
+              now.getMonth(),
+              1
+            );
+
+
+          selectedDate =
+            getTodayKey();
+
+
+          renderCalendar();
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "calendarGrid"
+      )
+      .addEventListener(
+        "click",
+        event => {
+
+          const day =
+            event.target.closest(
+              ".calendar-day[data-date]"
+            );
+
+
+          if (!day) return;
+
+
+          selectedDate =
+            day.dataset.date;
+
+
+          renderCalendar();
+
+        }
+      );
 
 
     /* =========================
@@ -1678,7 +2773,7 @@
         ).value;
 
 
-      const today =
+      const todayKey =
         getTodayKey();
 
 
@@ -1690,16 +2785,18 @@
         title,
 
         date:
-          today,
+          todayKey,
 
         startDate:
-          today,
+          todayKey,
 
         recurring:
           repeat,
 
         completed:
           false,
+
+        completedDates: [],
 
         createdAt:
           new Date().toISOString()
@@ -1714,7 +2811,9 @@
 
       saveTasks();
 
-      renderTasks();
+      renderHome();
+
+      renderCalendar();
 
       closeModal();
 
@@ -1729,10 +2828,13 @@
 
 
     /* =========================
-       COMPLETE TASK
+       TOGGLE TASK
     ========================= */
 
-    function toggleTask(id) {
+    function toggleTask(
+      id,
+      dateKey
+    ) {
 
       const task =
         tasks.find(
@@ -1744,18 +2846,29 @@
       if (!task) return;
 
 
-      task.completed =
-        !task.completed;
+      const completed =
+        isTaskCompleted(
+          task,
+          dateKey
+        );
+
+
+      setTaskCompleted(
+        task,
+        dateKey,
+        !completed
+      );
 
 
       saveTasks();
 
-      renderTasks();
+
+      renderHome();
+
+      renderCalendar();
 
 
-      if (
-        task.completed
-      ) {
+      if (!completed) {
 
         showToast(
           "Задача выполнена ✓"
@@ -1770,7 +2883,9 @@
        DELETE TASK
     ========================= */
 
-    function deleteTask(id) {
+    function deleteTask(
+      id
+    ) {
 
       tasks =
         tasks.filter(
@@ -1781,7 +2896,9 @@
 
       saveTasks();
 
-      renderTasks();
+      renderHome();
+
+      renderCalendar();
 
 
       showToast(
@@ -1792,82 +2909,54 @@
 
 
     /* =========================
-       SAVE
+       TASK EVENTS
     ========================= */
 
-    function saveTasks() {
+    document
+      .addEventListener(
+        "click",
+        event => {
 
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(tasks)
-      );
-
-    }
-
-
-    /* =========================
-       ESCAPE
-    ========================= */
-
-    function escapeHtml(
-      text
-    ) {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-      div.textContent =
-        text;
-
-      return div.innerHTML;
-
-    }
-
-
-    /* =========================
-       TOAST
-    ========================= */
-
-    let toastTimer;
-
-
-    function showToast(
-      message
-    ) {
-
-      clearTimeout(
-        toastTimer
-      );
-
-
-      toast.textContent =
-        message;
-
-
-      toast.classList.add(
-        "show"
-      );
-
-
-      toastTimer =
-        setTimeout(
-          () => {
-
-            toast.classList.remove(
-              "show"
+          const check =
+            event.target.closest(
+              "[data-task-id]"
             );
 
-          },
-          1800
-        );
 
-    }
+          if (check) {
+
+            toggleTask(
+              check.dataset.taskId,
+              check.dataset.date
+            );
+
+            return;
+
+          }
+
+
+          const deleteButton =
+            event.target.closest(
+              "[data-delete-id]"
+            );
+
+
+          if (
+            deleteButton
+          ) {
+
+            deleteTask(
+              deleteButton.dataset.deleteId
+            );
+
+          }
+
+        }
+      );
 
 
     /* =========================
-       EVENTS
+       MODAL EVENTS
     ========================= */
 
     addButton.addEventListener(
@@ -1921,47 +3010,6 @@
     );
 
 
-    tasksContainer.addEventListener(
-      "click",
-      event => {
-
-        const check =
-          event.target.closest(
-            "[data-id]"
-          );
-
-
-        if (check) {
-
-          toggleTask(
-            check.dataset.id
-          );
-
-          return;
-
-        }
-
-
-        const deleteButton =
-          event.target.closest(
-            "[data-delete]"
-          );
-
-
-        if (
-          deleteButton
-        ) {
-
-          deleteTask(
-            deleteButton.dataset.delete
-          );
-
-        }
-
-      }
-    );
-
-
     /* =========================
        NAVIGATION
     ========================= */
@@ -1976,6 +3024,10 @@
           button.addEventListener(
             "click",
             () => {
+
+              const page =
+                button.dataset.page;
+
 
               document
                 .querySelectorAll(
@@ -1997,17 +3049,52 @@
               );
 
 
-              const page =
-                button.dataset.page;
+              document
+                .querySelectorAll(
+                  ".page"
+                )
+                .forEach(
+                  item => {
+
+                    item.classList.remove(
+                      "active"
+                    );
+
+                  }
+                );
+
+
+              const pageElement =
+                document.getElementById(
+                  page + "Page"
+                );
 
 
               if (
-                page !== "home"
+                pageElement
               ) {
 
-                showToast(
-                  "Раздел добавим следующим шагом"
+                pageElement.classList.add(
+                  "active"
                 );
+
+              }
+
+
+              if (
+                page === "calendar"
+              ) {
+
+                renderCalendar();
+
+              }
+
+
+              if (
+                page === "home"
+              ) {
+
+                renderHome();
 
               }
 
@@ -2039,6 +3126,69 @@
 
 
     /* =========================
+       TOAST
+    ========================= */
+
+    let toastTimer;
+
+
+    function showToast(
+      message
+    ) {
+
+      clearTimeout(
+        toastTimer
+      );
+
+
+      toast.textContent =
+        message;
+
+
+      toast.classList.add(
+        "show"
+      );
+
+
+      toastTimer =
+        setTimeout(
+          () => {
+
+            toast.classList.remove(
+              "show"
+            );
+
+          },
+          1800
+        );
+
+    }
+
+
+    /* =========================
+       ESCAPE
+    ========================= */
+
+    function escapeHtml(
+      text
+    ) {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+
+      div.textContent =
+        text;
+
+
+      return div.innerHTML;
+
+    }
+
+
+    /* =========================
        TELEGRAM
     ========================= */
 
@@ -2064,7 +3214,9 @@
 
     formatDate();
 
-    renderTasks();
+    renderHome();
+
+    renderCalendar();
 
   </script>
 
