@@ -1,669 +1,722 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-  <meta charset="UTF-8">
-
+  <meta charset="UTF-8" />
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
 
-  <meta
-    name="theme-color"
-    content="#f5f5f3"
-  >
+  <title>Tracker</title>
 
-  <meta
-    name="description"
-    content="Минималистичный трекер задач"
-  >
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  <title>Трекер</title>
+    :root {
+      --bg: #f5f6f8;
+      --card: #ffffff;
+      --text: #17191c;
+      --secondary: #7d838b;
+      --border: #e8eaed;
+      --accent: #ff7a45;
+      --accent-soft: #fff0e9;
+      --danger: #e05252;
+      --shadow: 0 8px 30px rgba(20, 25, 30, 0.06);
+    }
 
-  <link rel="stylesheet" href="style.css">
+    body {
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    /* =========================
+       APP
+    ========================= */
+
+    .app {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 24px 18px 30px;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .greeting {
+      font-size: 14px;
+      color: var(--secondary);
+      margin-bottom: 5px;
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: 750;
+      letter-spacing: -0.8px;
+    }
+
+    .date {
+      margin-top: 5px;
+      font-size: 14px;
+      color: var(--secondary);
+    }
+
+    .profile-button {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--card);
+      box-shadow: var(--shadow);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 20px;
+    }
+
+    /* =========================
+       PROGRESS
+    ========================= */
+
+    .progress-card {
+      background: var(--card);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 26px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: var(--secondary);
+    }
+
+    .progress-value {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .progress-bar {
+      height: 9px;
+      background: #eceef0;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 20px;
+      transition: width 0.3s ease;
+    }
+
+    /* =========================
+       SECTION
+    ========================= */
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 13px;
+    }
+
+    .section-title {
+      font-size: 19px;
+      font-weight: 720;
+    }
+
+    .section-count {
+      font-size: 13px;
+      color: var(--secondary);
+    }
+
+    /* =========================
+       TASKS
+    ========================= */
+
+    .tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 15px 16px;
+
+      display: flex;
+      align-items: center;
+      gap: 13px;
+
+      box-shadow: var(--shadow);
+
+      transition:
+        transform 0.15s ease,
+        opacity 0.2s ease;
+    }
+
+    .task:active {
+      transform: scale(0.985);
+    }
+
+    .task.completed {
+      opacity: 0.58;
+    }
+
+    .task-check {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+
+      border: 2px solid #cdd1d5;
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: transparent;
+
+      transition: all 0.2s ease;
+    }
+
+    .task.completed .task-check {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .check-icon {
+      display: none;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .task.completed .check-icon {
+      display: block;
+    }
+
+    .task-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-name {
+      font-size: 15px;
+      font-weight: 620;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .task.completed .task-name {
+      text-decoration: line-through;
+    }
+
+    .task-meta {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--secondary);
+    }
+
+    .delete-task {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+
+      background: transparent;
+      color: #a1a6ac;
+
+      font-size: 17px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .delete-task:active {
+      background: #f1f2f3;
+      color: var(--danger);
+    }
+
+    /* =========================
+       EMPTY STATE
+    ========================= */
+
+    .empty {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 34px 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .empty-icon {
+      font-size: 35px;
+      margin-bottom: 10px;
+    }
+
+    .empty-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .empty-text {
+      font-size: 13px;
+      color: var(--secondary);
+      line-height: 1.5;
+    }
+
+    /* =========================
+       ADD BUTTON
+    ========================= */
+
+    .add-button {
+      position: fixed;
+      right: 20px;
+      bottom: 82px;
+
+      width: 58px;
+      height: 58px;
+
+      border-radius: 18px;
+
+      background: var(--accent);
+      color: white;
+
+      font-size: 30px;
+      font-weight: 300;
+
+      box-shadow:
+        0 10px 25px rgba(255, 122, 69, 0.28);
+
+      z-index: 20;
+
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .add-button:active {
+      transform: scale(0.94);
+      box-shadow: none;
+    }
+
+    /* =========================
+       BOTTOM NAVIGATION
+    ========================= */
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      height: 70px;
+
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      border-top: 1px solid var(--border);
+
+      display: flex;
+      justify-content: center;
+
+      z-index: 15;
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 600px;
+
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .nav-button {
+      background: transparent;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      gap: 4px;
+
+      color: #989da3;
+
+      font-size: 11px;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .nav-button.active {
+      color: var(--accent);
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+
+      background: rgba(20, 23, 27, 0.42);
+
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+
+      z-index: 100;
+
+      padding: 0;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 600px;
+
+      background: var(--card);
+
+      border-radius: 26px 26px 0 0;
+
+      padding: 22px 18px 30px;
+
+      animation: slideUp 0.22s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .modal-handle {
+      width: 42px;
+      height: 4px;
+      border-radius: 10px;
+      background: #d9dcdf;
+      margin: 0 auto 22px;
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 750;
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .task-input {
+      width: 100%;
+
+      border: 1px solid var(--border);
+      outline: none;
+
+      background: #f7f8f9;
+
+      border-radius: 15px;
+
+      padding: 15px;
+
+      font-size: 16px;
+
+      margin-bottom: 16px;
+    }
+
+    .task-input:focus {
+      border-color: var(--accent);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-button {
+      flex: 1;
+
+      padding: 14px;
+
+      border-radius: 15px;
+
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .cancel-button {
+      background: #f0f1f2;
+      color: var(--text);
+    }
+
+    .save-button {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    .toast {
+      position: fixed;
+
+      left: 50%;
+      bottom: 82px;
+
+      transform: translate(-50%, 20px);
+
+      background: #202326;
+      color: white;
+
+      padding: 11px 17px;
+
+      border-radius: 12px;
+
+      font-size: 13px;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition: all 0.25s ease;
+
+      z-index: 200;
+
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* =========================
+       DESKTOP
+    ========================= */
+
+    @media (min-width: 700px) {
+      .app {
+        padding-top: 40px;
+      }
+
+      .add-button {
+        right: calc(50% - 280px);
+      }
+
+      .modal-overlay {
+        align-items: center;
+        padding: 20px;
+      }
+
+      .modal {
+        border-radius: 26px;
+        max-width: 500px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
+  <!-- =========================
+       APP
+  ========================= -->
+
   <main class="app">
 
-    <!-- =========================
-         ГЛАВНАЯ
-    ========================== -->
+    <!-- HEADER -->
 
-    <section id="homePage" class="page">
+    <header class="header">
 
-      <header class="header">
+      <div>
+        <div class="greeting">Добрый день 👋</div>
 
-        <div class="greeting">
+        <h1 class="title">Мой день</h1>
 
-          <span
-            class="greeting-small"
-            id="currentDate"
-          >
-            Загрузка...
-          </span>
+        <div class="date" id="currentDate"></div>
+      </div>
 
-          <h1>Сегодня</h1>
+      <button class="profile-button" id="profileButton">
+        👤
+      </button>
 
-        </div>
-
-        <button
-          class="profile-button"
-          type="button"
-          id="profileButton"
-        >
-          •••
-        </button>
-
-      </header>
+    </header>
 
 
-      <section class="progress-card">
+    <!-- PROGRESS -->
 
-        <div class="progress-top">
+    <section class="progress-card">
 
-          <span class="progress-title">
-            Прогресс дня
-          </span>
+      <div class="progress-top">
 
-          <span
-            class="progress-percent"
-            id="progressPercent"
-          >
-            0%
-          </span>
+        <span class="progress-label">
+          Прогресс сегодня
+        </span>
 
-        </div>
+        <span class="progress-value" id="progressValue">
+          0%
+        </span>
 
-        <div class="progress-bar">
+      </div>
 
-          <div
-            class="progress-fill"
-            id="progressFill"
-          ></div>
-
-        </div>
-
-        <div class="progress-bottom">
-
-          <span id="progressTasks">
-            0 из 0 задач
-          </span>
-
-          <span id="progressMessage">
-            Начнём?
-          </span>
-
-        </div>
-
-      </section>
-
-
-      <section>
-
-        <div class="section-header">
-
-          <h2>Задачи</h2>
-
-          <button
-            class="section-link"
-            id="clearCompleted"
-            type="button"
-          >
-            Очистить
-          </button>
-
-        </div>
+      <div class="progress-bar">
 
         <div
-          class="tasks"
-          id="tasksContainer"
+          class="progress-fill"
+          id="progressFill"
         ></div>
 
-      </section>
+      </div>
 
     </section>
 
 
-    <!-- =========================
-         КАЛЕНДАРЬ
-    ========================== -->
+    <!-- TASKS -->
 
-    <section
-      id="calendarPage"
-      class="page"
-      hidden
-    >
+    <section>
 
-      <header class="page-header">
+      <div class="section-header">
 
-        <div>
-
-          <div class="page-eyebrow">
-            Планирование
-          </div>
-
-          <h1>Календарь</h1>
-
-        </div>
-
-        <button
-          class="today-button"
-          id="calendarToday"
-          type="button"
-        >
+        <h2 class="section-title">
           Сегодня
-        </button>
+        </h2>
 
-      </header>
-
-
-      <section class="calendar-card">
-
-        <div class="calendar-header">
-
-          <button
-            class="calendar-arrow"
-            id="previousMonth"
-            type="button"
-          >
-            ‹
-          </button>
-
-          <h2 id="calendarMonth">
-            Август 2026
-          </h2>
-
-          <button
-            class="calendar-arrow"
-            id="nextMonth"
-            type="button"
-          >
-            ›
-          </button>
-
-        </div>
-
-
-        <div class="calendar-weekdays">
-
-          <span>Пн</span>
-          <span>Вт</span>
-          <span>Ср</span>
-          <span>Чт</span>
-          <span>Пт</span>
-          <span>Сб</span>
-          <span>Вс</span>
-
-        </div>
-
-
-        <div
-          class="calendar-grid"
-          id="calendarGrid"
-        ></div>
-
-      </section>
-
-
-      <section class="selected-day">
-
-        <div class="selected-day-header">
-
-          <div>
-
-            <div
-              class="page-eyebrow"
-              id="selectedDayWeekday"
-            >
-              Сегодня
-            </div>
-
-            <h2 id="selectedDayTitle">
-              Сегодня
-            </h2>
-
-          </div>
-
-          <div
-            class="day-stat"
-            id="selectedDayStat"
-          >
-            0 / 0
-          </div>
-
-        </div>
-
-        <div
-          class="tasks"
-          id="calendarTasks"
-        ></div>
-
-      </section>
-
-    </section>
-
-
-    <!-- =========================
-         АНАЛИТИКА
-    ========================== -->
-
-    <section
-      id="analyticsPage"
-      class="page"
-      hidden
-    >
-
-      <header class="page-header">
-
-        <div>
-
-          <div class="page-eyebrow">
-            Статистика
-          </div>
-
-          <h1>Аналитика</h1>
-
-        </div>
-
-      </header>
-
-
-      <div class="analytics-switch">
-
-        <button
-          class="analytics-tab active"
-          data-period="week"
-          type="button"
+        <span
+          class="section-count"
+          id="taskCount"
         >
-          Неделя
-        </button>
-
-        <button
-          class="analytics-tab"
-          data-period="month"
-          type="button"
-        >
-          Месяц
-        </button>
+          0 задач
+        </span>
 
       </div>
 
 
-      <section class="analytics-main-card">
-
-        <div>
-
-          <div class="analytics-label">
-            Выполнено
-          </div>
-
-          <div
-            class="analytics-percent"
-            id="analyticsPercent"
-          >
-            0%
-          </div>
-
-        </div>
-
-
-        <div
-          class="analytics-ring"
-          id="analyticsRing"
-        >
-
-          <div>
-
-            <strong id="analyticsCompleted">
-              0
-            </strong>
-
-            <span>
-              выполнено
-            </span>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <section class="analytics-summary">
-
-        <div class="analytics-stat-card">
-
-          <span>Запланировано</span>
-
-          <strong id="analyticsTotal">
-            0
-          </strong>
-
-        </div>
-
-        <div class="analytics-stat-card">
-
-          <span>Выполнено</span>
-
-          <strong id="analyticsDone">
-            0
-          </strong>
-
-        </div>
-
-        <div class="analytics-stat-card">
-
-          <span>Не выполнено</span>
-
-          <strong id="analyticsMissed">
-            0
-          </strong>
-
-        </div>
-
-      </section>
-
-
-      <section class="analytics-section">
-
-        <div class="section-header">
-
-          <h2>По дням</h2>
-
-        </div>
-
-        <div
-          class="analytics-days"
-          id="analyticsDays"
-        ></div>
-
-      </section>
-
-
-      <section class="analytics-insights">
-
-        <div class="insight-card">
-
-          <span class="insight-icon">
-            ★
-          </span>
-
-          <div>
-
-            <span>Лучший день</span>
-
-            <strong id="bestDay">
-              —
-            </strong>
-
-          </div>
-
-        </div>
-
-
-        <div class="insight-card">
-
-          <span class="insight-icon">
-            ↗
-          </span>
-
-          <div>
-
-            <span>Средний результат</span>
-
-            <strong id="averageResult">
-              0%
-            </strong>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <section
-        class="analytics-day-details"
-        id="analyticsDayDetails"
-        hidden
-      >
-
-        <div class="selected-day-header">
-
-          <div>
-
-            <div
-              class="page-eyebrow"
-              id="analyticsSelectedWeekday"
-            >
-              День
-            </div>
-
-            <h2 id="analyticsSelectedDate">
-              —
-            </h2>
-
-          </div>
-
-          <div
-            class="day-stat"
-            id="analyticsSelectedStat"
-          >
-            0 / 0
-          </div>
-
-        </div>
-
-        <div
-          class="tasks"
-          id="analyticsDayTasks"
-        ></div>
-
-      </section>
-
-    </section>
-
-
-    <!-- =========================
-         НАСТРОЙКИ
-    ========================== -->
-
-    <section
-      id="settingsPage"
-      class="page"
-      hidden
-    >
-
-      <header class="page-header">
-
-        <div>
-
-          <div class="page-eyebrow">
-            Персонализация
-          </div>
-
-          <h1>Настройки</h1>
-
-        </div>
-
-      </header>
-
-
-      <div class="settings-list">
-
-        <div class="settings-item">
-
-          <div>
-
-            <strong>
-              Утренний отчёт
-            </strong>
-
-            <span>
-              Время утренней сводки
-            </span>
-
-          </div>
-
-          <input
-            type="time"
-            id="morningSummary"
-            value="08:00"
-          >
-
-        </div>
-
-
-        <div class="settings-item">
-
-          <div>
-
-            <strong>
-              Вечерний отчёт
-            </strong>
-
-            <span>
-              Время вечерней сводки
-            </span>
-
-          </div>
-
-          <input
-            type="time"
-            id="eveningSummary"
-            value="21:00"
-          >
-
-        </div>
-
-
-        <div class="settings-item">
-
-          <div>
-
-            <strong>
-              Первый день недели
-            </strong>
-
-            <span>
-              Понедельник
-            </span>
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="danger-button"
-          id="clearAllData"
-          type="button"
-        >
-          Удалить все данные
-        </button>
-
-      </div>
+      <div
+        class="tasks"
+        id="tasksContainer"
+      ></div>
 
     </section>
 
   </main>
 
 
-  <!-- =========================
-       КНОПКА ДОБАВЛЕНИЯ
-  ========================== -->
+  <!-- ADD BUTTON -->
 
   <button
     class="add-button"
     id="addButton"
-    type="button"
+    aria-label="Добавить задачу"
   >
     +
   </button>
 
 
-  <!-- =========================
-       НАВИГАЦИЯ
-  ========================== -->
+  <!-- BOTTOM NAVIGATION -->
 
   <nav class="bottom-nav">
 
-    <button
-      class="nav-item active"
-      data-page="home"
-      type="button"
-    >
+    <div class="nav-inner">
 
-      <span class="nav-icon">
-        ⌂
-      </span>
+      <button
+        class="nav-button active"
+        data-page="home"
+      >
+        <span class="nav-icon">⌂</span>
+        <span>Сегодня</span>
+      </button>
 
-      <span>
-        Главная
-      </span>
+      <button
+        class="nav-button"
+        data-page="calendar"
+      >
+        <span class="nav-icon">▣</span>
+        <span>Календарь</span>
+      </button>
 
-    </button>
+      <button
+        class="nav-button"
+        data-page="analytics"
+      >
+        <span class="nav-icon">◒</span>
+        <span>Аналитика</span>
+      </button>
 
+      <button
+        class="nav-button"
+        data-page="settings"
+      >
+        <span class="nav-icon">⚙</span>
+        <span>Настройки</span>
+      </button>
 
-    <button
-      class="nav-item"
-      data-page="calendar"
-      type="button"
-    >
-
-      <span class="nav-icon">
-        □
-      </span>
-
-      <span>
-        Календарь
-      </span>
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      data-page="analytics"
-      type="button"
-    >
-
-      <span class="nav-icon">
-        ◔
-      </span>
-
-      <span>
-        Аналитика
-      </span>
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      data-page="settings"
-      type="button"
-    >
-
-      <span class="nav-icon">
-        ⚙
-      </span>
-
-      <span>
-        Настройки
-      </span>
-
-    </button>
+    </div>
 
   </nav>
 
 
-  <!-- =========================
-       МОДАЛЬНОЕ ОКНО
-  ========================== -->
+  <!-- ADD TASK MODAL -->
 
   <div
     class="modal-overlay"
@@ -674,250 +727,699 @@
 
       <div class="modal-handle"></div>
 
+      <h2 class="modal-title">
+        Новая задача
+      </h2>
 
-      <div class="modal-header">
+      <label class="input-label">
+        Что нужно сделать?
+      </label>
 
-        <h2 id="modalTitle">
-          Новая задача
-        </h2>
+      <input
+        class="task-input"
+        id="taskInput"
+        type="text"
+        placeholder="Например: Прочитать 20 страниц"
+        maxlength="100"
+        autocomplete="off"
+      />
+
+      <div class="modal-actions">
 
         <button
-          class="modal-close"
-          id="closeModal"
-          type="button"
+          class="modal-button cancel-button"
+          id="cancelButton"
         >
-          ×
+          Отмена
+        </button>
+
+        <button
+          class="modal-button save-button"
+          id="saveButton"
+        >
+          Добавить
         </button>
 
       </div>
-
-
-      <form id="taskForm">
-
-        <div class="form-group">
-
-          <label
-            class="form-label"
-            for="taskTitle"
-          >
-            Название
-          </label>
-
-          <input
-            class="form-input"
-            id="taskTitle"
-            type="text"
-            placeholder="Например: Прочитать книгу"
-            autocomplete="off"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-row">
-
-          <div class="form-group">
-
-            <label
-              class="form-label"
-              for="taskDate"
-            >
-              Дата начала
-            </label>
-
-            <input
-              class="form-input"
-              id="taskDate"
-              type="date"
-              required
-            >
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label
-              class="form-label"
-              for="taskTime"
-            >
-              Время
-            </label>
-
-            <input
-              class="form-input"
-              id="taskTime"
-              type="time"
-            >
-
-          </div>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label
-            class="form-label"
-            for="taskRepeat"
-          >
-            Периодичность
-          </label>
-
-          <select
-            class="form-select"
-            id="taskRepeat"
-          >
-
-            <option value="none">
-              Один раз
-            </option>
-
-            <option value="daily">
-              Каждый день
-            </option>
-
-            <option value="weekdays">
-              По будням
-            </option>
-
-            <option value="weekends">
-              По выходным
-            </option>
-
-            <option value="custom">
-              Выбрать дни
-            </option>
-
-            <option value="weekly">
-              Каждую неделю
-            </option>
-
-            <option value="biweekly">
-              Каждые 2 недели
-            </option>
-
-            <option value="monthly">
-              Каждый месяц
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div
-          class="form-group"
-          id="customDaysGroup"
-          hidden
-        >
-
-          <label class="form-label">
-            Дни недели
-          </label>
-
-          <div class="weekday-picker">
-
-            <button
-              type="button"
-              class="weekday-button"
-              data-day="1"
-            >
-              Пн
-            </button>
-
-            <button
-              type="button"
-              class="weekday-button"
-              data-day="2"
-            >
-              Вт
-            </button>
-
-            <button
-              type="button"
-              class="weekday-button"
-              data-day="3"
-            >
-              Ср
-            </button>
-
-            <button
-              type="button"
-              class="weekday-button"
-              data-day="4"
-            >
-              Чт
-            </button>
-
-            <button
-              type="button"
-              class="weekday-button"
-              data-day="5"
-            >
-              Пт
-            </button>
-
-            <button
-              type="button"
-              class="weekday-button"
-              data-day="6"
-            >
-              Сб
-            </button>
-
-            <button
-              type="button"
-              class="weekday-button"
-              data-day="0"
-            >
-              Вс
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div
-          class="form-group"
-          id="repeatEndGroup"
-          hidden
-        >
-
-          <label
-            class="form-label"
-            for="repeatEnd"
-          >
-            Повторять до
-          </label>
-
-          <input
-            class="form-input"
-            id="repeatEnd"
-            type="date"
-          >
-
-        </div>
-
-
-        <button
-          class="save-button"
-          type="submit"
-        >
-          Создать задачу
-        </button>
-
-      </form>
 
     </div>
 
   </div>
 
 
-  <script src="app.js"></script>
+  <!-- TOAST -->
+
+  <div
+    class="toast"
+    id="toast"
+  ></div>
+
+
+  <script>
+
+    /* =========================
+       STORAGE
+    ========================= */
+
+    const STORAGE_KEY = "tracker_tasks";
+
+
+    let tasks = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) || "[]"
+    );
+
+
+    /* =========================
+       ELEMENTS
+    ========================= */
+
+    const tasksContainer =
+      document.getElementById("tasksContainer");
+
+    const taskCount =
+      document.getElementById("taskCount");
+
+    const progressValue =
+      document.getElementById("progressValue");
+
+    const progressFill =
+      document.getElementById("progressFill");
+
+    const currentDate =
+      document.getElementById("currentDate");
+
+    const addButton =
+      document.getElementById("addButton");
+
+    const modalOverlay =
+      document.getElementById("modalOverlay");
+
+    const taskInput =
+      document.getElementById("taskInput");
+
+    const cancelButton =
+      document.getElementById("cancelButton");
+
+    const saveButton =
+      document.getElementById("saveButton");
+
+    const toast =
+      document.getElementById("toast");
+
+
+    /* =========================
+       DATE
+    ========================= */
+
+    function getTodayKey() {
+
+      const date = new Date();
+
+      const year = date.getFullYear();
+
+      const month =
+        String(date.getMonth() + 1)
+          .padStart(2, "0");
+
+      const day =
+        String(date.getDate())
+          .padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    }
+
+
+    function formatDate() {
+
+      const date = new Date();
+
+      const text =
+        date.toLocaleDateString(
+          "ru-RU",
+          {
+            weekday: "long",
+            day: "numeric",
+            month: "long"
+          }
+        );
+
+      currentDate.textContent =
+        text.charAt(0).toUpperCase() +
+        text.slice(1);
+    }
+
+
+    /* =========================
+       STORAGE
+    ========================= */
+
+    function saveTasks() {
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(tasks)
+      );
+    }
+
+
+    /* =========================
+       RENDER
+    ========================= */
+
+    function renderTasks() {
+
+      tasksContainer.innerHTML = "";
+
+      const today = getTodayKey();
+
+      const todayTasks =
+        tasks.filter(
+          task => task.date === today
+        );
+
+
+      if (todayTasks.length === 0) {
+
+        tasksContainer.innerHTML = `
+
+          <div class="empty">
+
+            <div class="empty-icon">
+              ✨
+            </div>
+
+            <div class="empty-title">
+              День свободен
+            </div>
+
+            <div class="empty-text">
+              Добавьте первую задачу<br>
+              и начните свой день продуктивно.
+            </div>
+
+          </div>
+
+        `;
+
+      } else {
+
+        todayTasks.forEach(task => {
+
+          const element =
+            document.createElement("div");
+
+          element.className =
+            "task" +
+            (task.completed
+              ? " completed"
+              : "");
+
+          element.innerHTML = `
+
+            <button
+              class="task-check"
+              data-id="${task.id}"
+              aria-label="Выполнить задачу"
+            >
+              <span class="check-icon">
+                ✓
+              </span>
+            </button>
+
+            <div class="task-content">
+
+              <div class="task-name">
+                ${escapeHtml(task.title)}
+              </div>
+
+              <div class="task-meta">
+                ${task.recurring
+                  ? "🔁 Регулярная задача"
+                  : "Сегодня"}
+              </div>
+
+            </div>
+
+            <button
+              class="delete-task"
+              data-delete="${task.id}"
+              aria-label="Удалить"
+            >
+              ×
+            </button>
+
+          `;
+
+          tasksContainer.appendChild(element);
+
+        });
+
+      }
+
+
+      updateStats(todayTasks);
+
+    }
+
+
+    /* =========================
+       STATS
+    ========================= */
+
+    function updateStats(todayTasks) {
+
+      const total =
+        todayTasks.length;
+
+      const completed =
+        todayTasks.filter(
+          task => task.completed
+        ).length;
+
+
+      let percentage = 0;
+
+      if (total > 0) {
+
+        percentage =
+          Math.round(
+            (completed / total) * 100
+          );
+
+      }
+
+
+      progressValue.textContent =
+        `${percentage}%`;
+
+      progressFill.style.width =
+        `${percentage}%`;
+
+
+      taskCount.textContent =
+        `${total} ${
+          getTaskWord(total)
+        }`;
+
+    }
+
+
+    function getTaskWord(number) {
+
+      const mod10 = number % 10;
+
+      const mod100 = number % 100;
+
+      if (
+        mod10 === 1 &&
+        mod100 !== 11
+      ) {
+        return "задача";
+      }
+
+      if (
+        mod10 >= 2 &&
+        mod10 <= 4 &&
+        (mod100 < 10 || mod100 >= 20)
+      ) {
+        return "задачи";
+      }
+
+      return "задач";
+
+    }
+
+
+    /* =========================
+       ADD TASK
+    ========================= */
+
+    function openModal() {
+
+      modalOverlay.classList.add("show");
+
+      setTimeout(() => {
+
+        taskInput.focus();
+
+      }, 150);
+
+    }
+
+
+    function closeModal() {
+
+      modalOverlay.classList.remove("show");
+
+      taskInput.value = "";
+
+    }
+
+
+    function addTask() {
+
+      const title =
+        taskInput.value.trim();
+
+
+      if (!title) {
+
+        showToast(
+          "Введите название задачи"
+        );
+
+        taskInput.focus();
+
+        return;
+
+      }
+
+
+      const newTask = {
+
+        id:
+          Date.now().toString(),
+
+        title,
+
+        date:
+          getTodayKey(),
+
+        completed:
+          false,
+
+        recurring:
+          false,
+
+        createdAt:
+          new Date().toISOString()
+
+      };
+
+
+      tasks.push(newTask);
+
+      saveTasks();
+
+      renderTasks();
+
+      closeModal();
+
+      showToast(
+        "Задача добавлена ✓"
+      );
+
+    }
+
+
+    /* =========================
+       COMPLETE TASK
+    ========================= */
+
+    function toggleTask(id) {
+
+      const task =
+        tasks.find(
+          item => item.id === id
+        );
+
+
+      if (!task) return;
+
+
+      task.completed =
+        !task.completed;
+
+
+      saveTasks();
+
+      renderTasks();
+
+
+      if (task.completed) {
+
+        showToast(
+          "Задача выполнена ✓"
+        );
+
+      }
+
+    }
+
+
+    /* =========================
+       DELETE TASK
+    ========================= */
+
+    function deleteTask(id) {
+
+      tasks =
+        tasks.filter(
+          task => task.id !== id
+        );
+
+
+      saveTasks();
+
+      renderTasks();
+
+      showToast(
+        "Задача удалена"
+      );
+
+    }
+
+
+    /* =========================
+       ESCAPE HTML
+    ========================= */
+
+    function escapeHtml(text) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent = text;
+
+      return div.innerHTML;
+
+    }
+
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    let toastTimer;
+
+
+    function showToast(message) {
+
+      clearTimeout(toastTimer);
+
+      toast.textContent =
+        message;
+
+      toast.classList.add("show");
+
+
+      toastTimer =
+        setTimeout(() => {
+
+          toast.classList.remove(
+            "show"
+          );
+
+        }, 1800);
+
+    }
+
+
+    /* =========================
+       EVENTS
+    ========================= */
+
+    addButton.addEventListener(
+      "click",
+      openModal
+    );
+
+
+    cancelButton.addEventListener(
+      "click",
+      closeModal
+    );
+
+
+    saveButton.addEventListener(
+      "click",
+      addTask
+    );
+
+
+    taskInput.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          addTask();
+
+        }
+
+      }
+    );
+
+
+    modalOverlay.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target === modalOverlay
+        ) {
+
+          closeModal();
+
+        }
+
+      }
+    );
+
+
+    tasksContainer.addEventListener(
+      "click",
+      event => {
+
+        const check =
+          event.target.closest(
+            "[data-id]"
+          );
+
+
+        if (check) {
+
+          toggleTask(
+            check.dataset.id
+          );
+
+          return;
+
+        }
+
+
+        const deleteButton =
+          event.target.closest(
+            "[data-delete]"
+          );
+
+
+        if (deleteButton) {
+
+          deleteTask(
+            deleteButton.dataset.delete
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    document
+      .querySelectorAll(".nav-button")
+      .forEach(button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            document
+              .querySelectorAll(".nav-button")
+              .forEach(item => {
+
+                item.classList.remove(
+                  "active"
+                );
+
+              });
+
+
+            button.classList.add(
+              "active"
+            );
+
+
+            const page =
+              button.dataset.page;
+
+
+            if (page !== "home") {
+
+              showToast(
+                "Этот раздел добавим следующим шагом"
+              );
+
+            }
+
+          }
+        );
+
+      });
+
+
+    /* =========================
+       PROFILE
+    ========================= */
+
+    document
+      .getElementById("profileButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          showToast(
+            "Профиль добавим позже"
+          );
+
+        }
+      );
+
+
+    /* =========================
+       TELEGRAM MINI APP
+    ========================= */
+
+    if (
+      window.Telegram &&
+      window.Telegram.WebApp
+    ) {
+
+      const tg =
+        window.Telegram.WebApp;
+
+      tg.ready();
+
+      tg.expand();
+
+    }
+
+
+    /* =========================
+       INIT
+    ========================= */
+
+    formatDate();
+
+    renderTasks();
+
+  </script>
 
 </body>
-
 </html>
