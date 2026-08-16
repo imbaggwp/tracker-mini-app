@@ -1,160 +1,63 @@
-let currentDate = new Date();
+/* =====================================================
+   TRACKER
+   Полностью автономная версия для GitHub Pages
+===================================================== */
+
+
+/* ================= STATE ================= */
 
 let tasks = [];
 
+let selectedDate = new Date();
+
 let editingTaskId = null;
 
-let selectedTaskDate = null;
+let taskFormDate = "";
 
-let selectedTaskTime = "";
+let taskFormTime = "";
 
-let selectedRepeat = "none";
+let taskFormRepeat = "none";
 
-
-/* ================= ELEMENTS ================= */
-
-const dateTitle =
-  document.getElementById("dateTitle");
-
-const dateSubtitle =
-  document.getElementById("dateSubtitle");
-
-const completedCount =
-  document.getElementById("completedCount");
-
-const totalCount =
-  document.getElementById("totalCount");
-
-const emptyState =
-  document.getElementById("emptyState");
-
-const tasksList =
-  document.getElementById("tasksList");
-
-const addTaskButton =
-  document.getElementById("addTaskButton");
-
-const taskModal =
-  document.getElementById("taskModal");
-
-const modalOverlay =
-  document.getElementById("modalOverlay");
-
-const closeModal =
-  document.getElementById("closeModal");
-
-const modalTitle =
-  document.getElementById("modalTitle");
-
-const taskInput =
-  document.getElementById("taskInput");
-
-const taskDescription =
-  document.getElementById("taskDescription");
-
-const saveTaskButton =
-  document.getElementById("saveTaskButton");
-
-const deleteTaskButton =
-  document.getElementById("deleteTaskButton");
-
-const importantOption =
-  document.getElementById("importantOption");
-
-const importantValue =
-  document.getElementById("importantValue");
-
-const dateValue =
-  document.getElementById("dateValue");
-
-const timeValue =
-  document.getElementById("timeValue");
-
-const repeatValue =
-  document.getElementById("repeatValue");
-
-const addSubtaskButton =
-  document.getElementById("addSubtaskButton");
-
-const subtasksContainer =
-  document.getElementById("subtasks");
-
-const prevDay =
-  document.getElementById("prevDay");
-
-const nextDay =
-  document.getElementById("nextDay");
-
-
-/* ================= PICKERS ================= */
-
-const datePicker =
-  document.getElementById("datePicker");
-
-const dateInput =
-  document.getElementById("dateInput");
-
-const closeDatePicker =
-  document.getElementById("closeDatePicker");
-
-const confirmDate =
-  document.getElementById("confirmDate");
-
-const datePickerOverlay =
-  document.getElementById("datePickerOverlay");
-
-
-const timePicker =
-  document.getElementById("timePicker");
-
-const timeInput =
-  document.getElementById("timeInput");
-
-const closeTimePicker =
-  document.getElementById("closeTimePicker");
-
-const confirmTime =
-  document.getElementById("confirmTime");
-
-const removeTime =
-  document.getElementById("removeTime");
-
-const timePickerOverlay =
-  document.getElementById("timePickerOverlay");
-
-
-const repeatPicker =
-  document.getElementById("repeatPicker");
-
-const closeRepeatPicker =
-  document.getElementById("closeRepeatPicker");
-
-const repeatPickerOverlay =
-  document.getElementById("repeatPickerOverlay");
+let taskFormImportant = false;
 
 
 /* ================= STORAGE ================= */
 
+const STORAGE_KEY =
+  "tracker_tasks_v1";
+
+
 function loadTasks() {
-
-  const saved =
-    localStorage.getItem(
-      "tracker_tasks"
-    );
-
-  if (!saved) {
-
-    tasks = [];
-
-    return;
-
-  }
 
   try {
 
-    tasks = JSON.parse(saved);
+    const saved =
+      localStorage.getItem(
+        STORAGE_KEY
+      );
 
-  } catch {
+    if (!saved) {
+
+      tasks = [];
+
+      return;
+
+    }
+
+    const parsed =
+      JSON.parse(saved);
+
+    tasks =
+      Array.isArray(parsed)
+        ? parsed
+        : [];
+
+  } catch (error) {
+
+    console.error(
+      "Ошибка загрузки задач:",
+      error
+    );
 
     tasks = [];
 
@@ -165,117 +68,125 @@ function loadTasks() {
 
 function saveTasks() {
 
-  localStorage.setItem(
-    "tracker_tasks",
-    JSON.stringify(tasks)
+  try {
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(tasks)
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Ошибка сохранения задач:",
+      error
+    );
+
+  }
+
+}
+
+
+/* ================= HELPERS ================= */
+
+function pad(number) {
+
+  return String(number)
+    .padStart(2, "0");
+
+}
+
+
+function getDateKey(date) {
+
+  return [
+    date.getFullYear(),
+    pad(date.getMonth() + 1),
+    pad(date.getDate())
+  ].join("-");
+
+}
+
+
+function dateFromKey(key) {
+
+  const [
+    year,
+    month,
+    day
+  ] = key.split("-").map(Number);
+
+  return new Date(
+    year,
+    month - 1,
+    day
   );
 
 }
 
 
-/* ================= DATE ================= */
-
-function dateKey(date) {
-
-  const year =
-    date.getFullYear();
-
-  const month =
-    String(
-      date.getMonth() + 1
-    ).padStart(2, "0");
-
-  const day =
-    String(
-      date.getDate()
-    ).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-
-}
-
-
-function isSameDay(date1, date2) {
-
-  return (
-    date1.getFullYear() ===
-      date2.getFullYear() &&
-
-    date1.getMonth() ===
-      date2.getMonth() &&
-
-    date1.getDate() ===
-      date2.getDate()
-  );
-
-}
-
-
-function formatDate(date) {
+function isToday(date) {
 
   const today =
     new Date();
 
+  return (
+    date.getFullYear() ===
+      today.getFullYear() &&
 
-  if (isSameDay(date, today)) {
+    date.getMonth() ===
+      today.getMonth() &&
 
-    dateTitle.textContent =
-      "Сегодня";
-
-  } else {
-
-    dateTitle.textContent =
-      date.toLocaleDateString(
-        "ru-RU",
-        {
-          weekday: "long"
-        }
-      );
-
-  }
-
-
-  dateSubtitle.textContent =
-    date.toLocaleDateString(
-      "ru-RU",
-      {
-        weekday: "short",
-        day: "numeric",
-        month: "short"
-      }
-    );
+    date.getDate() ===
+      today.getDate()
+  );
 
 }
 
 
-/* ================= DATE TEXT ================= */
+function isSameDate(
+  first,
+  second
+) {
 
-function formatTaskDate(key) {
+  return (
+    first.getFullYear() ===
+      second.getFullYear() &&
 
-  if (!key) {
-    return "";
-  }
+    first.getMonth() ===
+      second.getMonth() &&
 
-  const parts =
-    key.split("-");
+    first.getDate() ===
+      second.getDate()
+  );
+
+}
+
+
+function formatFullDate(date) {
+
+  return date.toLocaleDateString(
+    "ru-RU",
+    {
+      weekday: "long",
+      day: "numeric",
+      month: "long"
+    }
+  );
+
+}
+
+
+function formatShortDate(key) {
 
   const date =
-    new Date(
-      Number(parts[0]),
-      Number(parts[1]) - 1,
-      Number(parts[2])
-    );
+    dateFromKey(key);
 
-
-  if (isSameDay(
-    date,
-    new Date()
-  )) {
+  if (isToday(date)) {
 
     return "Сегодня";
 
   }
-
 
   return date.toLocaleDateString(
     "ru-RU",
@@ -288,12 +199,340 @@ function formatTaskDate(key) {
 }
 
 
-/* ================= CURRENT TASKS ================= */
+function repeatText(repeat) {
 
-function getCurrentTasks() {
+  const values = {
+
+    none:
+      "Не повторять",
+
+    daily:
+      "Каждый день",
+
+    weekdays:
+      "По будням",
+
+    weekly:
+      "Каждую неделю",
+
+    monthly:
+      "Каждый месяц"
+
+  };
+
+  return (
+    values[repeat] ||
+    "Не повторять"
+  );
+
+}
+
+
+/* ================= ELEMENTS ================= */
+
+const dateMain =
+  document.getElementById(
+    "dateMain"
+  );
+
+const dateSmall =
+  document.getElementById(
+    "dateSmall"
+  );
+
+const previousDay =
+  document.getElementById(
+    "previousDay"
+  );
+
+const nextDay =
+  document.getElementById(
+    "nextDay"
+  );
+
+const todayButton =
+  document.getElementById(
+    "todayButton"
+  );
+
+const calendarButton =
+  document.getElementById(
+    "calendarButton"
+  );
+
+const tasksList =
+  document.getElementById(
+    "tasksList"
+  );
+
+const emptyState =
+  document.getElementById(
+    "emptyState"
+  );
+
+const progressFill =
+  document.getElementById(
+    "progressFill"
+  );
+
+const progressCount =
+  document.getElementById(
+    "progressCount"
+  );
+
+const addTaskButton =
+  document.getElementById(
+    "addTaskButton"
+  );
+
+
+/* ================= MODAL ================= */
+
+const taskModal =
+  document.getElementById(
+    "taskModal"
+  );
+
+const modalBackdrop =
+  document.getElementById(
+    "modalBackdrop"
+  );
+
+const closeModal =
+  document.getElementById(
+    "closeModal"
+  );
+
+const modalTitle =
+  document.getElementById(
+    "modalTitle"
+  );
+
+const taskTitle =
+  document.getElementById(
+    "taskTitle"
+  );
+
+const taskDescription =
+  document.getElementById(
+    "taskDescription"
+  );
+
+const taskDateButton =
+  document.getElementById(
+    "taskDateButton"
+  );
+
+const taskDateValue =
+  document.getElementById(
+    "taskDateValue"
+  );
+
+const taskTimeButton =
+  document.getElementById(
+    "taskTimeButton"
+  );
+
+const taskTimeValue =
+  document.getElementById(
+    "taskTimeValue"
+  );
+
+const taskRepeatButton =
+  document.getElementById(
+    "taskRepeatButton"
+  );
+
+const taskRepeatValue =
+  document.getElementById(
+    "taskRepeatValue"
+  );
+
+const importantButton =
+  document.getElementById(
+    "importantButton"
+  );
+
+const importantSwitch =
+  document.getElementById(
+    "importantSwitch"
+  );
+
+const importantValue =
+  document.getElementById(
+    "importantValue"
+  );
+
+const subtasksList =
+  document.getElementById(
+    "subtasksList"
+  );
+
+const addSubtaskButton =
+  document.getElementById(
+    "addSubtaskButton"
+  );
+
+const saveTaskButton =
+  document.getElementById(
+    "saveTaskButton"
+  );
+
+const deleteTaskButton =
+  document.getElementById(
+    "deleteTaskButton"
+  );
+
+
+/* ================= DATE PICKER ================= */
+
+const datePicker =
+  document.getElementById(
+    "datePicker"
+  );
+
+const datePickerBackdrop =
+  document.getElementById(
+    "datePickerBackdrop"
+  );
+
+const dateInput =
+  document.getElementById(
+    "dateInput"
+  );
+
+const confirmDate =
+  document.getElementById(
+    "confirmDate"
+  );
+
+const closeDatePicker =
+  document.getElementById(
+    "closeDatePicker"
+  );
+
+
+/* ================= TIME PICKER ================= */
+
+const timePicker =
+  document.getElementById(
+    "timePicker"
+  );
+
+const timePickerBackdrop =
+  document.getElementById(
+    "timePickerBackdrop"
+  );
+
+const timeInput =
+  document.getElementById(
+    "timeInput"
+  );
+
+const confirmTime =
+  document.getElementById(
+    "confirmTime"
+  );
+
+const removeTime =
+  document.getElementById(
+    "removeTime"
+  );
+
+const closeTimePicker =
+  document.getElementById(
+    "closeTimePicker"
+  );
+
+
+/* ================= REPEAT PICKER ================= */
+
+const repeatPicker =
+  document.getElementById(
+    "repeatPicker"
+  );
+
+const repeatPickerBackdrop =
+  document.getElementById(
+    "repeatPickerBackdrop"
+  );
+
+const closeRepeatPicker =
+  document.getElementById(
+    "closeRepeatPicker"
+  );
+
+
+/* ================= CALENDAR ================= */
+
+const calendarPicker =
+  document.getElementById(
+    "calendarPicker"
+  );
+
+const calendarPickerBackdrop =
+  document.getElementById(
+    "calendarPickerBackdrop"
+  );
+
+const calendarInput =
+  document.getElementById(
+    "calendarInput"
+  );
+
+const goToDate =
+  document.getElementById(
+    "goToDate"
+  );
+
+const closeCalendarPicker =
+  document.getElementById(
+    "closeCalendarPicker"
+  );
+
+
+/* ================= DATE RENDER ================= */
+
+function renderDate() {
+
+  if (isToday(selectedDate)) {
+
+    dateMain.textContent =
+      "Сегодня";
+
+  } else {
+
+    const weekday =
+      selectedDate.toLocaleDateString(
+        "ru-RU",
+        {
+          weekday: "long"
+        }
+      );
+
+    dateMain.textContent =
+      weekday
+        .charAt(0)
+        .toUpperCase() +
+      weekday.slice(1);
+
+  }
+
+
+  dateSmall.textContent =
+    formatFullDate(
+      selectedDate
+    );
+
+}
+
+
+/* ================= GET CURRENT TASKS ================= */
+
+function getTasksForSelectedDate() {
 
   const key =
-    dateKey(currentDate);
+    getDateKey(selectedDate);
 
   return tasks.filter(
     task =>
@@ -303,43 +542,52 @@ function getCurrentTasks() {
 }
 
 
-/* ================= RENDER ================= */
+/* ================= RENDER TASKS ================= */
 
 function renderTasks() {
 
-  tasksList.innerHTML = "";
-
   const currentTasks =
-    getCurrentTasks();
+    getTasksForSelectedDate();
 
 
-  totalCount.textContent =
-    currentTasks.length;
+  tasksList.innerHTML =
+    "";
 
 
-  const completed =
-    currentTasks.filter(
-      task =>
-        task.completed
-    ).length;
+  if (
+    currentTasks.length ===
+    0
+  ) {
+
+    emptyState.classList.remove(
+      "hidden"
+    );
+
+  } else {
+
+    emptyState.classList.add(
+      "hidden"
+    );
+
+  }
 
 
-  completedCount.textContent =
-    completed;
-
-
-  emptyState.style.display =
-    currentTasks.length === 0
-      ? "flex"
-      : "none";
+  let completed = 0;
 
 
   currentTasks.forEach(
     task => {
 
+      if (task.completed) {
+
+        completed++;
+
+      }
+
+
       const card =
         document.createElement(
-          "div"
+          "article"
         );
 
 
@@ -365,6 +613,8 @@ function renderTasks() {
       }
 
 
+      /* CHECK */
+
       const check =
         document.createElement(
           "button"
@@ -374,6 +624,8 @@ function renderTasks() {
       check.className =
         "task-check";
 
+      check.type =
+        "button";
 
       check.textContent =
         task.completed
@@ -387,43 +639,41 @@ function renderTasks() {
 
           event.stopPropagation();
 
-          task.completed =
-            !task.completed;
-
-          saveTasks();
-
-          renderTasks();
+          toggleTask(
+            task.id
+          );
 
         }
       );
 
 
-      const main =
+      /* CONTENT */
+
+      const content =
         document.createElement(
           "div"
         );
 
 
-      main.className =
-        "task-main";
+      content.className =
+        "task-content";
 
 
-      const name =
+      const title =
         document.createElement(
           "div"
         );
 
 
-      name.className =
-        "task-name";
+      title.className =
+        "task-title";
 
-
-      name.textContent =
+      title.textContent =
         task.title;
 
 
-      main.appendChild(
-        name
+      content.appendChild(
+        title
       );
 
 
@@ -435,26 +685,26 @@ function renderTasks() {
           );
 
         description.className =
-          "task-description-preview";
+          "task-description";
 
         description.textContent =
           task.description;
 
-        main.appendChild(
+        content.appendChild(
           description
         );
 
       }
 
 
-      const meta =
+      const info =
         document.createElement(
           "div"
         );
 
 
-      meta.className =
-        "task-meta";
+      info.className =
+        "task-info";
 
 
       if (task.time) {
@@ -464,13 +714,10 @@ function renderTasks() {
             "span"
           );
 
-        time.className =
-          "task-meta-item";
-
         time.textContent =
           "🕐 " + task.time;
 
-        meta.appendChild(
+        info.appendChild(
           time
         );
 
@@ -487,13 +734,13 @@ function renderTasks() {
             "span"
           );
 
-        repeat.className =
-          "task-meta-item";
-
         repeat.textContent =
-          "🔁";
+          "🔁 " +
+          repeatText(
+            task.repeat
+          );
 
-        meta.appendChild(
+        info.appendChild(
           repeat
         );
 
@@ -502,32 +749,31 @@ function renderTasks() {
 
       if (task.important) {
 
-        const important =
+        const star =
           document.createElement(
             "span"
           );
 
-        important.className =
-          "task-important";
+        star.className =
+          "task-star";
 
-        important.textContent =
+        star.textContent =
           "★";
 
-        meta.appendChild(
-          important
+        info.appendChild(
+          star
         );
 
       }
 
 
       if (
-        task.time ||
-        task.repeat ||
-        task.important
+        info.children.length
+        > 0
       ) {
 
-        main.appendChild(
-          meta
+        content.appendChild(
+          info
         );
 
       }
@@ -538,7 +784,7 @@ function renderTasks() {
       );
 
       card.appendChild(
-        main
+        content
       );
 
 
@@ -546,7 +792,7 @@ function renderTasks() {
         "click",
         () => {
 
-          openEditModal(
+          openEditTask(
             task.id
           );
 
@@ -561,76 +807,168 @@ function renderTasks() {
     }
   );
 
+
+  /* PROGRESS */
+
+  const total =
+    currentTasks.length;
+
+
+  const percent =
+    total === 0
+      ? 0
+      : Math.round(
+          (completed / total) *
+          100
+        );
+
+
+  progressCount.textContent =
+    `${completed} / ${total}`;
+
+
+  progressFill.style.width =
+    `${percent}%`;
+
 }
 
 
-/* ================= RESET MODAL ================= */
+/* ================= TOGGLE ================= */
 
-function resetModal() {
+function toggleTask(id) {
 
-  editingTaskId = null;
+  const task =
+    tasks.find(
+      item =>
+        item.id === id
+    );
 
-  selectedTaskDate =
-    dateKey(currentDate);
 
-  selectedTaskTime =
+  if (!task) {
+
+    return;
+
+  }
+
+
+  task.completed =
+    !task.completed;
+
+
+  saveTasks();
+
+  renderTasks();
+
+}
+
+
+/* ================= RESET FORM ================= */
+
+function resetForm() {
+
+  editingTaskId =
+    null;
+
+  taskFormDate =
+    getDateKey(
+      selectedDate
+    );
+
+  taskFormTime =
     "";
 
-  selectedRepeat =
+  taskFormRepeat =
     "none";
 
-
-  modalTitle.textContent =
-    "Новая задача";
-
-  saveTaskButton.textContent =
-    "Сохранить";
-
-  deleteTaskButton.classList.add(
-    "hidden"
-  );
+  taskFormImportant =
+    false;
 
 
-  taskInput.value =
+  taskTitle.value =
     "";
 
   taskDescription.value =
     "";
 
 
-  importantOption.classList.remove(
-    "important-active"
+  modalTitle.textContent =
+    "Новая задача";
+
+
+  saveTaskButton.textContent =
+    "Сохранить";
+
+
+  deleteTaskButton.classList.add(
+    "hidden"
   );
 
-  importantValue.textContent =
-    "Выключено";
 
+  updateFormUI();
 
-  dateValue.textContent =
-    formatTaskDate(
-      selectedTaskDate
-    );
-
-
-  timeValue.textContent =
-    "Без времени";
-
-
-  repeatValue.textContent =
-    "Не повторять";
-
-
-  subtasksContainer.innerHTML =
+  subtasksList.innerHTML =
     "";
 
 }
 
 
-/* ================= OPEN ================= */
+/* ================= UPDATE FORM UI ================= */
 
-function openModal() {
+function updateFormUI() {
 
-  resetModal();
+  taskDateValue.textContent =
+    formatShortDate(
+      taskFormDate
+    );
+
+
+  taskTimeValue.textContent =
+    taskFormTime ||
+    "Без времени";
+
+
+  taskRepeatValue.textContent =
+    repeatText(
+      taskFormRepeat
+    );
+
+
+  importantValue.textContent =
+    taskFormImportant
+      ? "Включено"
+      : "Выключено";
+
+
+  importantSwitch.classList.toggle(
+    "active",
+    taskFormImportant
+  );
+
+
+  document
+    .querySelectorAll(
+      ".repeat-option"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "selected",
+          button.dataset.repeat ===
+            taskFormRepeat
+        );
+
+      }
+    );
+
+}
+
+
+/* ================= OPEN NEW ================= */
+
+function openNewTask() {
+
+  resetForm();
 
   taskModal.classList.remove(
     "hidden"
@@ -640,7 +978,7 @@ function openModal() {
   setTimeout(
     () => {
 
-      taskInput.focus();
+      taskTitle.focus();
 
     },
     100
@@ -649,38 +987,48 @@ function openModal() {
 }
 
 
-/* ================= EDIT ================= */
+/* ================= OPEN EDIT ================= */
 
-function openEditModal(
-  taskId
-) {
+function openEditTask(id) {
 
   const task =
     tasks.find(
       item =>
-        item.id === taskId
+        item.id === id
     );
 
 
   if (!task) {
+
     return;
+
   }
 
 
   editingTaskId =
-    task.id;
+    id;
 
 
-  selectedTaskDate =
+  taskFormDate =
     task.date;
 
-
-  selectedTaskTime =
+  taskFormTime =
     task.time || "";
 
-
-  selectedRepeat =
+  taskFormRepeat =
     task.repeat || "none";
+
+  taskFormImportant =
+    Boolean(
+      task.important
+    );
+
+
+  taskTitle.value =
+    task.title || "";
+
+  taskDescription.value =
+    task.description || "";
 
 
   modalTitle.textContent =
@@ -696,62 +1044,20 @@ function openEditModal(
   );
 
 
-  taskInput.value =
-    task.title;
-
-
-  taskDescription.value =
-    task.description || "";
-
-
-  if (task.important) {
-
-    importantOption.classList.add(
-      "important-active"
-    );
-
-    importantValue.textContent =
-      "Включено";
-
-  } else {
-
-    importantOption.classList.remove(
-      "important-active"
-    );
-
-    importantValue.textContent =
-      "Выключено";
-
-  }
-
-
-  dateValue.textContent =
-    formatTaskDate(
-      selectedTaskDate
-    );
-
-
-  timeValue.textContent =
-    selectedTaskTime ||
-    "Без времени";
-
-
-  repeatValue.textContent =
-    getRepeatText(
-      selectedRepeat
-    );
-
-
-  subtasksContainer.innerHTML =
+  subtasksList.innerHTML =
     "";
 
 
-  if (task.subtasks) {
+  if (
+    Array.isArray(
+      task.subtasks
+    )
+  ) {
 
     task.subtasks.forEach(
       subtask => {
 
-        createSubtaskInput(
+        createSubtask(
           subtask
         );
 
@@ -761,6 +1067,9 @@ function openEditModal(
   }
 
 
+  updateFormUI();
+
+
   taskModal.classList.remove(
     "hidden"
   );
@@ -768,7 +1077,7 @@ function openEditModal(
 }
 
 
-/* ================= CLOSE ================= */
+/* ================= CLOSE MODAL ================= */
 
 function closeTaskModal() {
 
@@ -776,22 +1085,20 @@ function closeTaskModal() {
     "hidden"
   );
 
-  resetModal();
-
 }
 
 
-/* ================= SAVE ================= */
+/* ================= SAVE TASK ================= */
 
 function saveTask() {
 
   const title =
-    taskInput.value.trim();
+    taskTitle.value.trim();
 
 
   if (!title) {
 
-    taskInput.focus();
+    taskTitle.focus();
 
     return;
 
@@ -802,15 +1109,9 @@ function saveTask() {
     taskDescription.value.trim();
 
 
-  const important =
-    importantOption.classList.contains(
-      "important-active"
-    );
-
-
   const subtasks =
     Array.from(
-      subtasksContainer.querySelectorAll(
+      subtasksList.querySelectorAll(
         ".subtask-input"
       )
     )
@@ -818,10 +1119,15 @@ function saveTask() {
         input =>
           input.value.trim()
       )
-      .filter(Boolean);
+      .filter(
+        value =>
+          value.length > 0
+      );
 
 
-  if (editingTaskId) {
+  if (
+    editingTaskId !== null
+  ) {
 
     const task =
       tasks.find(
@@ -831,30 +1137,34 @@ function saveTask() {
       );
 
 
-    if (task) {
+    if (!task) {
 
-      task.title =
-        title;
-
-      task.description =
-        description;
-
-      task.date =
-        selectedTaskDate;
-
-      task.time =
-        selectedTaskTime;
-
-      task.repeat =
-        selectedRepeat;
-
-      task.important =
-        important;
-
-      task.subtasks =
-        subtasks;
+      return;
 
     }
+
+
+    task.title =
+      title;
+
+    task.description =
+      description;
+
+    task.date =
+      taskFormDate;
+
+    task.time =
+      taskFormTime;
+
+    task.repeat =
+      taskFormRepeat;
+
+    task.important =
+      taskFormImportant;
+
+    task.subtasks =
+      subtasks;
+
 
   } else {
 
@@ -868,15 +1178,16 @@ function saveTask() {
       description,
 
       date:
-        selectedTaskDate,
+        taskFormDate,
 
       time:
-        selectedTaskTime,
+        taskFormTime,
 
       repeat:
-        selectedRepeat,
+        taskFormRepeat,
 
-      important,
+      important:
+        taskFormImportant,
 
       completed:
         false,
@@ -899,21 +1210,27 @@ function saveTask() {
 
 /* ================= DELETE ================= */
 
-function deleteTask() {
+function deleteCurrentTask() {
 
-  if (!editingTaskId) {
+  if (
+    editingTaskId === null
+  ) {
+
     return;
+
   }
 
 
   const confirmed =
-    confirm(
+    window.confirm(
       "Удалить эту задачу?"
     );
 
 
   if (!confirmed) {
+
     return;
+
   }
 
 
@@ -936,7 +1253,7 @@ function deleteTask() {
 
 /* ================= SUBTASK ================= */
 
-function createSubtaskInput(
+function createSubtask(
   value = ""
 ) {
 
@@ -959,11 +1276,17 @@ function createSubtaskInput(
   input.className =
     "subtask-input";
 
+  input.type =
+    "text";
+
   input.placeholder =
     "Подзадача";
 
   input.value =
     value;
+
+  input.maxLength =
+    200;
 
 
   const remove =
@@ -973,7 +1296,10 @@ function createSubtaskInput(
 
 
   remove.className =
-    "remove-subtask";
+    "subtask-remove";
+
+  remove.type =
+    "button";
 
   remove.textContent =
     "×";
@@ -998,54 +1324,26 @@ function createSubtaskInput(
   );
 
 
-  subtasksContainer.appendChild(
+  subtasksList.appendChild(
     row
   );
-
-
-  input.focus();
 
 }
 
 
-/* ================= IMPORTANT ================= */
-
-importantOption.addEventListener(
-  "click",
-  () => {
-
-    const active =
-      importantOption.classList.toggle(
-        "important-active"
-      );
-
-
-    importantValue.textContent =
-      active
-        ? "Включено"
-        : "Выключено";
-
-  }
-);
-
-
 /* ================= DATE PICKER ================= */
 
-document
-  .getElementById("dateOption")
-  .addEventListener(
-    "click",
-    () => {
+function openDatePicker() {
 
-      dateInput.value =
-        selectedTaskDate;
+  dateInput.value =
+    taskFormDate;
 
-      datePicker.classList.remove(
-        "hidden"
-      );
 
-    }
+  datePicker.classList.remove(
+    "hidden"
   );
+
+}
 
 
 function closeDatePickerWindow() {
@@ -1057,57 +1355,38 @@ function closeDatePickerWindow() {
 }
 
 
-closeDatePicker.addEventListener(
-  "click",
-  closeDatePickerWindow
-);
+function confirmSelectedDate() {
 
+  if (
+    dateInput.value
+  ) {
 
-datePickerOverlay.addEventListener(
-  "click",
-  closeDatePickerWindow
-);
+    taskFormDate =
+      dateInput.value;
 
-
-confirmDate.addEventListener(
-  "click",
-  () => {
-
-    if (dateInput.value) {
-
-      selectedTaskDate =
-        dateInput.value;
-
-      dateValue.textContent =
-        formatTaskDate(
-          selectedTaskDate
-        );
-
-    }
-
-    closeDatePickerWindow();
+    updateFormUI();
 
   }
-);
+
+
+  closeDatePickerWindow();
+
+}
 
 
 /* ================= TIME PICKER ================= */
 
-document
-  .getElementById("timeOption")
-  .addEventListener(
-    "click",
-    () => {
+function openTimePicker() {
 
-      timeInput.value =
-        selectedTaskTime;
+  timeInput.value =
+    taskFormTime;
 
-      timePicker.classList.remove(
-        "hidden"
-      );
 
-    }
+  timePicker.classList.remove(
+    "hidden"
   );
+
+}
 
 
 function closeTimePickerWindow() {
@@ -1119,65 +1398,42 @@ function closeTimePickerWindow() {
 }
 
 
-closeTimePicker.addEventListener(
-  "click",
-  closeTimePickerWindow
-);
+function confirmSelectedTime() {
+
+  taskFormTime =
+    timeInput.value || "";
 
 
-timePickerOverlay.addEventListener(
-  "click",
-  closeTimePickerWindow
-);
+  updateFormUI();
+
+  closeTimePickerWindow();
+
+}
 
 
-confirmTime.addEventListener(
-  "click",
-  () => {
+function clearTime() {
 
-    selectedTaskTime =
-      timeInput.value;
+  taskFormTime =
+    "";
 
-    timeValue.textContent =
-      selectedTaskTime ||
-      "Без времени";
+  updateFormUI();
 
-    closeTimePickerWindow();
+  closeTimePickerWindow();
 
-  }
-);
+}
 
 
-removeTime.addEventListener(
-  "click",
-  () => {
+/* ================= REPEAT PICKER ================= */
 
-    selectedTaskTime =
-      "";
+function openRepeatPicker() {
 
-    timeValue.textContent =
-      "Без времени";
+  updateFormUI();
 
-    closeTimePickerWindow();
-
-  }
-);
-
-
-/* ================= REPEAT ================= */
-
-document
-  .getElementById("repeatOption")
-  .addEventListener(
-    "click",
-    () => {
-
-      repeatPicker.classList.remove(
-        "hidden"
-      );
-
-    }
+  repeatPicker.classList.remove(
+    "hidden"
   );
+
+}
 
 
 function closeRepeatPickerWindow() {
@@ -1189,53 +1445,213 @@ function closeRepeatPickerWindow() {
 }
 
 
+/* ================= CALENDAR ================= */
+
+function openCalendar() {
+
+  calendarInput.value =
+    getDateKey(
+      selectedDate
+    );
+
+
+  calendarPicker.classList.remove(
+    "hidden"
+  );
+
+}
+
+
+function closeCalendarWindow() {
+
+  calendarPicker.classList.add(
+    "hidden"
+  );
+
+}
+
+
+function goToSelectedDate() {
+
+  if (
+    !calendarInput.value
+  ) {
+
+    return;
+
+  }
+
+
+  selectedDate =
+    dateFromKey(
+      calendarInput.value
+    );
+
+
+  renderDate();
+
+  renderTasks();
+
+  closeCalendarWindow();
+
+}
+
+
+/* ================= DAY NAVIGATION ================= */
+
+function changeDay(
+  amount
+) {
+
+  selectedDate.setDate(
+    selectedDate.getDate() +
+      amount
+  );
+
+
+  renderDate();
+
+  renderTasks();
+
+}
+
+
+/* ================= TODAY ================= */
+
+function goToToday() {
+
+  selectedDate =
+    new Date();
+
+  renderDate();
+
+  renderTasks();
+
+}
+
+
+/* ================= EVENTS ================= */
+
+
+/* ADD */
+
+addTaskButton.addEventListener(
+  "click",
+  openNewTask
+);
+
+
+/* CLOSE */
+
+closeModal.addEventListener(
+  "click",
+  closeTaskModal
+);
+
+
+modalBackdrop.addEventListener(
+  "click",
+  closeTaskModal
+);
+
+
+/* SAVE */
+
+saveTaskButton.addEventListener(
+  "click",
+  saveTask
+);
+
+
+/* DELETE */
+
+deleteTaskButton.addEventListener(
+  "click",
+  deleteCurrentTask
+);
+
+
+/* DATE */
+
+taskDateButton.addEventListener(
+  "click",
+  openDatePicker
+);
+
+
+closeDatePicker.addEventListener(
+  "click",
+  closeDatePickerWindow
+);
+
+
+datePickerBackdrop.addEventListener(
+  "click",
+  closeDatePickerWindow
+);
+
+
+confirmDate.addEventListener(
+  "click",
+  confirmSelectedDate
+);
+
+
+/* TIME */
+
+taskTimeButton.addEventListener(
+  "click",
+  openTimePicker
+);
+
+
+closeTimePicker.addEventListener(
+  "click",
+  closeTimePickerWindow
+);
+
+
+timePickerBackdrop.addEventListener(
+  "click",
+  closeTimePickerWindow
+);
+
+
+confirmTime.addEventListener(
+  "click",
+  confirmSelectedTime
+);
+
+
+removeTime.addEventListener(
+  "click",
+  clearTime
+);
+
+
+/* REPEAT */
+
+taskRepeatButton.addEventListener(
+  "click",
+  openRepeatPicker
+);
+
+
 closeRepeatPicker.addEventListener(
   "click",
   closeRepeatPickerWindow
 );
 
 
-repeatPickerOverlay.addEventListener(
+repeatPickerBackdrop.addEventListener(
   "click",
   closeRepeatPickerWindow
 );
 
 
-function getRepeatText(
-  repeat
-) {
-
-  const names = {
-
-    none:
-      "Не повторять",
-
-    daily:
-      "Каждый день",
-
-    weekdays:
-      "По будням",
-
-    weekly:
-      "Каждую неделю",
-
-    monthly:
-      "Каждый месяц"
-
-  };
-
-
-  return (
-    names[repeat] ||
-    "Не повторять"
-  );
-
-}
-
-
 document
   .querySelectorAll(
-    ".repeat-choice"
+    ".repeat-option"
   )
   .forEach(
     button => {
@@ -1244,13 +1660,10 @@ document
         "click",
         () => {
 
-          selectedRepeat =
+          taskFormRepeat =
             button.dataset.repeat;
 
-          repeatValue.textContent =
-            getRepeatText(
-              selectedRepeat
-            );
+          updateFormUI();
 
           closeRepeatPickerWindow();
 
@@ -1261,82 +1674,40 @@ document
   );
 
 
-/* ================= SUBTASK ================= */
+/* IMPORTANT */
+
+importantButton.addEventListener(
+  "click",
+  () => {
+
+    taskFormImportant =
+      !taskFormImportant;
+
+    updateFormUI();
+
+  }
+);
+
+
+/* SUBTASK */
 
 addSubtaskButton.addEventListener(
   "click",
   () => {
 
-    createSubtaskInput();
+    createSubtask();
 
   }
 );
 
 
-/* ================= MODAL EVENTS ================= */
+/* DAY */
 
-addTaskButton.addEventListener(
-  "click",
-  openModal
-);
-
-
-closeModal.addEventListener(
-  "click",
-  closeTaskModal
-);
-
-
-modalOverlay.addEventListener(
-  "click",
-  closeTaskModal
-);
-
-
-saveTaskButton.addEventListener(
-  "click",
-  saveTask
-);
-
-
-deleteTaskButton.addEventListener(
-  "click",
-  deleteTask
-);
-
-
-taskInput.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key ===
-      "Enter"
-    ) {
-
-      saveTask();
-
-    }
-
-  }
-);
-
-
-/* ================= DAY NAVIGATION ================= */
-
-prevDay.addEventListener(
+previousDay.addEventListener(
   "click",
   () => {
 
-    currentDate.setDate(
-      currentDate.getDate() - 1
-    );
-
-    formatDate(
-      currentDate
-    );
-
-    renderTasks();
+    changeDay(-1);
 
   }
 );
@@ -1346,26 +1717,164 @@ nextDay.addEventListener(
   "click",
   () => {
 
-    currentDate.setDate(
-      currentDate.getDate() + 1
-    );
-
-    formatDate(
-      currentDate
-    );
-
-    renderTasks();
+    changeDay(1);
 
   }
 );
 
 
-/* ================= START ================= */
+/* TODAY */
+
+todayButton.addEventListener(
+  "click",
+  goToToday
+);
+
+
+/* CALENDAR */
+
+calendarButton.addEventListener(
+  "click",
+  openCalendar
+);
+
+
+closeCalendarPicker.addEventListener(
+  "click",
+  closeCalendarWindow
+);
+
+
+calendarPickerBackdrop.addEventListener(
+  "click",
+  closeCalendarWindow
+);
+
+
+goToDate.addEventListener(
+  "click",
+  goToSelectedDate
+);
+
+
+/* ================= KEYBOARD ================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key ===
+      "Escape"
+    ) {
+
+      taskModal.classList.add(
+        "hidden"
+      );
+
+      datePicker.classList.add(
+        "hidden"
+      );
+
+      timePicker.classList.add(
+        "hidden"
+      );
+
+      repeatPicker.classList.add(
+        "hidden"
+      );
+
+      calendarPicker.classList.add(
+        "hidden"
+      );
+
+    }
+
+  }
+);
+
+
+/* ================= BOTTOM NAV ================= */
+
+document
+  .querySelectorAll(
+    ".nav-item"
+  )
+  .forEach(
+    item => {
+
+      item.addEventListener(
+        "click",
+        () => {
+
+          document
+            .querySelectorAll(
+              ".nav-item"
+            )
+            .forEach(
+              nav => {
+
+                nav.classList.remove(
+                  "active"
+                );
+
+              }
+            );
+
+
+          item.classList.add(
+            "active"
+          );
+
+
+          const page =
+            item.dataset.page;
+
+
+          if (
+            page !== "tasks"
+          ) {
+
+            alert(
+              "Этот раздел сделаем следующим этапом."
+            );
+
+            document
+              .querySelectorAll(
+                ".nav-item"
+              )
+              .forEach(
+                nav => {
+
+                  nav.classList.remove(
+                    "active"
+                  );
+
+                }
+              );
+
+
+            document
+              .querySelector(
+                '[data-page="tasks"]'
+              )
+              .classList.add(
+                "active"
+              );
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+/* ================= INITIALIZE ================= */
 
 loadTasks();
 
-formatDate(
-  currentDate
-);
+renderDate();
 
 renderTasks();
