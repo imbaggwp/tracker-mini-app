@@ -22,9 +22,12 @@
       --text: #17191c;
       --secondary: #7d838b;
       --border: #e8eaed;
+
       --accent: #ff7a45;
       --accent-soft: #fff0e9;
+
       --danger: #e05252;
+
       --shadow: 0 8px 30px rgba(20, 25, 30, 0.06);
     }
 
@@ -39,12 +42,15 @@
 
       background: var(--bg);
       color: var(--text);
+
       min-height: 100vh;
+
       padding-bottom: 90px;
     }
 
     button,
-    input {
+    input,
+    select {
       font: inherit;
     }
 
@@ -60,7 +66,9 @@
     .app {
       width: 100%;
       max-width: 600px;
+
       margin: 0 auto;
+
       padding: 24px 18px 30px;
     }
 
@@ -72,32 +80,40 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       margin-bottom: 28px;
     }
 
     .greeting {
       font-size: 14px;
       color: var(--secondary);
+
       margin-bottom: 5px;
     }
 
     .title {
       font-size: 30px;
       font-weight: 750;
+
       letter-spacing: -0.8px;
     }
 
     .date {
       margin-top: 5px;
+
       font-size: 14px;
+
       color: var(--secondary);
     }
 
     .profile-button {
       width: 46px;
       height: 46px;
+
       border-radius: 50%;
+
       background: var(--card);
+
       box-shadow: var(--shadow);
 
       display: flex;
@@ -113,9 +129,13 @@
 
     .progress-card {
       background: var(--card);
+
       border-radius: 22px;
+
       padding: 20px;
+
       box-shadow: var(--shadow);
+
       margin-bottom: 26px;
     }
 
@@ -123,31 +143,41 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       margin-bottom: 14px;
     }
 
     .progress-label {
       font-size: 14px;
+
       color: var(--secondary);
     }
 
     .progress-value {
       font-size: 17px;
+
       font-weight: 700;
     }
 
     .progress-bar {
       height: 9px;
+
       background: #eceef0;
+
       border-radius: 20px;
+
       overflow: hidden;
     }
 
     .progress-fill {
       height: 100%;
+
       width: 0%;
+
       background: var(--accent);
+
       border-radius: 20px;
+
       transition: width 0.3s ease;
     }
 
@@ -159,16 +189,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       margin-bottom: 13px;
     }
 
     .section-title {
       font-size: 19px;
+
       font-weight: 720;
     }
 
     .section-count {
       font-size: 13px;
+
       color: var(--secondary);
     }
 
@@ -178,17 +211,22 @@
 
     .tasks {
       display: flex;
+
       flex-direction: column;
+
       gap: 10px;
     }
 
     .task {
       background: var(--card);
+
       border-radius: 18px;
+
       padding: 15px 16px;
 
       display: flex;
       align-items: center;
+
       gap: 13px;
 
       box-shadow: var(--shadow);
@@ -209,9 +247,11 @@
     .task-check {
       width: 24px;
       height: 24px;
+
       min-width: 24px;
 
       border: 2px solid #cdd1d5;
+
       border-radius: 50%;
 
       display: flex;
@@ -225,13 +265,17 @@
 
     .task.completed .task-check {
       background: var(--accent);
+
       border-color: var(--accent);
+
       color: white;
     }
 
     .check-icon {
       display: none;
+
       font-size: 13px;
+
       font-weight: 800;
     }
 
@@ -241,13 +285,17 @@
 
     .task-content {
       flex: 1;
+
       min-width: 0;
     }
 
     .task-name {
       font-size: 15px;
+
       font-weight: 620;
+
       line-height: 1.3;
+
       word-break: break-word;
     }
 
@@ -257,16 +305,20 @@
 
     .task-meta {
       margin-top: 4px;
+
       font-size: 12px;
+
       color: var(--secondary);
     }
 
     .delete-task {
       width: 32px;
       height: 32px;
+
       border-radius: 10px;
 
       background: transparent;
+
       color: #a1a6ac;
 
       font-size: 17px;
@@ -278,35 +330,45 @@
 
     .delete-task:active {
       background: #f1f2f3;
+
       color: var(--danger);
     }
 
     /* =========================
-       EMPTY STATE
+       EMPTY
     ========================= */
 
     .empty {
       background: var(--card);
+
       border-radius: 20px;
+
       padding: 34px 20px;
+
       text-align: center;
+
       box-shadow: var(--shadow);
     }
 
     .empty-icon {
       font-size: 35px;
+
       margin-bottom: 10px;
     }
 
     .empty-title {
       font-size: 16px;
+
       font-weight: 700;
+
       margin-bottom: 5px;
     }
 
     .empty-text {
       font-size: 13px;
+
       color: var(--secondary);
+
       line-height: 1.5;
     }
 
@@ -316,6 +378,7 @@
 
     .add-button {
       position: fixed;
+
       right: 20px;
       bottom: 82px;
 
@@ -325,9 +388,11 @@
       border-radius: 18px;
 
       background: var(--accent);
+
       color: white;
 
       font-size: 30px;
+
       font-weight: 300;
 
       box-shadow:
@@ -342,15 +407,17 @@
 
     .add-button:active {
       transform: scale(0.94);
+
       box-shadow: none;
     }
 
     /* =========================
-       BOTTOM NAVIGATION
+       NAVIGATION
     ========================= */
 
     .bottom-nav {
       position: fixed;
+
       left: 0;
       right: 0;
       bottom: 0;
@@ -358,12 +425,15 @@
       height: 70px;
 
       background: rgba(255, 255, 255, 0.94);
+
       backdrop-filter: blur(18px);
+
       -webkit-backdrop-filter: blur(18px);
 
       border-top: 1px solid var(--border);
 
       display: flex;
+
       justify-content: center;
 
       z-index: 15;
@@ -371,18 +441,24 @@
 
     .nav-inner {
       width: 100%;
+
       max-width: 600px;
 
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+
+      grid-template-columns:
+        repeat(4, 1fr);
     }
 
     .nav-button {
       background: transparent;
 
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
+
       justify-content: center;
 
       gap: 4px;
@@ -394,6 +470,7 @@
 
     .nav-icon {
       font-size: 20px;
+
       line-height: 1;
     }
 
@@ -407,12 +484,15 @@
 
     .modal-overlay {
       position: fixed;
+
       inset: 0;
 
       background: rgba(20, 23, 27, 0.42);
 
       display: none;
+
       align-items: flex-end;
+
       justify-content: center;
 
       z-index: 100;
@@ -426,6 +506,7 @@
 
     .modal {
       width: 100%;
+
       max-width: 600px;
 
       background: var(--card);
@@ -435,6 +516,10 @@
       padding: 22px 18px 30px;
 
       animation: slideUp 0.22s ease;
+
+      max-height: 90vh;
+
+      overflow-y: auto;
     }
 
     @keyframes slideUp {
@@ -450,21 +535,29 @@
     .modal-handle {
       width: 42px;
       height: 4px;
+
       border-radius: 10px;
+
       background: #d9dcdf;
+
       margin: 0 auto 22px;
     }
 
     .modal-title {
       font-size: 22px;
+
       font-weight: 750;
+
       margin-bottom: 20px;
     }
 
     .input-label {
       display: block;
+
       font-size: 13px;
+
       color: var(--secondary);
+
       margin-bottom: 8px;
     }
 
@@ -472,6 +565,7 @@
       width: 100%;
 
       border: 1px solid var(--border);
+
       outline: none;
 
       background: #f7f8f9;
@@ -482,15 +576,97 @@
 
       font-size: 16px;
 
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .task-input:focus {
       border-color: var(--accent);
     }
 
+    /* =========================
+       REPEAT
+    ========================= */
+
+    .repeat-title {
+      font-size: 14px;
+
+      font-weight: 650;
+
+      margin-bottom: 10px;
+    }
+
+    .repeat-options {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 8px;
+
+      margin-bottom: 20px;
+    }
+
+    .repeat-option {
+      position: relative;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      padding: 13px 14px;
+
+      background: #f7f8f9;
+
+      border: 1px solid transparent;
+
+      border-radius: 14px;
+
+      cursor: pointer;
+
+      transition: all 0.15s ease;
+    }
+
+    .repeat-option:has(input:checked) {
+      background: var(--accent-soft);
+
+      border-color: var(--accent);
+    }
+
+    .repeat-option input {
+      width: 18px;
+      height: 18px;
+
+      accent-color: var(--accent);
+    }
+
+    .repeat-label {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 2px;
+    }
+
+    .repeat-name {
+      font-size: 14px;
+
+      font-weight: 600;
+    }
+
+    .repeat-description {
+      font-size: 11px;
+
+      color: var(--secondary);
+    }
+
+    /* =========================
+       MODAL ACTIONS
+    ========================= */
+
     .modal-actions {
       display: flex;
+
       gap: 10px;
     }
 
@@ -502,16 +678,19 @@
       border-radius: 15px;
 
       font-size: 15px;
+
       font-weight: 650;
     }
 
     .cancel-button {
       background: #f0f1f2;
+
       color: var(--text);
     }
 
     .save-button {
       background: var(--accent);
+
       color: white;
     }
 
@@ -525,9 +704,11 @@
       left: 50%;
       bottom: 82px;
 
-      transform: translate(-50%, 20px);
+      transform:
+        translate(-50%, 20px);
 
       background: #202326;
+
       color: white;
 
       padding: 11px 17px;
@@ -537,6 +718,7 @@
       font-size: 13px;
 
       opacity: 0;
+
       pointer-events: none;
 
       transition: all 0.25s ease;
@@ -548,7 +730,9 @@
 
     .toast.show {
       opacity: 1;
-      transform: translate(-50%, 0);
+
+      transform:
+        translate(-50%, 0);
     }
 
     /* =========================
@@ -556,26 +740,32 @@
     ========================= */
 
     @media (min-width: 700px) {
+
       .app {
         padding-top: 40px;
       }
 
       .add-button {
-        right: calc(50% - 280px);
+        right:
+          calc(50% - 280px);
       }
 
       .modal-overlay {
         align-items: center;
+
         padding: 20px;
       }
 
       .modal {
         border-radius: 26px;
+
         max-width: 500px;
       }
+
     }
   </style>
 </head>
+
 
 <body>
 
@@ -590,14 +780,26 @@
     <header class="header">
 
       <div>
-        <div class="greeting">Добрый день 👋</div>
 
-        <h1 class="title">Мой день</h1>
+        <div class="greeting">
+          Добрый день 👋
+        </div>
 
-        <div class="date" id="currentDate"></div>
+        <h1 class="title">
+          Мой день
+        </h1>
+
+        <div
+          class="date"
+          id="currentDate"
+        ></div>
+
       </div>
 
-      <button class="profile-button" id="profileButton">
+      <button
+        class="profile-button"
+        id="profileButton"
+      >
         👤
       </button>
 
@@ -614,7 +816,10 @@
           Прогресс сегодня
         </span>
 
-        <span class="progress-value" id="progressValue">
+        <span
+          class="progress-value"
+          id="progressValue"
+        >
           0%
         </span>
 
@@ -673,7 +878,9 @@
   </button>
 
 
-  <!-- BOTTOM NAVIGATION -->
+  <!-- =========================
+       NAVIGATION
+  ========================= -->
 
   <nav class="bottom-nav">
 
@@ -683,32 +890,55 @@
         class="nav-button active"
         data-page="home"
       >
-        <span class="nav-icon">⌂</span>
-        <span>Сегодня</span>
+        <span class="nav-icon">
+          ⌂
+        </span>
+
+        <span>
+          Сегодня
+        </span>
       </button>
+
 
       <button
         class="nav-button"
         data-page="calendar"
       >
-        <span class="nav-icon">▣</span>
-        <span>Календарь</span>
+        <span class="nav-icon">
+          ▣
+        </span>
+
+        <span>
+          Календарь
+        </span>
       </button>
+
 
       <button
         class="nav-button"
         data-page="analytics"
       >
-        <span class="nav-icon">◒</span>
-        <span>Аналитика</span>
+        <span class="nav-icon">
+          ◒
+        </span>
+
+        <span>
+          Аналитика
+        </span>
       </button>
+
 
       <button
         class="nav-button"
         data-page="settings"
       >
-        <span class="nav-icon">⚙</span>
-        <span>Настройки</span>
+        <span class="nav-icon">
+          ⚙
+        </span>
+
+        <span>
+          Настройки
+        </span>
       </button>
 
     </div>
@@ -716,7 +946,9 @@
   </nav>
 
 
-  <!-- ADD TASK MODAL -->
+  <!-- =========================
+       ADD TASK MODAL
+  ========================= -->
 
   <div
     class="modal-overlay"
@@ -727,13 +959,16 @@
 
       <div class="modal-handle"></div>
 
+
       <h2 class="modal-title">
         Новая задача
       </h2>
 
+
       <label class="input-label">
         Что нужно сделать?
       </label>
+
 
       <input
         class="task-input"
@@ -744,6 +979,113 @@
         autocomplete="off"
       />
 
+
+      <!-- REPEAT -->
+
+      <div class="repeat-title">
+        Периодичность
+      </div>
+
+
+      <div class="repeat-options">
+
+        <label class="repeat-option">
+
+          <input
+            type="radio"
+            name="repeat"
+            value="none"
+            checked
+          />
+
+          <div class="repeat-label">
+
+            <span class="repeat-name">
+              Не повторять
+            </span>
+
+            <span class="repeat-description">
+              Только сегодня
+            </span>
+
+          </div>
+
+        </label>
+
+
+        <label class="repeat-option">
+
+          <input
+            type="radio"
+            name="repeat"
+            value="daily"
+          />
+
+          <div class="repeat-label">
+
+            <span class="repeat-name">
+              Каждый день
+            </span>
+
+            <span class="repeat-description">
+              Задача будет появляться ежедневно
+            </span>
+
+          </div>
+
+        </label>
+
+
+        <label class="repeat-option">
+
+          <input
+            type="radio"
+            name="repeat"
+            value="weekdays"
+          />
+
+          <div class="repeat-label">
+
+            <span class="repeat-name">
+              По будням
+            </span>
+
+            <span class="repeat-description">
+              Понедельник — пятница
+            </span>
+
+          </div>
+
+        </label>
+
+
+        <label class="repeat-option">
+
+          <input
+            type="radio"
+            name="repeat"
+            value="weekly"
+          />
+
+          <div class="repeat-label">
+
+            <span class="repeat-name">
+              Каждую неделю
+            </span>
+
+            <span class="repeat-description">
+              В этот же день каждую неделю
+            </span>
+
+          </div>
+
+        </label>
+
+      </div>
+
+
+      <!-- ACTIONS -->
+
       <div class="modal-actions">
 
         <button
@@ -752,6 +1094,7 @@
         >
           Отмена
         </button>
+
 
         <button
           class="modal-button save-button"
@@ -781,11 +1124,14 @@
        STORAGE
     ========================= */
 
-    const STORAGE_KEY = "tracker_tasks";
+    const STORAGE_KEY =
+      "tracker_tasks";
 
 
     let tasks = JSON.parse(
-      localStorage.getItem(STORAGE_KEY) || "[]"
+      localStorage.getItem(
+        STORAGE_KEY
+      ) || "[]"
     );
 
 
@@ -794,64 +1140,98 @@
     ========================= */
 
     const tasksContainer =
-      document.getElementById("tasksContainer");
+      document.getElementById(
+        "tasksContainer"
+      );
 
     const taskCount =
-      document.getElementById("taskCount");
+      document.getElementById(
+        "taskCount"
+      );
 
     const progressValue =
-      document.getElementById("progressValue");
+      document.getElementById(
+        "progressValue"
+      );
 
     const progressFill =
-      document.getElementById("progressFill");
+      document.getElementById(
+        "progressFill"
+      );
 
     const currentDate =
-      document.getElementById("currentDate");
+      document.getElementById(
+        "currentDate"
+      );
 
     const addButton =
-      document.getElementById("addButton");
+      document.getElementById(
+        "addButton"
+      );
 
     const modalOverlay =
-      document.getElementById("modalOverlay");
+      document.getElementById(
+        "modalOverlay"
+      );
 
     const taskInput =
-      document.getElementById("taskInput");
+      document.getElementById(
+        "taskInput"
+      );
 
     const cancelButton =
-      document.getElementById("cancelButton");
+      document.getElementById(
+        "cancelButton"
+      );
 
     const saveButton =
-      document.getElementById("saveButton");
+      document.getElementById(
+        "saveButton"
+      );
 
     const toast =
-      document.getElementById("toast");
+      document.getElementById(
+        "toast"
+      );
 
 
     /* =========================
        DATE
     ========================= */
 
-    function getTodayKey() {
+    function getDateKey(date = new Date()) {
 
-      const date = new Date();
-
-      const year = date.getFullYear();
+      const year =
+        date.getFullYear();
 
       const month =
-        String(date.getMonth() + 1)
-          .padStart(2, "0");
+        String(
+          date.getMonth() + 1
+        ).padStart(2, "0");
 
       const day =
-        String(date.getDate())
-          .padStart(2, "0");
+        String(
+          date.getDate()
+        ).padStart(2, "0");
 
       return `${year}-${month}-${day}`;
+
+    }
+
+
+    function getTodayKey() {
+
+      return getDateKey(
+        new Date()
+      );
+
     }
 
 
     function formatDate() {
 
-      const date = new Date();
+      const date =
+        new Date();
 
       const text =
         date.toLocaleDateString(
@@ -866,19 +1246,126 @@
       currentDate.textContent =
         text.charAt(0).toUpperCase() +
         text.slice(1);
+
     }
 
 
     /* =========================
-       STORAGE
+       DAY OF WEEK
     ========================= */
 
-    function saveTasks() {
+    function getDayOfWeek(date) {
 
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(tasks)
+      return date.getDay();
+
+    }
+
+
+    /* =========================
+       RECURRING TASK LOGIC
+    ========================= */
+
+    function taskShouldAppearToday(task) {
+
+      const today =
+        new Date();
+
+      const todayKey =
+        getTodayKey();
+
+
+      /* обычная задача */
+
+      if (
+        !task.recurring ||
+        task.recurring === "none"
+      ) {
+
+        return task.date === todayKey;
+
+      }
+
+
+      /* задача не должна появляться
+         раньше даты создания */
+
+      if (
+        task.startDate &&
+        todayKey < task.startDate
+      ) {
+
+        return false;
+
+      }
+
+
+      /* каждый день */
+
+      if (
+        task.recurring === "daily"
+      ) {
+
+        return true;
+
+      }
+
+
+      /* будни */
+
+      if (
+        task.recurring === "weekdays"
+      ) {
+
+        const day =
+          getDayOfWeek(today);
+
+        return (
+          day >= 1 &&
+          day <= 5
+        );
+
+      }
+
+
+      /* каждую неделю */
+
+      if (
+        task.recurring === "weekly"
+      ) {
+
+        const start =
+          task.startDate
+            ? new Date(
+                task.startDate
+              )
+            : today;
+
+        return (
+          getDayOfWeek(start) ===
+          getDayOfWeek(today)
+        );
+
+      }
+
+
+      return false;
+
+    }
+
+
+    /* =========================
+       GET TODAY TASKS
+    ========================= */
+
+    function getTodayTasks() {
+
+      return tasks.filter(
+        task =>
+          taskShouldAppearToday(
+            task
+          )
       );
+
     }
 
 
@@ -888,17 +1375,16 @@
 
     function renderTasks() {
 
-      tasksContainer.innerHTML = "";
-
-      const today = getTodayKey();
+      tasksContainer.innerHTML =
+        "";
 
       const todayTasks =
-        tasks.filter(
-          task => task.date === today
-        );
+        getTodayTasks();
 
 
-      if (todayTasks.length === 0) {
+      if (
+        todayTasks.length === 0
+      ) {
 
         tasksContainer.innerHTML = `
 
@@ -923,61 +1409,110 @@
 
       } else {
 
-        todayTasks.forEach(task => {
+        todayTasks.forEach(
+          task => {
 
-          const element =
-            document.createElement("div");
+            const element =
+              document.createElement(
+                "div"
+              );
 
-          element.className =
-            "task" +
-            (task.completed
-              ? " completed"
-              : "");
 
-          element.innerHTML = `
+            element.className =
+              "task" +
+              (
+                task.completed
+                  ? " completed"
+                  : ""
+              );
 
-            <button
-              class="task-check"
-              data-id="${task.id}"
-              aria-label="Выполнить задачу"
-            >
-              <span class="check-icon">
-                ✓
-              </span>
-            </button>
 
-            <div class="task-content">
+            element.innerHTML = `
 
-              <div class="task-name">
-                ${escapeHtml(task.title)}
+              <button
+                class="task-check"
+                data-id="${task.id}"
+              >
+
+                <span class="check-icon">
+                  ✓
+                </span>
+
+              </button>
+
+
+              <div class="task-content">
+
+                <div class="task-name">
+                  ${escapeHtml(
+                    task.title
+                  )}
+                </div>
+
+
+                <div class="task-meta">
+
+                  ${
+                    getRepeatLabel(
+                      task.recurring
+                    )
+                  }
+
+                </div>
+
               </div>
 
-              <div class="task-meta">
-                ${task.recurring
-                  ? "🔁 Регулярная задача"
-                  : "Сегодня"}
-              </div>
 
-            </div>
+              <button
+                class="delete-task"
+                data-delete="${task.id}"
+              >
+                ×
+              </button>
 
-            <button
-              class="delete-task"
-              data-delete="${task.id}"
-              aria-label="Удалить"
-            >
-              ×
-            </button>
+            `;
 
-          `;
 
-          tasksContainer.appendChild(element);
+            tasksContainer.appendChild(
+              element
+            );
 
-        });
+          }
+        );
 
       }
 
 
-      updateStats(todayTasks);
+      updateStats(
+        todayTasks
+      );
+
+    }
+
+
+    /* =========================
+       REPEAT LABEL
+    ========================= */
+
+    function getRepeatLabel(
+      repeat
+    ) {
+
+      switch (repeat) {
+
+        case "daily":
+          return "🔁 Каждый день";
+
+        case "weekdays":
+          return "🔁 По будням";
+
+        case "weekly":
+          return "🔁 Каждую неделю";
+
+        default:
+          return "Сегодня";
+
+      }
 
     }
 
@@ -986,24 +1521,32 @@
        STATS
     ========================= */
 
-    function updateStats(todayTasks) {
+    function updateStats(
+      todayTasks
+    ) {
 
       const total =
         todayTasks.length;
 
+
       const completed =
         todayTasks.filter(
-          task => task.completed
+          task =>
+            task.completed
         ).length;
 
 
       let percentage = 0;
 
+
       if (total > 0) {
 
         percentage =
           Math.round(
-            (completed / total) * 100
+            (
+              completed /
+              total
+            ) * 100
           );
 
       }
@@ -1011,6 +1554,7 @@
 
       progressValue.textContent =
         `${percentage}%`;
+
 
       progressFill.style.width =
         `${percentage}%`;
@@ -1024,26 +1568,40 @@
     }
 
 
-    function getTaskWord(number) {
+    function getTaskWord(
+      number
+    ) {
 
-      const mod10 = number % 10;
+      const mod10 =
+        number % 10;
 
-      const mod100 = number % 100;
+      const mod100 =
+        number % 100;
+
 
       if (
         mod10 === 1 &&
         mod100 !== 11
       ) {
+
         return "задача";
+
       }
+
 
       if (
         mod10 >= 2 &&
         mod10 <= 4 &&
-        (mod100 < 10 || mod100 >= 20)
+        (
+          mod100 < 10 ||
+          mod100 >= 20
+        )
       ) {
+
         return "задачи";
+
       }
+
 
       return "задач";
 
@@ -1051,30 +1609,49 @@
 
 
     /* =========================
-       ADD TASK
+       MODAL
     ========================= */
 
     function openModal() {
 
-      modalOverlay.classList.add("show");
+      modalOverlay.classList.add(
+        "show"
+      );
 
-      setTimeout(() => {
 
-        taskInput.focus();
+      setTimeout(
+        () => {
 
-      }, 150);
+          taskInput.focus();
+
+        },
+        150
+      );
 
     }
 
 
     function closeModal() {
 
-      modalOverlay.classList.remove("show");
+      modalOverlay.classList.remove(
+        "show"
+      );
 
-      taskInput.value = "";
+
+      taskInput.value =
+        "";
+
+
+      document.querySelector(
+        'input[name="repeat"][value="none"]'
+      ).checked = true;
 
     }
 
+
+    /* =========================
+       ADD TASK
+    ========================= */
 
     function addTask() {
 
@@ -1095,6 +1672,16 @@
       }
 
 
+      const repeat =
+        document.querySelector(
+          'input[name="repeat"]:checked'
+        ).value;
+
+
+      const today =
+        getTodayKey();
+
+
       const newTask = {
 
         id:
@@ -1103,12 +1690,15 @@
         title,
 
         date:
-          getTodayKey(),
+          today,
 
-        completed:
-          false,
+        startDate:
+          today,
 
         recurring:
+          repeat,
+
+        completed:
           false,
 
         createdAt:
@@ -1117,7 +1707,10 @@
       };
 
 
-      tasks.push(newTask);
+      tasks.push(
+        newTask
+      );
+
 
       saveTasks();
 
@@ -1125,8 +1718,11 @@
 
       closeModal();
 
+
       showToast(
-        "Задача добавлена ✓"
+        repeat === "none"
+          ? "Задача добавлена ✓"
+          : "Регулярная задача создана 🔁"
       );
 
     }
@@ -1140,7 +1736,8 @@
 
       const task =
         tasks.find(
-          item => item.id === id
+          item =>
+            item.id === id
         );
 
 
@@ -1156,7 +1753,9 @@
       renderTasks();
 
 
-      if (task.completed) {
+      if (
+        task.completed
+      ) {
 
         showToast(
           "Задача выполнена ✓"
@@ -1175,13 +1774,15 @@
 
       tasks =
         tasks.filter(
-          task => task.id !== id
+          task =>
+            task.id !== id
         );
 
 
       saveTasks();
 
       renderTasks();
+
 
       showToast(
         "Задача удалена"
@@ -1191,15 +1792,34 @@
 
 
     /* =========================
-       ESCAPE HTML
+       SAVE
     ========================= */
 
-    function escapeHtml(text) {
+    function saveTasks() {
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(tasks)
+      );
+
+    }
+
+
+    /* =========================
+       ESCAPE
+    ========================= */
+
+    function escapeHtml(
+      text
+    ) {
 
       const div =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
-      div.textContent = text;
+      div.textContent =
+        text;
 
       return div.innerHTML;
 
@@ -1213,24 +1833,35 @@
     let toastTimer;
 
 
-    function showToast(message) {
+    function showToast(
+      message
+    ) {
 
-      clearTimeout(toastTimer);
+      clearTimeout(
+        toastTimer
+      );
+
 
       toast.textContent =
         message;
 
-      toast.classList.add("show");
+
+      toast.classList.add(
+        "show"
+      );
 
 
       toastTimer =
-        setTimeout(() => {
+        setTimeout(
+          () => {
 
-          toast.classList.remove(
-            "show"
-          );
+            toast.classList.remove(
+              "show"
+            );
 
-        }, 1800);
+          },
+          1800
+        );
 
     }
 
@@ -1278,7 +1909,8 @@
       event => {
 
         if (
-          event.target === modalOverlay
+          event.target ===
+          modalOverlay
         ) {
 
           closeModal();
@@ -1316,7 +1948,9 @@
           );
 
 
-        if (deleteButton) {
+        if (
+          deleteButton
+        ) {
 
           deleteTask(
             deleteButton.dataset.delete
@@ -1333,45 +1967,55 @@
     ========================= */
 
     document
-      .querySelectorAll(".nav-button")
-      .forEach(button => {
+      .querySelectorAll(
+        ".nav-button"
+      )
+      .forEach(
+        button => {
 
-        button.addEventListener(
-          "click",
-          () => {
+          button.addEventListener(
+            "click",
+            () => {
 
-            document
-              .querySelectorAll(".nav-button")
-              .forEach(item => {
+              document
+                .querySelectorAll(
+                  ".nav-button"
+                )
+                .forEach(
+                  item => {
 
-                item.classList.remove(
-                  "active"
+                    item.classList.remove(
+                      "active"
+                    );
+
+                  }
                 );
 
-              });
 
-
-            button.classList.add(
-              "active"
-            );
-
-
-            const page =
-              button.dataset.page;
-
-
-            if (page !== "home") {
-
-              showToast(
-                "Этот раздел добавим следующим шагом"
+              button.classList.add(
+                "active"
               );
 
+
+              const page =
+                button.dataset.page;
+
+
+              if (
+                page !== "home"
+              ) {
+
+                showToast(
+                  "Раздел добавим следующим шагом"
+                );
+
+              }
+
             }
+          );
 
-          }
-        );
-
-      });
+        }
+      );
 
 
     /* =========================
@@ -1379,7 +2023,9 @@
     ========================= */
 
     document
-      .getElementById("profileButton")
+      .getElementById(
+        "profileButton"
+      )
       .addEventListener(
         "click",
         () => {
@@ -1393,7 +2039,7 @@
 
 
     /* =========================
-       TELEGRAM MINI APP
+       TELEGRAM
     ========================= */
 
     if (
@@ -1403,6 +2049,7 @@
 
       const tg =
         window.Telegram.WebApp;
+
 
       tg.ready();
 
