@@ -2279,6 +2279,167 @@
     tg.expand();
   }
 
+  const TG_USER =
+    (tg && tg.initDataUnsafe && tg.initDataUnsafe.user)
+      ? tg.initDataUnsafe.user
+      : null;
+
+  /* =========================================
+     CLOUDFLARE API / D1
+  ========================================= */
+
+  const API_URL = "https://tracker-api.asiya30092013.workers.dev";
+
+  function getTelegramUserId() {
+    return TG_USER && TG_USER.id ? String(TG_USER.id) : null;
+  }
+
+  async function apiRequest(path, options = {}) {
+    const telegramId = getTelegramUserId();
+    if (!telegramId) throw new Error("Telegram user is not available");
+
+    const response = await fetch(API_URL + path, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        "X-Telegram-User-Id": telegramId,
+        ...(options.headers || {})
+      }
+    });
+
+    let body = null;
+    try { body = await response.json(); } catch (e) {}
+
+    if (!response.ok) {
+      throw new Error((body && body.error) || `API error ${response.status}`);
+    }
+
+    return body;
+  }
+
+  function localTaskById(id) {
+    return tasks.find(task => String(task.id) === String(id));
+  }
+
+  async function createTaskOnServer(task) {
+    const result = await apiRequest("/api/tasks", {
+      method: "POST",
+      body: JSON.stringify({
+        title: task.title,
+        description: task.note || "",
+        date: task.date || null,
+        time: task.time || null,
+        repeat_type: task.repeat || "none",
+        important: Boolean(task.important)
+      })
+    });
+    return result.task || null;
+  }
+
+  async function updateTaskOnServer(task) {
+    const result = await apiRequest(`/api/tasks/${encodeURIComponent(task.id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        title: task.title,
+        description: task.note || "",
+        date: task.date || null,
+        time: task.time || null,
+        repeat_type: task.repeat || "none",
+        important: Boolean(task.important)
+      })
+    });
+    return result.task || null;
+  }
+
+  async function deleteTaskOnServer(id) {
+    return apiRequest(`/api/tasks/${encodeURIComponent(id)}`, {
+      method: "DELETE"
+    });
+  }
+
+  async function loadTasksFromServer() {
+    if (!getTelegramUserId()) return false;
+
+    try {
+      const result = await apiRequest("/api/tasks");
+      const serverTasks = Array.isArray(result.tasks) ? result.tasks : [];
+      const localTasks = Array.isArray(tasks) ? tasks.slice() : [];
+
+      // Если D1 пока пустая, переносим существующие локальные задачи.
+      if (serverTasks.length === 0 && localTasks.length > 0) {
+        const uploaded = [];
+        for (const localTask of localTasks) {
+          try {
+            const serverTask = await createTaskOnServer(localTask);
+            if (serverTask) {
+              uploaded.push({
+                ...localTask,
+                id: serverTask.id,
+                date: serverTask.date || localTask.date,
+                time: serverTask.time || localTask.time,
+                repeat: serverTask.repeat_type || localTask.repeat || "none",
+                note: serverTask.description || localTask.note || "",
+                important: Boolean(serverTask.important)
+              });
+            }
+          } catch (e) {
+            console.warn("Не удалось перенести задачу в D1", e);
+          }
+        }
+        if (uploaded.length) {
+          tasks = uploaded;
+          saveTasks();
+          return true;
+        }
+      }
+
+      const localById = new Map(localTasks.map(t => [String(t.id), t]));
+      const merged = serverTasks.map(serverTask => {
+        const local = localById.get(String(serverTask.id));
+        return {
+          id: serverTask.id,
+          title: serverTask.title || "",
+          date: serverTask.date || "",
+          time: serverTask.time || "",
+          repeat: serverTask.repeat_type || "none",
+          note: serverTask.description || "",
+          important: Boolean(serverTask.important),
+          completed: local ? Boolean(local.completed) : false,
+          completions: local && local.completions ? local.completions : {},
+          createdAt: serverTask.created_at || (local && local.createdAt) || new Date().toISOString()
+        };
+      });
+
+      const serverIds = new Set(serverTasks.map(t => String(t.id)));
+      for (const localTask of localTasks) {
+        if (serverIds.has(String(localTask.id))) continue;
+        try {
+          const serverTask = await createTaskOnServer(localTask);
+          if (serverTask) {
+            merged.push({
+              ...localTask,
+              id: serverTask.id,
+              date: serverTask.date || localTask.date,
+              time: serverTask.time || localTask.time,
+              repeat: serverTask.repeat_type || localTask.repeat || "none",
+              note: serverTask.description || localTask.note || "",
+              important: Boolean(serverTask.important)
+            });
+          }
+        } catch (e) {
+          console.warn("Не удалось синхронизировать локальную задачу", e);
+        }
+      }
+
+      tasks = merged;
+      saveTasks();
+      return true;
+    } catch (e) {
+      console.warn("D1 недоступна, продолжаем с локальными данными", e);
+      return false;
+    }
+  }
+
 
   /* =========================================
      STATE
@@ -2628,128 +2789,82 @@
      SAVE TASK
   ========================================= */
 
-  function saveTask() {
+  async function saveTask() {
+    const name = document.getElementById("taskName").value.trim();
+    const date = document.getElementById("taskDate").value;
+    const time = document.getElementById("taskTime").value;
+    const repeat = document.getElementById("taskRepeat").value;
+    const note = document.getElementById("taskNote").value.trim();
 
-    const name =
-      document
-        .getElementById("taskName")
-        .value
-        .trim();
-
-    const date =
-      document
-        .getElementById("taskDate")
-        .value;
-
-    const time =
-      document
-        .getElementById("taskTime")
-        .value;
-
-    const repeat =
-      document
-        .getElementById("taskRepeat")
-        .value;
-
-    const note =
-      document
-        .getElementById("taskNote")
-        .value
-        .trim();
-
-
-    if (!name) {
-
-      showToast(
-        "Введите название задачи"
-      );
-
-      return;
-
-    }
-
-
-    if (!date) {
-
-      showToast(
-        "Выберите дату"
-      );
-
-      return;
-
-    }
-
+    if (!name) return showToast("Введите название задачи");
+    if (!date) return showToast("Выберите дату");
 
     if (editingTaskId) {
+      const task = localTaskById(editingTaskId);
+      if (!task) return;
 
-      const task =
-        tasks.find(
-          item =>
-            item.id === editingTaskId
-        );
+      task.title = name;
+      task.date = date;
+      task.time = time;
+      task.repeat = repeat;
+      task.note = note;
+      task.important = importantValue;
 
-      if (task) {
+      saveTasks();
+      closeTaskModal();
+      renderAll();
 
-        task.title = name;
-        task.date = date;
-        task.time = time;
-        task.repeat = repeat;
-        task.note = note;
-        task.important = importantValue;
-
+      try {
+        await updateTaskOnServer(task);
+        showToast("Задача обновлена");
+      } catch (e) {
+        console.warn(e);
+        showToast("Обновлено локально");
       }
-
-      showToast(
-        "Задача обновлена"
-      );
-
-    } else {
-
-      const task = {
-
-        id:
-          Date.now().toString(),
-
-        title: name,
-
-        date: date,
-
-        time: time,
-
-        repeat: repeat,
-
-        note: note,
-
-        important:
-          importantValue,
-
-        completed: false,
-
-        completions: {},
-
-        createdAt:
-          new Date().toISOString()
-
-      };
-
-
-      tasks.push(task);
-
-
-      showToast(
-        "Задача создана"
-      );
-
+      return;
     }
 
+    const task = {
+      id: Date.now().toString(),
+      title: name,
+      date,
+      time,
+      repeat,
+      note,
+      important: importantValue,
+      completed: false,
+      completions: {},
+      createdAt: new Date().toISOString()
+    };
 
+    tasks.push(task);
     saveTasks();
-
     closeTaskModal();
-
-    saveTasks();
     renderAll();
 
+    try {
+      const serverTask = await createTaskOnServer(task);
+      if (serverTask) {
+        const index = tasks.findIndex(item => String(item.id) === String(task.id));
+        if (index !== -1) {
+          tasks[index] = {
+            ...tasks[index],
+            id: serverTask.id,
+            date: serverTask.date || tasks[index].date,
+            time: serverTask.time || tasks[index].time,
+            repeat: serverTask.repeat_type || tasks[index].repeat,
+            note: serverTask.description || tasks[index].note,
+            important: Boolean(serverTask.important)
+          };
+        }
+        saveTasks();
+        renderAll();
+      }
+      showToast("Задача создана");
+    } catch (e) {
+      console.warn(e);
+      showToast("Задача создана локально");
+    }
   }
 
 
@@ -2822,17 +2937,18 @@
 
     tasks =
       tasks.filter(
-        item => item.id !== id
+        item => String(item.id) !== String(id)
       );
 
-
     saveTasks();
-
     renderAll();
 
-    showToast(
-      "Задача удалена"
-    );
+    deleteTaskOnServer(id)
+      .then(() => showToast("Задача удалена"))
+      .catch(e => {
+        console.warn(e);
+        showToast("Удалено локально");
+      });
 
   }
 
@@ -2850,8 +2966,11 @@
       !task.important;
 
     saveTasks();
-
     renderAll();
+
+    updateTaskOnServer(task).catch(e => {
+      console.warn("Не удалось обновить важность на сервере", e);
+    });
 
   }
 
@@ -4020,6 +4139,10 @@
 
 
     renderAll();
+
+    loadTasksFromServer().then(ok => {
+      if (ok) renderAll();
+    });
 
   }
 
