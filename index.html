@@ -1,88 +1,76 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  />
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+  >
 
-  <title>Tracker</title>
+  <meta name="theme-color" content="#111214">
+
+  <title>Трекер</title>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     :root {
-      --bg: #f5f6f8;
+      --bg: #f5f5f3;
       --card: #ffffff;
-      --card-soft: #f1f2f4;
-      --text: #17191c;
-      --secondary: #7d838b;
-      --border: #e5e7ea;
-
-      --accent: #ff7a45;
-      --accent-soft: #fff0e9;
-
-      --success: #5dbb7b;
-      --danger: #e05252;
-
-      --shadow: 0 8px 30px rgba(20, 25, 30, 0.06);
-
-      --nav-bg: rgba(255, 255, 255, 0.94);
+      --card-soft: #f0f0ed;
+      --text: #171819;
+      --muted: #85878a;
+      --border: #e6e6e2;
+      --accent: #171819;
+      --accent-text: #ffffff;
+      --danger: #e5484d;
+      --success: #28a36a;
+      --shadow: 0 8px 30px rgba(0,0,0,.06);
+      --radius: 20px;
     }
 
-    /* =========================
-       DARK THEME
-    ========================= */
-
     body.dark {
-      --bg: #111315;
-      --card: #1a1d20;
-      --card-soft: #22262a;
-      --text: #f2f3f4;
-      --secondary: #9299a2;
-      --border: #2a2e33;
-
-      --accent: #ff8654;
-      --accent-soft: #30231d;
-
-      --shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
-
-      --nav-bg: rgba(25, 28, 31, 0.94);
+      --bg: #111214;
+      --card: #191a1d;
+      --card-soft: #222327;
+      --text: #f5f5f5;
+      --muted: #92959a;
+      --border: #292a2e;
+      --accent: #f5f5f5;
+      --accent-text: #111214;
+      --shadow: 0 8px 30px rgba(0,0,0,.22);
     }
 
     html,
     body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
       min-height: 100%;
-    }
-
-    body {
+      background: var(--bg);
+      color: var(--text);
       font-family:
         -apple-system,
         BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
+        "SF Pro Display",
+        "SF Pro Text",
+        Inter,
         Arial,
         sans-serif;
+    }
 
-      background: var(--bg);
-      color: var(--text);
-
+    body {
       min-height: 100vh;
-
-      padding-bottom: 90px;
-
-      transition:
-        background 0.2s ease,
-        color 0.2s ease;
+      overflow-x: hidden;
     }
 
     button,
     input,
+    textarea,
     select {
       font: inherit;
     }
@@ -90,211 +78,245 @@
     button {
       border: 0;
       cursor: pointer;
-      color: inherit;
     }
-
-    /* =========================
-       APP
-    ========================= */
 
     .app {
       width: 100%;
-      max-width: 600px;
+      max-width: 720px;
+      min-height: 100vh;
       margin: 0 auto;
-      padding: 24px 18px 30px;
+      padding-bottom: 100px;
     }
 
-    /* =========================
-       HEADER
-    ========================= */
+    /* HEADER */
 
-    .header {
+    .topbar {
+      padding:
+        max(18px, env(safe-area-inset-top))
+        20px
+        8px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 28px;
+      justify-content: space-between;
     }
 
-    .greeting {
-      font-size: 14px;
-      color: var(--secondary);
-      margin-bottom: 5px;
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
     }
 
-    .title {
-      font-size: 30px;
+    .brand-small {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .brand-title {
+      font-size: 29px;
       font-weight: 750;
-      letter-spacing: -0.8px;
-    }
-
-    .date {
-      margin-top: 5px;
-      font-size: 14px;
-      color: var(--secondary);
+      letter-spacing: -1.1px;
     }
 
     .profile-button {
-      width: 46px;
-      height: 46px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-
       background: var(--card);
-
-      box-shadow: var(--shadow);
-
+      border: 1px solid var(--border);
+      color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
-
-      font-size: 20px;
+      box-shadow: var(--shadow);
+      font-size: 19px;
     }
 
-    /* =========================
-       PAGES
-    ========================= */
+    /* PAGES */
 
     .page {
       display: none;
+      padding: 12px 16px 20px;
     }
 
     .page.active {
       display: block;
+      animation: pageIn .2s ease;
     }
 
-    /* =========================
-       PROGRESS
-    ========================= */
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
 
-    .progress-card {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* TODAY SUMMARY */
+
+    .summary-card {
       background: var(--card);
-      border-radius: 22px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
       padding: 20px;
       box-shadow: var(--shadow);
-      margin-bottom: 26px;
+      margin-bottom: 18px;
     }
 
-    .progress-top {
+    .summary-top {
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .summary-title {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .summary-number {
+      font-size: 37px;
+      font-weight: 750;
+      letter-spacing: -1.5px;
+    }
+
+    .summary-percent {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: var(--card-soft);
+      display: flex;
       align-items: center;
-      margin-bottom: 14px;
-    }
-
-    .progress-label {
-      font-size: 14px;
-      color: var(--secondary);
-    }
-
-    .progress-value {
-      font-size: 17px;
+      justify-content: center;
       font-weight: 700;
+      font-size: 13px;
     }
 
-    .progress-bar {
-      height: 9px;
+    .progress {
+      width: 100%;
+      height: 6px;
       background: var(--card-soft);
       border-radius: 20px;
       overflow: hidden;
+      margin-top: 18px;
     }
 
     .progress-fill {
       height: 100%;
       width: 0%;
       background: var(--accent);
-      border-radius: 20px;
-      transition: width 0.3s ease;
+      border-radius: inherit;
+      transition: width .3s ease;
     }
 
-    /* =========================
-       SECTION
-    ========================= */
+    /* SECTION */
 
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 13px;
+      margin: 24px 3px 12px;
     }
 
     .section-title {
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 720;
+      letter-spacing: -.3px;
     }
 
-    .section-count {
+    .section-link {
+      color: var(--muted);
       font-size: 13px;
-      color: var(--secondary);
+      background: transparent;
     }
 
-    /* =========================
-       TASKS
-    ========================= */
+    /* FILTERS */
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 2px 8px;
+      scrollbar-width: none;
+    }
+
+    .filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter {
+      flex: 0 0 auto;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font-size: 13px;
+      transition: .2s;
+    }
+
+    .filter.active {
+      background: var(--accent);
+      color: var(--accent-text);
+      border-color: var(--accent);
+    }
+
+    /* TASKS */
 
     .tasks {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
     }
 
     .task {
       background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 15px 16px;
-
+      padding: 14px;
       display: flex;
       align-items: center;
-      gap: 13px;
-
-      box-shadow: var(--shadow);
-
-      transition:
-        transform 0.15s ease,
-        opacity 0.2s ease;
-    }
-
-    .task:active {
-      transform: scale(0.985);
+      gap: 12px;
+      transition: .2s;
+      box-shadow: 0 4px 18px rgba(0,0,0,.025);
     }
 
     .task.completed {
-      opacity: 0.58;
+      opacity: .58;
     }
 
-    .task-check {
-      width: 24px;
-      height: 24px;
-      min-width: 24px;
+    .task.completed .task-title {
+      text-decoration: line-through;
+    }
 
-      border: 2px solid #cdd1d5;
+    .check {
+      width: 23px;
+      height: 23px;
+      flex: 0 0 23px;
       border-radius: 50%;
-
+      border: 1.7px solid var(--muted);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-
-      background: transparent;
-
-      transition: all 0.2s ease;
+      color: transparent;
+      transition: .2s;
     }
 
-    body.dark .task-check {
-      border-color: #565c63;
-    }
-
-    .task.completed .task-check {
+    .task.completed .check {
       background: var(--accent);
       border-color: var(--accent);
-      color: white;
+      color: var(--accent-text);
     }
 
-    .check-icon {
-      display: none;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .task.completed .check-icon {
-      display: block;
+    .check svg {
+      width: 13px;
+      height: 13px;
     }
 
     .task-content {
@@ -302,55 +324,56 @@
       min-width: 0;
     }
 
-    .task-name {
+    .task-title {
       font-size: 15px;
-      font-weight: 620;
+      font-weight: 650;
       line-height: 1.3;
       word-break: break-word;
     }
 
-    .task.completed .task-name {
-      text-decoration: line-through;
-    }
-
     .task-meta {
-      margin-top: 4px;
-      font-size: 12px;
-      color: var(--secondary);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 5px;
     }
 
-    .delete-task {
-      width: 32px;
-      height: 32px;
+    .task-meta span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .important {
+      color: #e7a92c !important;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .icon-button {
+      width: 34px;
+      height: 34px;
       border-radius: 10px;
-
       background: transparent;
-      color: var(--secondary);
-
-      font-size: 17px;
-
+      color: var(--muted);
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 16px;
     }
 
-    .delete-task:active {
+    .icon-button:active {
       background: var(--card-soft);
-      color: var(--danger);
     }
 
-    /* =========================
-       EMPTY
-    ========================= */
+    /* EMPTY */
 
     .empty {
-      background: var(--card);
-      border-radius: 20px;
-      padding: 34px 20px;
-
+      padding: 45px 20px;
       text-align: center;
-
-      box-shadow: var(--shadow);
+      color: var(--muted);
     }
 
     .empty-icon {
@@ -359,710 +382,362 @@
     }
 
     .empty-title {
-      font-size: 16px;
-      font-weight: 700;
+      color: var(--text);
+      font-weight: 650;
       margin-bottom: 5px;
     }
 
     .empty-text {
       font-size: 13px;
-      color: var(--secondary);
       line-height: 1.5;
     }
 
-    /* =========================
-       ADD BUTTON
-    ========================= */
+    /* ADD BUTTON */
 
     .add-button {
       position: fixed;
-
-      right: 20px;
-      bottom: 82px;
-
+      right: max(20px, calc((100vw - 720px) / 2 + 20px));
+      bottom: calc(82px + env(safe-area-inset-bottom));
       width: 58px;
       height: 58px;
-
-      border-radius: 18px;
-
+      border-radius: 19px;
       background: var(--accent);
-      color: white;
-
-      font-size: 30px;
-      font-weight: 300;
-
-      box-shadow:
-        0 10px 25px rgba(255, 122, 69, 0.28);
-
-      z-index: 20;
-
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
+      color: var(--accent-text);
+      font-size: 29px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.17);
+      z-index: 50;
+      transition: transform .2s;
     }
 
     .add-button:active {
-      transform: scale(0.94);
-      box-shadow: none;
+      transform: scale(.94);
     }
 
-    /* =========================
-       CALENDAR
-    ========================= */
+    /* CALENDAR */
 
     .calendar-card {
       background: var(--card);
-      border-radius: 22px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
       padding: 18px;
       box-shadow: var(--shadow);
-      margin-bottom: 18px;
     }
 
     .calendar-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 18px;
     }
 
-    .calendar-month {
-      font-size: 20px;
-      font-weight: 750;
+    .month-title {
+      font-size: 18px;
+      font-weight: 700;
     }
 
-    .calendar-actions {
+    .month-actions {
       display: flex;
-      gap: 7px;
+      gap: 6px;
     }
 
-    .calendar-arrow {
-      width: 36px;
-      height: 36px;
-      border-radius: 11px;
+    .month-button {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
       background: var(--card-soft);
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 17px;
+      color: var(--text);
     }
 
-    .calendar-weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      margin-bottom: 8px;
-    }
-
-    .weekday {
-      text-align: center;
-      font-size: 11px;
-      color: var(--secondary);
-      font-weight: 600;
-    }
-
+    .calendar-weekdays,
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 5px;
     }
 
-    .calendar-day {
-      min-height: 58px;
+    .weekday {
+      text-align: center;
+      color: var(--muted);
+      font-size: 10px;
+      padding-bottom: 6px;
+    }
+
+    .day {
+      min-height: 48px;
       border-radius: 13px;
-
-      background: transparent;
-
-      position: relative;
-
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-
-      padding-top: 7px;
-    }
-
-    .calendar-day.today {
-      background: var(--accent-soft);
-    }
-
-    .calendar-day.selected {
-      background: var(--accent);
-      color: white;
-    }
-
-    .calendar-number {
-      font-size: 13px;
-      font-weight: 650;
-    }
-
-    .calendar-stats {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      margin-top: 6px;
-    }
-
-    .calendar-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-
-    .calendar-day.selected .calendar-dot {
-      background: white;
-    }
-
-    .calendar-count,
-    .calendar-complete {
-      font-size: 9px;
-      color: var(--secondary);
-    }
-
-    .calendar-complete {
-      color: var(--success);
-    }
-
-    .calendar-day.selected .calendar-count,
-    .calendar-day.selected .calendar-complete {
-      color: white;
-    }
-
-    /* =========================
-       SELECTED DAY
-    ========================= */
-
-    .selected-day-card {
-      background: var(--card);
-      border-radius: 22px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .selected-day-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 17px;
-    }
-
-    .selected-day-title {
-      font-size: 20px;
-      font-weight: 750;
-    }
-
-    .selected-day-subtitle {
-      font-size: 13px;
-      color: var(--secondary);
-      margin-top: 4px;
-    }
-
-    .day-progress {
-      text-align: right;
-    }
-
-    .day-progress-value {
-      font-size: 20px;
-      font-weight: 750;
-      color: var(--accent);
-    }
-
-    .day-progress-label {
-      font-size: 10px;
-      color: var(--secondary);
-    }
-
-    /* =========================
-       ANALYTICS
-    ========================= */
-
-    .analytics-summary {
-      background: var(--card);
-      border-radius: 22px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      margin-bottom: 18px;
-    }
-
-    .analytics-summary-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .analytics-summary-title {
-      font-size: 18px;
-      font-weight: 720;
-    }
-
-    .analytics-summary-value {
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--accent);
-    }
-
-    .analytics-summary-subtitle {
-      font-size: 13px;
-      color: var(--secondary);
-      margin-bottom: 13px;
-    }
-
-    .week-progress {
-      height: 9px;
-      background: var(--card-soft);
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .week-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--accent);
-      border-radius: 20px;
-    }
-
-    .week-navigation {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-
-    .week-nav-button {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: var(--card);
-      box-shadow: var(--shadow);
-      font-size: 18px;
-    }
-
-    .week-title {
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .week-days {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .week-day {
-      background: var(--card);
-      border-radius: 18px;
-      padding: 15px;
-      box-shadow: var(--shadow);
-    }
-
-    .week-day.today {
-      border: 1px solid var(--accent);
-    }
-
-    .week-day.selected {
-      background: var(--accent-soft);
-    }
-
-    .week-day-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 11px;
-    }
-
-    .week-day-name {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-
-    .week-day-label {
-      font-size: 15px;
-      font-weight: 700;
-    }
-
-    .week-day-date {
-      font-size: 12px;
-      color: var(--secondary);
-    }
-
-    .week-day-percent {
-      font-size: 15px;
-      font-weight: 750;
-      color: var(--accent);
-    }
-
-    .week-day-progress {
-      height: 7px;
-      background: var(--card-soft);
-      border-radius: 20px;
-      overflow: hidden;
-      margin-bottom: 9px;
-    }
-
-    .week-day-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 20px;
-    }
-
-    .week-day-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .week-day-stat {
-      font-size: 12px;
-      color: var(--secondary);
-    }
-
-    .week-day-stat strong {
+      justify-content: center;
+      gap: 4px;
       color: var(--text);
+      position: relative;
+      cursor: pointer;
     }
 
-    .week-day-badge {
-      font-size: 10px;
-      padding: 4px 8px;
-      border-radius: 8px;
+    .day:hover {
       background: var(--card-soft);
-      color: var(--secondary);
     }
 
-    .week-day-badge.complete {
-      background: #e9f7ee;
-      color: var(--success);
+    .day.other {
+      color: var(--muted);
+      opacity: .4;
     }
 
-    body.dark .week-day-badge.complete {
-      background: #193323;
+    .day.today {
+      border: 1px solid var(--text);
     }
 
-    .analytics-day-details {
+    .day.selected {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+
+    .day-number {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .day-dots {
+      display: flex;
+      gap: 3px;
+      height: 4px;
+    }
+
+    .day-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .55;
+    }
+
+    .calendar-info {
       margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
     }
 
-    .analytics-details-title {
-      font-size: 18px;
+    .calendar-info-title {
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    /* ANALYTICS */
+
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      padding: 17px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .stat-value {
+      font-size: 26px;
       font-weight: 750;
-      margin-bottom: 12px;
     }
 
-    /* =========================
-       SETTINGS
-    ========================= */
+    .week-chart {
+      margin-top: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+    }
 
-    .settings-list {
+    .chart-bars {
+      height: 190px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 20px;
+    }
+
+    .chart-day {
+      flex: 1;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 7px;
+      cursor: pointer;
     }
 
-    .settings-group-title {
+    .bar-wrapper {
+      height: 145px;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .bar {
+      width: min(28px, 65%);
+      min-height: 4px;
+      background: var(--accent);
+      border-radius: 8px 8px 4px 4px;
+      transition: height .3s;
+    }
+
+    .chart-day-name {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* SETTINGS */
+
+    .settings-group {
+      margin-bottom: 22px;
+    }
+
+    .settings-label {
+      color: var(--muted);
       font-size: 12px;
-      color: var(--secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      font-weight: 700;
-
-      margin: 22px 5px 8px;
-    }
-
-    .settings-group-title:first-child {
-      margin-top: 0;
+      margin: 0 5px 8px;
     }
 
     .settings-card {
       background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 20px;
-      box-shadow: var(--shadow);
       overflow: hidden;
     }
 
-    .settings-row {
-      min-height: 64px;
-
+    .setting-row {
+      min-height: 58px;
       padding: 13px 16px;
-
       display: flex;
       align-items: center;
-      gap: 13px;
-
+      justify-content: space-between;
       border-bottom: 1px solid var(--border);
     }
 
-    .settings-row:last-child {
+    .setting-row:last-child {
       border-bottom: 0;
     }
 
-    .settings-icon {
-      width: 38px;
-      height: 38px;
-
-      border-radius: 12px;
-
-      background: var(--accent-soft);
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .settings-content {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .settings-title {
+    .setting-name {
       font-size: 14px;
-      font-weight: 650;
-    }
-
-    .settings-description {
-      font-size: 11px;
-      color: var(--secondary);
-      margin-top: 3px;
-      line-height: 1.35;
-    }
-
-    .settings-control {
-      flex-shrink: 0;
-    }
-
-    /* toggle */
-
-    .switch {
-      position: relative;
-      width: 49px;
-      height: 29px;
-    }
-
-    .switch input {
-      display: none;
-    }
-
-    .switch-slider {
-      position: absolute;
-      inset: 0;
-
-      border-radius: 30px;
-
-      background: #d6d9dc;
-
-      transition: 0.2s;
-    }
-
-    .switch-slider::before {
-      content: "";
-
-      position: absolute;
-
-      width: 23px;
-      height: 23px;
-
-      left: 3px;
-      top: 3px;
-
-      border-radius: 50%;
-
-      background: white;
-
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
-
-      transition: 0.2s;
-    }
-
-    .switch input:checked + .switch-slider {
-      background: var(--accent);
-    }
-
-    .switch input:checked + .switch-slider::before {
-      transform: translateX(20px);
-    }
-
-    /* time */
-
-    .time-input {
-      border: 0;
-      outline: none;
-
-      background: var(--card-soft);
-
-      color: var(--text);
-
-      border-radius: 11px;
-
-      padding: 8px 9px;
-
-      font-size: 14px;
-    }
-
-    /* select */
-
-    .settings-select {
-      border: 0;
-      outline: none;
-
-      background: var(--card-soft);
-      color: var(--text);
-
-      border-radius: 11px;
-
-      padding: 9px 28px 9px 10px;
-
-      font-size: 13px;
-
-      max-width: 145px;
-    }
-
-    /* theme */
-
-    .theme-options {
-      display: flex;
-      gap: 6px;
-
-      background: var(--card-soft);
-
-      padding: 4px;
-
-      border-radius: 12px;
-    }
-
-    .theme-option {
-      padding: 7px 9px;
-
-      border-radius: 9px;
-
-      background: transparent;
-
-      color: var(--secondary);
-
-      font-size: 11px;
       font-weight: 600;
     }
 
-    .theme-option.active {
-      background: var(--card);
-      color: var(--text);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-    }
-
-    .settings-note {
-      margin-top: 18px;
-
-      text-align: center;
-
+    .setting-description {
+      color: var(--muted);
       font-size: 11px;
-
-      color: var(--secondary);
-
-      line-height: 1.5;
+      margin-top: 3px;
     }
 
-    /* =========================
-       NAVIGATION
-    ========================= */
+    .setting-control {
+      color: var(--muted);
+      background: var(--card-soft);
+      padding: 7px 10px;
+      border-radius: 9px;
+      border: 0;
+    }
+
+    /* BOTTOM NAV */
 
     .bottom-nav {
       position: fixed;
-
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      height: 70px;
-
-      background: var(--nav-bg);
-
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-
-      border-top: 1px solid var(--border);
-
-      display: flex;
-      justify-content: center;
-
-      z-index: 15;
-    }
-
-    .nav-inner {
-      width: 100%;
-      max-width: 600px;
-
+      z-index: 40;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 10px;
+      width: min(calc(100% - 24px), 500px);
+      min-height: 64px;
+      padding:
+        7px
+        8px
+        max(7px, env(safe-area-inset-bottom));
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 23px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
+      box-shadow: 0 12px 35px rgba(0,0,0,.12);
     }
 
-    .nav-button {
-      background: transparent;
+    body.dark .bottom-nav {
+      background: rgba(27,28,31,.9);
+      border-color: rgba(255,255,255,.07);
+    }
 
+    .nav-item {
+      background: transparent;
+      color: var(--muted);
       display: flex;
       flex-direction: column;
-
       align-items: center;
       justify-content: center;
-
       gap: 4px;
+      border-radius: 16px;
+      min-height: 50px;
+      transition: .2s;
+    }
 
-      color: #989da3;
-
-      font-size: 11px;
+    .nav-item.active {
+      color: var(--text);
+      background: var(--card-soft);
     }
 
     .nav-icon {
-      font-size: 20px;
+      font-size: 18px;
       line-height: 1;
     }
 
-    .nav-button.active {
-      color: var(--accent);
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
     }
 
-    /* =========================
-       MODAL
-    ========================= */
+    /* MODAL */
 
-    .modal-overlay {
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-
-      background: rgba(20, 23, 27, 0.42);
-
+      z-index: 100;
+      background: rgba(0,0,0,.45);
       display: none;
-
       align-items: flex-end;
       justify-content: center;
-
-      z-index: 100;
+      padding: 0;
     }
 
-    .modal-overlay.show {
+    .modal-backdrop.active {
       display: flex;
     }
 
     .modal {
-      width: 100%;
-      max-width: 600px;
-
-      background: var(--card);
-
-      border-radius: 26px 26px 0 0;
-
-      padding: 22px 18px 30px;
-
-      animation: slideUp 0.22s ease;
-
-      max-height: 90vh;
+      width: min(100%, 720px);
+      max-height: 92vh;
       overflow-y: auto;
+      background: var(--card);
+      color: var(--text);
+      border-radius: 28px 28px 0 0;
+      padding:
+        10px
+        18px
+        calc(22px + env(safe-area-inset-bottom));
+      animation: modalUp .25s ease;
     }
 
-    @keyframes slideUp {
+    @keyframes modalUp {
       from {
         transform: translateY(100%);
       }
@@ -1073,14 +748,11 @@
     }
 
     .modal-handle {
-      width: 42px;
+      width: 38px;
       height: 4px;
-
-      border-radius: 10px;
-
       background: var(--border);
-
-      margin: 0 auto 22px;
+      border-radius: 5px;
+      margin: 4px auto 20px;
     }
 
     .modal-title {
@@ -1089,148 +761,122 @@
       margin-bottom: 20px;
     }
 
-    .input-label {
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-label {
       display: block;
-
-      font-size: 13px;
-      color: var(--secondary);
-
-      margin-bottom: 8px;
-    }
-
-    .task-input {
-      width: 100%;
-
-      border: 1px solid var(--border);
-
-      outline: none;
-
-      background: var(--card-soft);
-
-      color: var(--text);
-
-      border-radius: 15px;
-
-      padding: 15px;
-
-      font-size: 16px;
-
-      margin-bottom: 20px;
-    }
-
-    .task-input:focus {
-      border-color: var(--accent);
-    }
-
-    .repeat-title {
-      font-size: 14px;
-      font-weight: 650;
-      margin-bottom: 10px;
-    }
-
-    .repeat-options {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-
-    .repeat-option {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-
-      padding: 13px 14px;
-
-      background: var(--card-soft);
-
-      border: 1px solid transparent;
-
-      border-radius: 14px;
-    }
-
-    .repeat-option:has(input:checked) {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-    }
-
-    .repeat-option input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-    }
-
-    .repeat-label {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .repeat-name {
-      font-size: 14px;
+      color: var(--muted);
+      font-size: 12px;
       font-weight: 600;
+      margin: 0 3px 7px;
     }
 
-    .repeat-description {
-      font-size: 11px;
-      color: var(--secondary);
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--card-soft);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 13px;
+      outline: none;
     }
 
-    .modal-actions {
-      display: flex;
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--text);
+    }
+
+    .form-textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
+    .important-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card-soft);
+      border-radius: 14px;
+      padding: 13px;
+    }
+
+    .switch {
+      width: 46px;
+      height: 27px;
+      background: var(--border);
+      border-radius: 999px;
+      padding: 3px;
+      transition: .2s;
+    }
+
+    .switch span {
+      display: block;
+      width: 21px;
+      height: 21px;
+      background: white;
+      border-radius: 50%;
+      transition: .2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,.2);
+    }
+
+    .switch.active {
+      background: var(--accent);
+    }
+
+    .switch.active span {
+      transform: translateX(19px);
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 20px;
+    }
+
     .modal-button {
-      flex: 1;
-
-      padding: 14px;
-
+      height: 50px;
       border-radius: 15px;
-
-      font-size: 15px;
       font-weight: 650;
     }
 
-    .cancel-button {
+    .modal-cancel {
       background: var(--card-soft);
       color: var(--text);
     }
 
-    .save-button {
+    .modal-save {
       background: var(--accent);
-      color: white;
+      color: var(--accent-text);
     }
 
-    /* =========================
-       TOAST
-    ========================= */
+    /* TOAST */
 
     .toast {
       position: fixed;
-
-      left: 50%;
-      bottom: 82px;
-
-      transform: translate(-50%, 20px);
-
-      background: #202326;
-      color: white;
-
-      padding: 11px 17px;
-
-      border-radius: 12px;
-
-      font-size: 13px;
-
-      opacity: 0;
-
-      pointer-events: none;
-
-      transition: all 0.25s ease;
-
       z-index: 200;
-
+      left: 50%;
+      bottom: 90px;
+      transform: translate(-50%, 20px);
+      background: var(--accent);
+      color: var(--accent-text);
+      padding: 11px 16px;
+      border-radius: 13px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s;
       white-space: nowrap;
     }
 
@@ -1240,22 +886,22 @@
     }
 
     @media (min-width: 700px) {
-      .app {
-        padding-top: 40px;
+      .page {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .topbar {
+        padding-left: 0;
+        padding-right: 0;
       }
 
       .add-button {
-        right: calc(50% - 280px);
+        right: max(25px, calc((100vw - 720px) / 2 + 25px));
       }
 
-      .modal-overlay {
-        align-items: center;
-        padding: 20px;
-      }
-
-      .modal {
-        border-radius: 26px;
-        max-width: 500px;
+      .bottom-nav {
+        bottom: 20px;
       }
     }
   </style>
@@ -1263,157 +909,161 @@
 
 <body>
 
-<main class="app">
+<div class="app">
 
-  <!-- =========================
-       HOME
-  ========================= -->
+  <!-- HEADER -->
 
-  <section
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-small">Твой день</div>
+      <div class="brand-title">Трекер</div>
+    </div>
+
+    <button
+      class="profile-button"
+      onclick="showPage('settings')"
+      aria-label="Настройки"
+    >
+      ⚙
+    </button>
+  </header>
+
+
+  <!-- ========================= -->
+  <!-- HOME -->
+  <!-- ========================= -->
+
+  <main
+    id="page-home"
     class="page active"
-    id="homePage"
   >
 
-    <header class="header">
+    <div class="summary-card">
 
-      <div>
+      <div class="summary-top">
 
-        <div class="greeting">
-          Добрый день 👋
+        <div>
+          <div class="summary-title">
+            Сегодня
+          </div>
+
+          <div
+            class="summary-number"
+            id="todayCount"
+          >
+            0 задач
+          </div>
         </div>
 
-        <h1 class="title">
-          Мой день
-        </h1>
-
         <div
-          class="date"
-          id="currentDate"
-        ></div>
-
-      </div>
-
-      <button
-        class="profile-button"
-        id="profileButton"
-      >
-        👤
-      </button>
-
-    </header>
-
-
-    <section class="progress-card">
-
-      <div class="progress-top">
-
-        <span class="progress-label">
-          Прогресс сегодня
-        </span>
-
-        <span
-          class="progress-value"
-          id="progressValue"
+          class="summary-percent"
+          id="todayPercent"
         >
           0%
-        </span>
-
-      </div>
-
-      <div class="progress-bar">
-
-        <div
-          class="progress-fill"
-          id="progressFill"
-        ></div>
-
-      </div>
-
-    </section>
-
-
-    <section>
-
-      <div class="section-header">
-
-        <h2 class="section-title">
-          Сегодня
-        </h2>
-
-        <span
-          class="section-count"
-          id="taskCount"
-        >
-          0 задач
-        </span>
-
-      </div>
-
-
-      <div
-        class="tasks"
-        id="tasksContainer"
-      ></div>
-
-    </section>
-
-  </section>
-
-
-  <!-- =========================
-       CALENDAR
-  ========================= -->
-
-  <section
-    class="page"
-    id="calendarPage"
-  >
-
-    <header class="header">
-
-      <div>
-
-        <div class="greeting">
-          Планирование
         </div>
 
-        <h1 class="title">
-          Календарь
-        </h1>
+      </div>
 
+      <div class="progress">
+        <div
+          class="progress-fill"
+          id="todayProgress"
+        ></div>
+      </div>
+
+    </div>
+
+
+    <div class="filters">
+
+      <button
+        class="filter active"
+        data-filter="today"
+        onclick="setFilter('today')"
+      >
+        Сегодня
+      </button>
+
+      <button
+        class="filter"
+        data-filter="all"
+        onclick="setFilter('all')"
+      >
+        Все
+      </button>
+
+      <button
+        class="filter"
+        data-filter="important"
+        onclick="setFilter('important')"
+      >
+        ⭐ Важные
+      </button>
+
+    </div>
+
+
+    <div class="section-header">
+
+      <div class="section-title">
+        Задачи
       </div>
 
       <button
-        class="profile-button"
-        id="calendarTodayButton"
+        class="section-link"
+        onclick="openTaskModal()"
       >
-        ●
+        Добавить
       </button>
 
-    </header>
+    </div>
 
 
-    <section class="calendar-card">
+    <div
+      class="tasks"
+      id="taskList"
+    ></div>
+
+  </main>
+
+
+  <!-- ========================= -->
+  <!-- CALENDAR -->
+  <!-- ========================= -->
+
+  <main
+    id="page-calendar"
+    class="page"
+  >
+
+    <div class="section-header">
+      <div class="section-title">
+        Календарь
+      </div>
+    </div>
+
+
+    <div class="calendar-card">
 
       <div class="calendar-header">
 
         <div
-          class="calendar-month"
-          id="calendarMonth"
+          class="month-title"
+          id="monthTitle"
         ></div>
 
-        <div class="calendar-actions">
+        <div class="month-actions">
 
           <button
-            class="calendar-arrow"
-            id="prevMonth"
+            class="month-button"
+            onclick="changeMonth(-1)"
           >
             ‹
           </button>
 
           <button
-            class="calendar-arrow"
-            id="nextMonth"
+            class="month-button"
+            onclick="changeMonth(1)"
           >
             ›
           </button>
@@ -1441,606 +1091,489 @@
         id="calendarGrid"
       ></div>
 
-    </section>
+
+      <div
+        class="calendar-info"
+        id="calendarInfo"
+      ></div>
+
+    </div>
+
+  </main>
 
 
-    <section
-      class="selected-day-card"
-      id="selectedDayCard"
-    ></section>
+  <!-- ========================= -->
+  <!-- ANALYTICS -->
+  <!-- ========================= -->
 
-  </section>
-
-
-  <!-- =========================
-       ANALYTICS
-  ========================= -->
-
-  <section
+  <main
+    id="page-analytics"
     class="page"
-    id="analyticsPage"
   >
 
-    <header class="header">
-
-      <div>
-
-        <div class="greeting">
-          Ваш результат
-        </div>
-
-        <h1 class="title">
-          Аналитика
-        </h1>
-
+    <div class="section-header">
+      <div class="section-title">
+        Аналитика
       </div>
+    </div>
 
-    </header>
 
+    <div class="analytics-grid">
 
-    <section class="analytics-summary">
-
-      <div class="analytics-summary-top">
-
-        <div class="analytics-summary-title">
-          Эта неделя
+      <div class="stat-card">
+        <div class="stat-label">
+          Всего задач
         </div>
 
         <div
-          class="analytics-summary-value"
-          id="weekPercent"
+          class="stat-value"
+          id="statTotal"
+        >
+          0
+        </div>
+      </div>
+
+
+      <div class="stat-card">
+        <div class="stat-label">
+          Выполнено
+        </div>
+
+        <div
+          class="stat-value"
+          id="statCompleted"
+        >
+          0
+        </div>
+      </div>
+
+
+      <div class="stat-card">
+        <div class="stat-label">
+          Важные
+        </div>
+
+        <div
+          class="stat-value"
+          id="statImportant"
+        >
+          0
+        </div>
+      </div>
+
+
+      <div class="stat-card">
+        <div class="stat-label">
+          Эффективность
+        </div>
+
+        <div
+          class="stat-value"
+          id="statEfficiency"
         >
           0%
         </div>
-
       </div>
-
-
-      <div
-        class="analytics-summary-subtitle"
-        id="weekSummary"
-      >
-        0 выполнено из 0 задач
-      </div>
-
-
-      <div class="week-progress">
-
-        <div
-          class="week-progress-fill"
-          id="weekProgressFill"
-        ></div>
-
-      </div>
-
-    </section>
-
-
-    <div class="week-navigation">
-
-      <button
-        class="week-nav-button"
-        id="prevWeek"
-      >
-        ‹
-      </button>
-
-
-      <div
-        class="week-title"
-        id="weekTitle"
-      >
-        Эта неделя
-      </div>
-
-
-      <button
-        class="week-nav-button"
-        id="nextWeek"
-      >
-        ›
-      </button>
 
     </div>
 
 
-    <div
-      class="week-days"
-      id="weekDays"
-    ></div>
+    <div class="section-header">
+      <div class="section-title">
+        Эта неделя
+      </div>
+    </div>
 
 
-    <section
-      class="analytics-day-details"
-      id="analyticsDayDetails"
-    ></section>
+    <div class="week-chart">
 
-  </section>
+      <div
+        class="chart-bars"
+        id="weekChart"
+      ></div>
+
+    </div>
+
+  </main>
 
 
-  <!-- =========================
-       SETTINGS
-  ========================= -->
+  <!-- ========================= -->
+  <!-- SETTINGS -->
+  <!-- ========================= -->
 
-  <section
+  <main
+    id="page-settings"
     class="page"
-    id="settingsPage"
   >
 
-    <header class="header">
-
-      <div>
-
-        <div class="greeting">
-          Персонализация
-        </div>
-
-        <h1 class="title">
-          Настройки
-        </h1>
-
+    <div class="section-header">
+      <div class="section-title">
+        Настройки
       </div>
+    </div>
 
-    </header>
 
+    <div class="settings-group">
 
-    <div class="settings-list">
-
-      <!-- NOTIFICATIONS -->
-
-      <div class="settings-group-title">
-        Уведомления
+      <div class="settings-label">
+        ВНЕШНИЙ ВИД
       </div>
 
       <div class="settings-card">
 
-        <div class="settings-row">
+        <div class="setting-row">
 
-          <div class="settings-icon">
-            🔔
-          </div>
-
-          <div class="settings-content">
-
-            <div class="settings-title">
-              Уведомления
-            </div>
-
-            <div class="settings-description">
-              Разрешить напоминания
-            </div>
-
-          </div>
-
-          <div class="settings-control">
-
-            <label class="switch">
-
-              <input
-                type="checkbox"
-                id="notificationsToggle"
-              />
-
-              <span class="switch-slider"></span>
-
-            </label>
-
-          </div>
-
-        </div>
-
-
-        <div class="settings-row">
-
-          <div class="settings-icon">
-            ☀️
-          </div>
-
-          <div class="settings-content">
-
-            <div class="settings-title">
-              Утренняя сводка
-            </div>
-
-            <div class="settings-description">
-              План задач на сегодня
-            </div>
-
-          </div>
-
-          <div class="settings-control">
-
-            <input
-              class="time-input"
-              type="time"
-              id="morningTime"
-              value="08:00"
-            />
-
-          </div>
-
-        </div>
-
-
-        <div class="settings-row">
-
-          <div class="settings-icon">
-            🌙
-          </div>
-
-          <div class="settings-content">
-
-            <div class="settings-title">
-              Вечерняя сводка
-            </div>
-
-            <div class="settings-description">
-              Итоги вашего дня
-            </div>
-
-          </div>
-
-          <div class="settings-control">
-
-            <input
-              class="time-input"
-              type="time"
-              id="eveningTime"
-              value="21:00"
-            />
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- CALENDAR -->
-
-      <div class="settings-group-title">
-        Календарь
-      </div>
-
-      <div class="settings-card">
-
-        <div class="settings-row">
-
-          <div class="settings-icon">
-            📅
-          </div>
-
-          <div class="settings-content">
-
-            <div class="settings-title">
-              Первый день недели
-            </div>
-
-            <div class="settings-description">
-              Как отображать календарь
-            </div>
-
-          </div>
-
-          <div class="settings-control">
-
-            <select
-              class="settings-select"
-              id="firstDay"
-            >
-
-              <option value="monday">
-                Понедельник
-              </option>
-
-              <option value="sunday">
-                Воскресенье
-              </option>
-
-            </select>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- APPEARANCE -->
-
-      <div class="settings-group-title">
-        Внешний вид
-      </div>
-
-      <div class="settings-card">
-
-        <div class="settings-row">
-
-          <div class="settings-icon">
-            🎨
-          </div>
-
-          <div class="settings-content">
-
-            <div class="settings-title">
+          <div>
+            <div class="setting-name">
               Тема
             </div>
 
-            <div class="settings-description">
-              Выберите оформление приложения
+            <div class="setting-description">
+              Светлая или тёмная
             </div>
-
           </div>
 
-          <div class="settings-control">
+          <button
+            class="setting-control"
+            onclick="toggleTheme()"
+            id="themeButton"
+          >
+            Авто
+          </button>
 
-            <div class="theme-options">
+        </div>
 
-              <button
-                class="theme-option"
-                data-theme="system"
-              >
-                Система
-              </button>
+      </div>
 
-              <button
-                class="theme-option"
-                data-theme="light"
-              >
-                Светлая
-              </button>
+    </div>
 
-              <button
-                class="theme-option"
-                data-theme="dark"
-              >
-                Тёмная
-              </button>
 
+    <div class="settings-group">
+
+      <div class="settings-label">
+        СВОДКИ
+      </div>
+
+      <div class="settings-card">
+
+        <div class="setting-row">
+
+          <div>
+            <div class="setting-name">
+              ☀️ Утренняя сводка
             </div>
 
+            <div class="setting-description">
+              Время получения сводки
+            </div>
+          </div>
+
+          <input
+            class="setting-control"
+            type="time"
+            id="morningTime"
+            value="08:00"
+            onchange="saveSettings()"
+          >
+
+        </div>
+
+
+        <div class="setting-row">
+
+          <div>
+            <div class="setting-name">
+              🌙 Вечерняя сводка
+            </div>
+
+            <div class="setting-description">
+              Итоги дня
+            </div>
+          </div>
+
+          <input
+            class="setting-control"
+            type="time"
+            id="eveningTime"
+            value="21:00"
+            onchange="saveSettings()"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="settings-group">
+
+      <div class="settings-label">
+        ДАННЫЕ
+      </div>
+
+      <div class="settings-card">
+
+        <div class="setting-row">
+
+          <div>
+            <div class="setting-name">
+              Задач сохранено
+            </div>
+
+            <div
+              class="setting-description"
+              id="savedTaskCount"
+            >
+              0
+            </div>
           </div>
 
         </div>
 
       </div>
 
-
-      <div class="settings-note">
-
-        Настройки сохраняются автоматически.
-        <br />
-        Уведомления Telegram подключим на следующем этапе.
-
-      </div>
-
     </div>
 
-  </section>
+  </main>
 
-</main>
+</div>
 
 
-<!-- =========================
-     ADD BUTTON
-========================= -->
+<!-- ADD BUTTON -->
 
 <button
   class="add-button"
-  id="addButton"
+  onclick="openTaskModal()"
 >
   +
 </button>
 
 
-<!-- =========================
-     NAVIGATION
-========================= -->
+<!-- BOTTOM NAV -->
 
 <nav class="bottom-nav">
 
-  <div class="nav-inner">
+  <button
+    class="nav-item active"
+    data-page="home"
+    onclick="showPage('home')"
+  >
 
-    <button
-      class="nav-button active"
-      data-page="home"
-    >
+    <span class="nav-icon">
+      ⌂
+    </span>
 
-      <span class="nav-icon">
-        ⌂
-      </span>
+    <span class="nav-label">
+      Главная
+    </span>
 
-      <span>
-        Сегодня
-      </span>
-
-    </button>
-
-
-    <button
-      class="nav-button"
-      data-page="calendar"
-    >
-
-      <span class="nav-icon">
-        ▣
-      </span>
-
-      <span>
-        Календарь
-      </span>
-
-    </button>
+  </button>
 
 
-    <button
-      class="nav-button"
-      data-page="analytics"
-    >
+  <button
+    class="nav-item"
+    data-page="calendar"
+    onclick="showPage('calendar')"
+  >
 
-      <span class="nav-icon">
-        ◒
-      </span>
+    <span class="nav-icon">
+      □
+    </span>
 
-      <span>
-        Аналитика
-      </span>
+    <span class="nav-label">
+      Календарь
+    </span>
 
-    </button>
+  </button>
 
 
-    <button
-      class="nav-button"
-      data-page="settings"
-    >
+  <button
+    class="nav-item"
+    data-page="analytics"
+    onclick="showPage('analytics')"
+  >
 
-      <span class="nav-icon">
-        ⚙
-      </span>
+    <span class="nav-icon">
+      ◒
+    </span>
 
-      <span>
-        Настройки
-      </span>
+    <span class="nav-label">
+      Аналитика
+    </span>
 
-    </button>
+  </button>
 
-  </div>
+
+  <button
+    class="nav-item"
+    data-page="settings"
+    onclick="showPage('settings')"
+  >
+
+    <span class="nav-icon">
+      ⚙
+    </span>
+
+    <span class="nav-label">
+      Настройки
+    </span>
+
+  </button>
 
 </nav>
 
 
-<!-- =========================
-     ADD TASK MODAL
-========================= -->
+<!-- ========================= -->
+<!-- TASK MODAL -->
+<!-- ========================= -->
 
 <div
-  class="modal-overlay"
-  id="modalOverlay"
+  class="modal-backdrop"
+  id="taskModal"
+  onclick="closeModalOutside(event)"
 >
 
   <div class="modal">
 
     <div class="modal-handle"></div>
 
-
-    <h2 class="modal-title">
+    <div
+      class="modal-title"
+      id="modalTitle"
+    >
       Новая задача
-    </h2>
-
-
-    <label class="input-label">
-      Что нужно сделать?
-    </label>
-
-
-    <input
-      class="task-input"
-      id="taskInput"
-      type="text"
-      placeholder="Например: Прочитать 20 страниц"
-      maxlength="100"
-      autocomplete="off"
-    />
-
-
-    <div class="repeat-title">
-      Периодичность
     </div>
 
 
-    <div class="repeat-options">
+    <div class="form-group">
 
-      <label class="repeat-option">
+      <label class="form-label">
+        Название
+      </label>
+
+      <input
+        class="form-input"
+        id="taskName"
+        type="text"
+        placeholder="Например, прочитать 20 страниц"
+        maxlength="120"
+      >
+
+    </div>
+
+
+    <div class="form-row">
+
+      <div class="form-group">
+
+        <label class="form-label">
+          Дата
+        </label>
 
         <input
-          type="radio"
-          name="repeat"
-          value="none"
-          checked
-        />
+          class="form-input"
+          id="taskDate"
+          type="date"
+        >
 
-        <div class="repeat-label">
+      </div>
 
-          <span class="repeat-name">
-            Не повторять
-          </span>
 
-          <span class="repeat-description">
-            Только сегодня
-          </span>
+      <div class="form-group">
+
+        <label class="form-label">
+          Время
+        </label>
+
+        <input
+          class="form-input"
+          id="taskTime"
+          type="time"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label class="form-label">
+        Периодичность
+      </label>
+
+      <select
+        class="form-select"
+        id="taskRepeat"
+      >
+
+        <option value="none">
+          Не повторять
+        </option>
+
+        <option value="daily">
+          Каждый день
+        </option>
+
+        <option value="weekdays">
+          По будням
+        </option>
+
+        <option value="weekly">
+          Каждую неделю
+        </option>
+
+        <option value="monthly">
+          Каждый месяц
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <div class="important-toggle">
+
+        <div>
+
+          <div class="setting-name">
+            ⭐ Важная задача
+          </div>
+
+          <div class="setting-description">
+            Показывать среди важных
+          </div>
 
         </div>
 
+
+        <button
+          class="switch"
+          id="importantSwitch"
+          onclick="toggleImportant()"
+        >
+          <span></span>
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="form-group">
+
+      <label class="form-label">
+        Заметка
       </label>
 
-
-      <label class="repeat-option">
-
-        <input
-          type="radio"
-          name="repeat"
-          value="daily"
-        />
-
-        <div class="repeat-label">
-
-          <span class="repeat-name">
-            Каждый день
-          </span>
-
-          <span class="repeat-description">
-            Задача появляется ежедневно
-          </span>
-
-        </div>
-
-      </label>
-
-
-      <label class="repeat-option">
-
-        <input
-          type="radio"
-          name="repeat"
-          value="weekdays"
-        />
-
-        <div class="repeat-label">
-
-          <span class="repeat-name">
-            По будням
-          </span>
-
-          <span class="repeat-description">
-            Понедельник — пятница
-          </span>
-
-        </div>
-
-      </label>
-
-
-      <label class="repeat-option">
-
-        <input
-          type="radio"
-          name="repeat"
-          value="weekly"
-        />
-
-        <div class="repeat-label">
-
-          <span class="repeat-name">
-            Каждую неделю
-          </span>
-
-          <span class="repeat-description">
-            В этот же день каждую неделю
-          </span>
-
-        </div>
-
-      </label>
+      <textarea
+        class="form-textarea"
+        id="taskNote"
+        placeholder="Дополнительная информация..."
+      ></textarea>
 
     </div>
 
@@ -2048,18 +1581,17 @@
     <div class="modal-actions">
 
       <button
-        class="modal-button cancel-button"
-        id="cancelButton"
+        class="modal-button modal-cancel"
+        onclick="closeTaskModal()"
       >
         Отмена
       </button>
 
-
       <button
-        class="modal-button save-button"
-        id="saveButton"
+        class="modal-button modal-save"
+        onclick="saveTask()"
       >
-        Добавить
+        Сохранить
       </button>
 
     </div>
@@ -2069,9 +1601,7 @@
 </div>
 
 
-<!-- =========================
-     TOAST
-========================= -->
+<!-- TOAST -->
 
 <div
   class="toast"
@@ -2081,341 +1611,621 @@
 
 <script>
 
-  /* =====================================================
-     STORAGE
-  ===================================================== */
+  /* =========================================
+     TELEGRAM
+  ========================================= */
 
-  const STORAGE_KEY =
-    "tracker_tasks";
+  const tg =
+    window.Telegram &&
+    window.Telegram.WebApp
+      ? window.Telegram.WebApp
+      : null;
 
-  const SETTINGS_KEY =
-    "tracker_settings";
+  if (tg) {
+    tg.ready();
+    tg.expand();
+  }
 
 
-  let tasks = JSON.parse(
-    localStorage.getItem(
-      STORAGE_KEY
-    ) || "[]"
+  /* =========================================
+     STATE
+  ========================================= */
+
+  let tasks =
+    JSON.parse(
+      localStorage.getItem("tracker_tasks") || "[]"
+    );
+
+  let settings =
+    JSON.parse(
+      localStorage.getItem("tracker_settings") || "{}"
+    );
+
+  let currentFilter = "today";
+
+  let editingTaskId = null;
+
+  let importantValue = false;
+
+  let calendarDate = new Date();
+
+  let selectedCalendarDate = formatDate(
+    new Date()
   );
 
 
-  const defaultSettings = {
+  /* =========================================
+     HELPERS
+  ========================================= */
 
-    notifications: true,
+  function formatDate(date) {
 
-    morningTime: "08:00",
-
-    eveningTime: "21:00",
-
-    firstDay: "monday",
-
-    theme: "system"
-
-  };
-
-
-  let settings = {
-
-    ...defaultSettings,
-
-    ...JSON.parse(
-      localStorage.getItem(
-        SETTINGS_KEY
-      ) || "{}"
-    )
-
-  };
-
-
-  /* =====================================================
-     ELEMENTS
-  ===================================================== */
-
-  const tasksContainer =
-    document.getElementById(
-      "tasksContainer"
-    );
-
-  const taskCount =
-    document.getElementById(
-      "taskCount"
-    );
-
-  const progressValue =
-    document.getElementById(
-      "progressValue"
-    );
-
-  const progressFill =
-    document.getElementById(
-      "progressFill"
-    );
-
-  const currentDate =
-    document.getElementById(
-      "currentDate"
-    );
-
-  const addButton =
-    document.getElementById(
-      "addButton"
-    );
-
-  const modalOverlay =
-    document.getElementById(
-      "modalOverlay"
-    );
-
-  const taskInput =
-    document.getElementById(
-      "taskInput"
-    );
-
-  const cancelButton =
-    document.getElementById(
-      "cancelButton"
-    );
-
-  const saveButton =
-    document.getElementById(
-      "saveButton"
-    );
-
-  const toast =
-    document.getElementById(
-      "toast"
-    );
-
-
-  /* =====================================================
-     DATE
-  ===================================================== */
-
-  const today =
-    new Date();
-
-
-  let calendarDate =
-    new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      1
-    );
-
-
-  let selectedDate =
-    getDateKey(today);
-
-
-  let analyticsWeekStart =
-    getMonday(today);
-
-
-  let analyticsSelectedDate =
-    getDateKey(today);
-
-
-  function getDateKey(date) {
-
-    const year =
-      date.getFullYear();
+    const year = date.getFullYear();
 
     const month =
-      String(
-        date.getMonth() + 1
-      ).padStart(2, "0");
+      String(date.getMonth() + 1)
+        .padStart(2, "0");
 
     const day =
-      String(
-        date.getDate()
-      ).padStart(2, "0");
-
+      String(date.getDate())
+        .padStart(2, "0");
 
     return `${year}-${month}-${day}`;
-
   }
 
 
-  function parseDate(key) {
+  function formatHumanDate(dateString) {
 
-    const [
-      year,
-      month,
-      day
-    ] =
-      key.split("-").map(Number);
+    if (!dateString) {
+      return "";
+    }
+
+    const date =
+      new Date(dateString + "T00:00:00");
+
+    return date.toLocaleDateString(
+      "ru-RU",
+      {
+        day: "numeric",
+        month: "short"
+      }
+    );
+  }
 
 
-    return new Date(
-      year,
-      month - 1,
-      day
+  function saveTasks() {
+
+    localStorage.setItem(
+      "tracker_tasks",
+      JSON.stringify(tasks)
     );
 
   }
 
 
-  function getTodayKey() {
+  function saveSettings() {
 
-    return getDateKey(
-      new Date()
+    settings.morning =
+      document.getElementById("morningTime").value;
+
+    settings.evening =
+      document.getElementById("eveningTime").value;
+
+    localStorage.setItem(
+      "tracker_settings",
+      JSON.stringify(settings)
+    );
+
+    showToast("Настройки сохранены");
+
+  }
+
+
+  function showToast(text) {
+
+    const toast =
+      document.getElementById("toast");
+
+    toast.textContent = text;
+
+    toast.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer =
+      setTimeout(() => {
+
+        toast.classList.remove("show");
+
+      }, 1800);
+
+  }
+
+
+  /* =========================================
+     NAVIGATION
+  ========================================= */
+
+  function showPage(page) {
+
+    document
+      .querySelectorAll(".page")
+      .forEach(element => {
+
+        element.classList.remove("active");
+
+      });
+
+
+    const target =
+      document.getElementById(
+        "page-" + page
+      );
+
+    if (target) {
+      target.classList.add("active");
+    }
+
+
+    document
+      .querySelectorAll(".nav-item")
+      .forEach(button => {
+
+        button.classList.toggle(
+          "active",
+          button.dataset.page === page
+        );
+
+      });
+
+
+    if (page === "calendar") {
+      renderCalendar();
+    }
+
+    if (page === "analytics") {
+      renderAnalytics();
+    }
+
+    if (page === "settings") {
+      renderSettings();
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  /* =========================================
+     TASK MODAL
+  ========================================= */
+
+  function openTaskModal(taskId = null) {
+
+    editingTaskId = taskId;
+
+    const modal =
+      document.getElementById("taskModal");
+
+    const title =
+      document.getElementById("modalTitle");
+
+    const name =
+      document.getElementById("taskName");
+
+    const date =
+      document.getElementById("taskDate");
+
+    const time =
+      document.getElementById("taskTime");
+
+    const repeat =
+      document.getElementById("taskRepeat");
+
+    const note =
+      document.getElementById("taskNote");
+
+    const switchButton =
+      document.getElementById(
+        "importantSwitch"
+      );
+
+
+    if (taskId) {
+
+      const task =
+        tasks.find(
+          item => item.id === taskId
+        );
+
+      if (!task) return;
+
+      title.textContent =
+        "Редактировать задачу";
+
+      name.value =
+        task.title || "";
+
+      date.value =
+        task.date || formatDate(new Date());
+
+      time.value =
+        task.time || "";
+
+      repeat.value =
+        task.repeat || "none";
+
+      note.value =
+        task.note || "";
+
+      importantValue =
+        Boolean(task.important);
+
+    } else {
+
+      title.textContent =
+        "Новая задача";
+
+      name.value = "";
+
+      date.value =
+        formatDate(new Date());
+
+      time.value = "";
+
+      repeat.value = "none";
+
+      note.value = "";
+
+      importantValue = false;
+
+    }
+
+
+    switchButton.classList.toggle(
+      "active",
+      importantValue
+    );
+
+
+    modal.classList.add("active");
+
+
+    setTimeout(() => {
+
+      name.focus();
+
+    }, 150);
+
+  }
+
+
+  function closeTaskModal() {
+
+    document
+      .getElementById("taskModal")
+      .classList.remove("active");
+
+    editingTaskId = null;
+
+  }
+
+
+  function closeModalOutside(event) {
+
+    if (
+      event.target.id === "taskModal"
+    ) {
+
+      closeTaskModal();
+
+    }
+
+  }
+
+
+  function toggleImportant() {
+
+    importantValue =
+      !importantValue;
+
+    document
+      .getElementById("importantSwitch")
+      .classList.toggle(
+        "active",
+        importantValue
+      );
+
+  }
+
+
+  /* =========================================
+     SAVE TASK
+  ========================================= */
+
+  function saveTask() {
+
+    const name =
+      document
+        .getElementById("taskName")
+        .value
+        .trim();
+
+    const date =
+      document
+        .getElementById("taskDate")
+        .value;
+
+    const time =
+      document
+        .getElementById("taskTime")
+        .value;
+
+    const repeat =
+      document
+        .getElementById("taskRepeat")
+        .value;
+
+    const note =
+      document
+        .getElementById("taskNote")
+        .value
+        .trim();
+
+
+    if (!name) {
+
+      showToast(
+        "Введите название задачи"
+      );
+
+      return;
+
+    }
+
+
+    if (!date) {
+
+      showToast(
+        "Выберите дату"
+      );
+
+      return;
+
+    }
+
+
+    if (editingTaskId) {
+
+      const task =
+        tasks.find(
+          item =>
+            item.id === editingTaskId
+        );
+
+      if (task) {
+
+        task.title = name;
+        task.date = date;
+        task.time = time;
+        task.repeat = repeat;
+        task.note = note;
+        task.important = importantValue;
+
+      }
+
+      showToast(
+        "Задача обновлена"
+      );
+
+    } else {
+
+      const task = {
+
+        id:
+          Date.now().toString(),
+
+        title: name,
+
+        date: date,
+
+        time: time,
+
+        repeat: repeat,
+
+        note: note,
+
+        important:
+          importantValue,
+
+        completed: false,
+
+        createdAt:
+          new Date().toISOString()
+
+      };
+
+
+      tasks.push(task);
+
+
+      showToast(
+        "Задача создана"
+      );
+
+    }
+
+
+    saveTasks();
+
+    closeTaskModal();
+
+    renderAll();
+
+  }
+
+
+  /* =========================================
+     TASK ACTIONS
+  ========================================= */
+
+  function toggleTask(id) {
+
+    const task =
+      tasks.find(
+        item => item.id === id
+      );
+
+    if (!task) return;
+
+    task.completed =
+      !task.completed;
+
+
+    task.completedAt =
+      task.completed
+        ? new Date().toISOString()
+        : null;
+
+
+    saveTasks();
+
+    renderAll();
+
+    showToast(
+      task.completed
+        ? "Задача выполнена ✓"
+        : "Задача возвращена"
     );
 
   }
 
 
-  function addDays(
-    date,
-    amount
-  ) {
+  function deleteTask(id) {
 
-    const result =
-      new Date(date);
+    const task =
+      tasks.find(
+        item => item.id === id
+      );
+
+    if (!task) return;
 
 
-    result.setDate(
-      result.getDate() + amount
+    const confirmed =
+      confirm(
+        `Удалить «${task.title}»?`
+      );
+
+
+    if (!confirmed) return;
+
+
+    tasks =
+      tasks.filter(
+        item => item.id !== id
+      );
+
+
+    saveTasks();
+
+    renderAll();
+
+    showToast(
+      "Задача удалена"
     );
-
-
-    return result;
 
   }
 
 
-  function getMonday(date) {
+  function toggleTaskImportant(id) {
 
-    const result =
-      new Date(date);
+    const task =
+      tasks.find(
+        item => item.id === id
+      );
+
+    if (!task) return;
+
+    task.important =
+      !task.important;
+
+    saveTasks();
+
+    renderAll();
+
+  }
 
 
-    const day =
-      result.getDay();
+  /* =========================================
+     REPEAT
+  ========================================= */
+
+  function occursOnDate(task, dateString) {
+
+    if (!task.repeat ||
+        task.repeat === "none") {
+
+      return task.date === dateString;
+
+    }
+
+
+    const start =
+      new Date(
+        task.date + "T00:00:00"
+      );
+
+    const target =
+      new Date(
+        dateString + "T00:00:00"
+      );
+
+
+    if (target < start) {
+      return false;
+    }
 
 
     const diff =
-      day === 0
-        ? -6
-        : 1 - day;
-
-
-    result.setDate(
-      result.getDate() + diff
-    );
-
-
-    result.setHours(
-      0,
-      0,
-      0,
-      0
-    );
-
-
-    return result;
-
-  }
-
-
-  function formatDate() {
-
-    const date =
-      new Date();
-
-
-    const text =
-      date.toLocaleDateString(
-        "ru-RU",
-        {
-          weekday: "long",
-          day: "numeric",
-          month: "long"
-        }
+      Math.floor(
+        (
+          target.getTime() -
+          start.getTime()
+        ) /
+        86400000
       );
 
 
-    currentDate.textContent =
-      text.charAt(0).toUpperCase() +
-      text.slice(1);
-
-  }
-
-
-  /* =====================================================
-     TASKS
-  ===================================================== */
-
-  function taskAppearsOnDate(
-    task,
-    dateKey
-  ) {
-
-    const date =
-      parseDate(
-        dateKey
-      );
-
-
-    if (
-      task.startDate &&
-      dateKey < task.startDate
-    ) {
-
-      return false;
-
-    }
-
-
-    if (
-      !task.recurring ||
-      task.recurring === "none"
-    ) {
-
-      return (
-        task.date === dateKey
-      );
-
-    }
-
-
-    if (
-      task.recurring === "daily"
-    ) {
-
+    if (task.repeat === "daily") {
       return true;
-
     }
 
 
-    if (
-      task.recurring === "weekdays"
-    ) {
+    if (task.repeat === "weekdays") {
 
       const day =
-        date.getDay();
+        target.getDay();
 
-
-      return (
-        day >= 1 &&
-        day <= 5
-      );
+      return day !== 0 && day !== 6;
 
     }
 
 
-    if (
-      task.recurring === "weekly"
-    ) {
+    if (task.repeat === "weekly") {
 
-      const start =
-        parseDate(
-          task.startDate
-        );
+      return diff % 7 === 0;
 
+    }
+
+
+    if (task.repeat === "monthly") {
 
       return (
-        start.getDay() ===
-        date.getDay()
+        target.getDate() ===
+        start.getDate()
       );
 
     }
@@ -2426,358 +2236,320 @@
   }
 
 
-  function isTaskCompleted(
-    task,
-    dateKey
-  ) {
-
-    if (
-      task.recurring &&
-      task.recurring !== "none"
-    ) {
-
-      return (
-        Array.isArray(
-          task.completedDates
-        ) &&
-        task.completedDates.includes(
-          dateKey
-        )
-      );
-
-    }
-
-
-    return Boolean(
-      task.completed
-    );
-
-  }
-
-
-  function setTaskCompleted(
-    task,
-    dateKey,
-    value
-  ) {
-
-    if (
-      task.recurring &&
-      task.recurring !== "none"
-    ) {
-
-      if (
-        !Array.isArray(
-          task.completedDates
-        )
-      ) {
-
-        task.completedDates = [];
-
-      }
-
-
-      if (value) {
-
-        if (
-          !task.completedDates.includes(
-            dateKey
-          )
-        ) {
-
-          task.completedDates.push(
-            dateKey
-          );
-
-        }
-
-      } else {
-
-        task.completedDates =
-          task.completedDates.filter(
-            date =>
-              date !== dateKey
-          );
-
-      }
-
-
-      return;
-
-    }
-
-
-    task.completed =
-      value;
-
-  }
-
-
-  function getTasksForDate(
-    dateKey
-  ) {
+  function getTasksForDate(dateString) {
 
     return tasks.filter(
       task =>
-        taskAppearsOnDate(
+        occursOnDate(
           task,
-          dateKey
+          dateString
         )
     );
 
   }
 
 
-  function getRepeatLabel(
-    repeat
-  ) {
+  /* =========================================
+     FILTER
+  ========================================= */
 
-    switch (repeat) {
+  function setFilter(filter) {
 
-      case "daily":
-        return "🔁 Каждый день";
-
-      case "weekdays":
-        return "🔁 По будням";
-
-      case "weekly":
-        return "🔁 Каждую неделю";
-
-      default:
-        return "Сегодня";
-
-    }
-
-  }
+    currentFilter =
+      filter;
 
 
-  function getTaskWord(
-    number
-  ) {
+    document
+      .querySelectorAll(".filter")
+      .forEach(button => {
 
-    const mod10 =
-      number % 10;
+        button.classList.toggle(
+          "active",
+          button.dataset.filter === filter
+        );
 
-    const mod100 =
-      number % 100;
-
-
-    if (
-      mod10 === 1 &&
-      mod100 !== 11
-    ) {
-
-      return "задача";
-
-    }
+      });
 
 
-    if (
-      mod10 >= 2 &&
-      mod10 <= 4 &&
-      (
-        mod100 < 10 ||
-        mod100 >= 20
-      )
-    ) {
-
-      return "задачи";
-
-    }
-
-
-    return "задач";
+    renderTasks();
 
   }
 
 
-  function createTaskElement(
-    task,
-    dateKey
-  ) {
+  function getFilteredTasks() {
 
-    const completed =
-      isTaskCompleted(
-        task,
-        dateKey
+    const today =
+      formatDate(new Date());
+
+
+    if (currentFilter === "today") {
+
+      return getTasksForDate(
+        today
       );
 
+    }
 
-    const element =
-      document.createElement(
-        "div"
+
+    if (currentFilter === "important") {
+
+      return tasks.filter(
+        task =>
+          task.important
       );
 
-
-    element.className =
-      "task" +
-      (
-        completed
-          ? " completed"
-          : ""
-      );
+    }
 
 
-    element.innerHTML = `
-
-      <button
-        class="task-check"
-        data-task-id="${task.id}"
-        data-date="${dateKey}"
-      >
-
-        <span class="check-icon">
-          ✓
-        </span>
-
-      </button>
-
-
-      <div class="task-content">
-
-        <div class="task-name">
-          ${escapeHtml(task.title)}
-        </div>
-
-        <div class="task-meta">
-          ${getRepeatLabel(task.recurring)}
-        </div>
-
-      </div>
-
-
-      <button
-        class="delete-task"
-        data-delete-id="${task.id}"
-      >
-        ×
-      </button>
-
-    `;
-
-
-    return element;
+    return [
+      ...tasks
+    ].sort(
+      (a, b) =>
+        (
+          a.date + a.time
+        ).localeCompare(
+          b.date + b.time
+        )
+    );
 
   }
 
 
-  /* =====================================================
-     HOME
-  ===================================================== */
+  /* =========================================
+     TASK RENDER
+  ========================================= */
 
-  function renderHome() {
+  function renderTasks() {
 
-    const dateKey =
-      getTodayKey();
-
-
-    const todayTasks =
-      getTasksForDate(
-        dateKey
+    const container =
+      document.getElementById(
+        "taskList"
       );
 
 
-    tasksContainer.innerHTML =
-      "";
+    const list =
+      getFilteredTasks();
 
 
-    if (
-      todayTasks.length === 0
-    ) {
+    if (!list.length) {
 
-      tasksContainer.innerHTML = `
+      container.innerHTML = `
 
         <div class="empty">
 
           <div class="empty-icon">
-            ✨
+            ✓
           </div>
 
           <div class="empty-title">
-            День свободен
+            Всё чисто
           </div>
 
           <div class="empty-text">
-            Добавьте первую задачу<br>
-            и начните свой день продуктивно.
+            Здесь появятся твои задачи.
+            Создай первую и начни день.
           </div>
 
         </div>
 
       `;
 
-    } else {
-
-      todayTasks.forEach(
-        task => {
-
-          tasksContainer.appendChild(
-            createTaskElement(
-              task,
-              dateKey
-            )
-          );
-
-        }
-      );
+      return;
 
     }
 
 
-    updateHomeStats(
-      todayTasks,
-      dateKey
-    );
+    container.innerHTML =
+      list
+        .map(task => {
+
+          const repeatLabel = {
+
+            none: "",
+
+            daily: "Каждый день",
+
+            weekdays: "По будням",
+
+            weekly: "Каждую неделю",
+
+            monthly: "Каждый месяц"
+
+          }[task.repeat] || "";
+
+
+          return `
+
+            <div
+              class="task ${
+                task.completed
+                  ? "completed"
+                  : ""
+              }"
+            >
+
+              <button
+                class="check"
+                onclick="toggleTask('${task.id}')"
+                aria-label="Выполнить"
+              >
+
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+
+                  <path
+                    d="M5 12l4 4L19 7"
+                  />
+
+                </svg>
+
+              </button>
+
+
+              <div
+                class="task-content"
+                onclick="openTaskModal('${task.id}')"
+              >
+
+                <div class="task-title">
+
+                  ${
+                    task.important
+                      ? '<span class="important">★ </span>'
+                      : ''
+                  }
+
+                  ${escapeHtml(task.title)}
+
+                </div>
+
+
+                <div class="task-meta">
+
+                  <span>
+                    📅 ${formatHumanDate(task.date)}
+                  </span>
+
+                  ${
+                    task.time
+                      ? `<span>⏰ ${task.time}</span>`
+                      : ""
+                  }
+
+                  ${
+                    repeatLabel
+                      ? `<span>🔁 ${repeatLabel}</span>`
+                      : ""
+                  }
+
+                </div>
+
+              </div>
+
+
+              <div class="task-actions">
+
+                <button
+                  class="icon-button"
+                  onclick="openTaskModal('${task.id}')"
+                >
+                  ⋯
+                </button>
+
+              </div>
+
+            </div>
+
+          `;
+
+        })
+        .join("");
 
   }
 
 
-  function updateHomeStats(
-    todayTasks,
-    dateKey
-  ) {
+  function escapeHtml(value) {
 
-    const total =
-      todayTasks.length;
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  }
+
+
+  /* =========================================
+     TODAY SUMMARY
+  ========================================= */
+
+  function renderSummary() {
+
+    const today =
+      formatDate(new Date());
+
+
+    const list =
+      getTasksForDate(today);
 
 
     const completed =
-      todayTasks.filter(
-        task =>
-          isTaskCompleted(
-            task,
-            dateKey
-          )
+      list.filter(
+        task => task.completed
       ).length;
 
 
-    const percentage =
-      total === 0
-        ? 0
-        : Math.round(
-            completed /
-            total *
-            100
-          );
+    const total =
+      list.length;
 
 
-    progressValue.textContent =
-      `${percentage}%`;
+    const percent =
+      total
+        ? Math.round(
+            completed / total * 100
+          )
+        : 0;
 
 
-    progressFill.style.width =
-      `${percentage}%`;
+    document
+      .getElementById("todayCount")
+      .textContent =
+        `${completed} из ${total}`;
 
 
-    taskCount.textContent =
-      `${total} ${getTaskWord(total)}`;
+    document
+      .getElementById("todayPercent")
+      .textContent =
+        `${percent}%`;
+
+
+    document
+      .getElementById("todayProgress")
+      .style.width =
+        `${percent}%`;
 
   }
 
 
-  /* =====================================================
+  /* =========================================
      CALENDAR
-  ===================================================== */
+  ========================================= */
+
+  function changeMonth(offset) {
+
+    calendarDate.setMonth(
+      calendarDate.getMonth() + offset
+    );
+
+    renderCalendar();
+
+  }
+
 
   function renderCalendar() {
 
@@ -2788,7 +2560,7 @@
       calendarDate.getMonth();
 
 
-    const monthName =
+    const monthTitle =
       calendarDate.toLocaleDateString(
         "ru-RU",
         {
@@ -2798,21 +2570,13 @@
       );
 
 
-    document.getElementById(
-      "calendarMonth"
-    ).textContent =
-      monthName.charAt(0).toUpperCase() +
-      monthName.slice(1);
-
-
-    const grid =
-      document.getElementById(
-        "calendarGrid"
-      );
-
-
-    grid.innerHTML =
-      "";
+    document
+      .getElementById("monthTitle")
+      .textContent =
+        monthTitle
+          .charAt(0)
+          .toUpperCase() +
+        monthTitle.slice(1);
 
 
     const firstDay =
@@ -2823,6 +2587,15 @@
       );
 
 
+    let startDay =
+      firstDay.getDay();
+
+    startDay =
+      startDay === 0
+        ? 6
+        : startDay - 1;
+
+
     const daysInMonth =
       new Date(
         year,
@@ -2831,34 +2604,44 @@
       ).getDate();
 
 
-    let startDay =
-      firstDay.getDay();
+    const previousDays =
+      new Date(
+        year,
+        month,
+        0
+      ).getDate();
 
 
-    startDay =
-      startDay === 0
-        ? 6
-        : startDay - 1;
+    const grid =
+      document.getElementById(
+        "calendarGrid"
+      );
+
+
+    grid.innerHTML = "";
 
 
     for (
-      let i = 0;
-      i < startDay;
-      i++
+      let i = startDay - 1;
+      i >= 0;
+      i--
     ) {
 
-      const empty =
-        document.createElement(
-          "div"
+      const number =
+        previousDays - i;
+
+      const date =
+        new Date(
+          year,
+          month - 1,
+          number
         );
 
-
-      empty.className =
-        "calendar-day";
-
-
       grid.appendChild(
-        empty
+        createCalendarDay(
+          date,
+          true
+        )
       );
 
     }
@@ -2877,382 +2660,324 @@
           day
         );
 
-
-      const dateKey =
-        getDateKey(
-          date
-        );
-
-
-      const dayTasks =
-        getTasksForDate(
-          dateKey
-        );
-
-
-      const completed =
-        dayTasks.filter(
-          task =>
-            isTaskCompleted(
-              task,
-              dateKey
-            )
-        ).length;
-
-
-      const total =
-        dayTasks.length;
-
-
-      const dayElement =
-        document.createElement(
-          "button"
-        );
-
-
-      dayElement.className =
-        "calendar-day";
-
-
-      if (
-        dateKey ===
-        getTodayKey()
-      ) {
-
-        dayElement.classList.add(
-          "today"
-        );
-
-      }
-
-
-      if (
-        dateKey ===
-        selectedDate
-      ) {
-
-        dayElement.classList.add(
-          "selected"
-        );
-
-      }
-
-
-      dayElement.dataset.date =
-        dateKey;
-
-
-      dayElement.innerHTML = `
-
-        <span class="calendar-number">
-          ${day}
-        </span>
-
-        ${
-          total > 0
-            ? `
-              <div class="calendar-stats">
-
-                <span class="calendar-dot"></span>
-
-                <span class="calendar-count">
-                  ${total}
-                </span>
-
-                <span class="calendar-complete">
-                  ${completed}
-                </span>
-
-              </div>
-            `
-            : ""
-        }
-
-      `;
-
-
       grid.appendChild(
-        dayElement
+        createCalendarDay(
+          date,
+          false
+        )
       );
 
     }
 
 
-    renderSelectedDay();
+    const cells =
+      grid.children.length;
+
+    const remaining =
+      Math.ceil(cells / 7) * 7 -
+      cells;
+
+
+    for (
+      let day = 1;
+      day <= remaining;
+      day++
+    ) {
+
+      const date =
+        new Date(
+          year,
+          month + 1,
+          day
+        );
+
+      grid.appendChild(
+        createCalendarDay(
+          date,
+          true
+        )
+      );
+
+    }
+
+
+    renderCalendarInfo(
+      selectedCalendarDate
+    );
 
   }
 
 
-  function renderSelectedDay() {
+  function createCalendarDay(
+    date,
+    other
+  ) {
 
-    const card =
-      document.getElementById(
-        "selectedDayCard"
-      );
-
-
-    const date =
-      parseDate(
-        selectedDate
-      );
+    const element =
+      document.createElement("div");
 
 
-    const dayTasks =
+    const dateString =
+      formatDate(date);
+
+
+    const list =
       getTasksForDate(
-        selectedDate
+        dateString
       );
 
 
     const completed =
-      dayTasks.filter(
+      list.filter(
         task =>
-          isTaskCompleted(
-            task,
-            selectedDate
-          )
+          task.completed
       ).length;
 
 
-    const total =
-      dayTasks.length;
+    element.className =
+      "day";
 
 
-    const percentage =
-      total === 0
-        ? 0
-        : Math.round(
-            completed /
-            total *
-            100
-          );
-
-
-    const formatted =
-      date.toLocaleDateString(
-        "ru-RU",
-        {
-          weekday: "long",
-          day: "numeric",
-          month: "long"
-        }
+    if (other) {
+      element.classList.add(
+        "other"
       );
-
-
-    const title =
-      formatted.charAt(0).toUpperCase() +
-      formatted.slice(1);
-
-
-    card.innerHTML = `
-
-      <div class="selected-day-header">
-
-        <div>
-
-          <div class="selected-day-title">
-            ${title}
-          </div>
-
-          <div class="selected-day-subtitle">
-
-            ${total}
-            ${getTaskWord(total)}
-
-            ·
-
-            ${completed}
-            выполнено
-
-          </div>
-
-        </div>
-
-
-        <div class="day-progress">
-
-          <div class="day-progress-value">
-            ${percentage}%
-          </div>
-
-          <div class="day-progress-label">
-            выполнено
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="tasks"
-        id="selectedDayTasks"
-      ></div>
-
-    `;
-
-
-    const container =
-      document.getElementById(
-        "selectedDayTasks"
-      );
+    }
 
 
     if (
-      dayTasks.length === 0
+      dateString ===
+      formatDate(new Date())
     ) {
 
-      container.innerHTML = `
-
-        <div class="empty">
-
-          <div class="empty-icon">
-            🌿
-          </div>
-
-          <div class="empty-title">
-            Нет задач
-          </div>
-
-          <div class="empty-text">
-            На этот день ничего
-            не запланировано.
-          </div>
-
-        </div>
-
-      `;
-
-      return;
+      element.classList.add(
+        "today"
+      );
 
     }
 
 
-    dayTasks.forEach(
-      task => {
+    if (
+      dateString ===
+      selectedCalendarDate
+    ) {
 
-        container.appendChild(
-          createTaskElement(
-            task,
-            selectedDate
-          )
-        );
+      element.classList.add(
+        "selected"
+      );
 
-      }
-    );
+    }
+
+
+    element.innerHTML = `
+
+      <div class="day-number">
+        ${date.getDate()}
+      </div>
+
+      <div class="day-dots">
+
+        ${
+          list.length
+            ? `
+              <span class="day-dot"></span>
+              ${
+                completed === list.length
+                  ? '<span class="day-dot"></span>'
+                  : ""
+              }
+            `
+            : ""
+        }
+
+      </div>
+
+    `;
+
+
+    element.onclick = () => {
+
+      selectedCalendarDate =
+        dateString;
+
+      renderCalendar();
+
+    };
+
+
+    return element;
 
   }
 
 
-  document
-    .getElementById(
-      "prevMonth"
-    )
-    .addEventListener(
-      "click",
-      () => {
-
-        calendarDate =
-          new Date(
-            calendarDate.getFullYear(),
-            calendarDate.getMonth() - 1,
-            1
-          );
-
-
-        renderCalendar();
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "nextMonth"
-    )
-    .addEventListener(
-      "click",
-      () => {
-
-        calendarDate =
-          new Date(
-            calendarDate.getFullYear(),
-            calendarDate.getMonth() + 1,
-            1
-          );
-
-
-        renderCalendar();
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "calendarTodayButton"
-    )
-    .addEventListener(
-      "click",
-      () => {
-
-        const now =
-          new Date();
-
-
-        calendarDate =
-          new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            1
-          );
-
-
-        selectedDate =
-          getTodayKey();
-
-
-        renderCalendar();
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "calendarGrid"
-    )
-    .addEventListener(
-      "click",
-      event => {
-
-        const day =
-          event.target.closest(
-            ".calendar-day[data-date]"
-          );
-
-
-        if (!day) return;
-
-
-        selectedDate =
-          day.dataset.date;
-
-
-        renderCalendar();
-
-      }
-    );
-
-
-  /* =====================================================
-     ANALYTICS
-  ===================================================== */
-
-  function getWeekStats(
-    weekStart
+  function renderCalendarInfo(
+    dateString
   ) {
 
-    const days = [];
+    const list =
+      getTasksForDate(
+        dateString
+      );
+
+
+    const completed =
+      list.filter(
+        task =>
+          task.completed
+      ).length;
+
+
+    const info =
+      document.getElementById(
+        "calendarInfo"
+      );
+
+
+    info.innerHTML = `
+
+      <div class="calendar-info-title">
+
+        ${formatHumanDate(dateString)}
+
+      </div>
+
+      <div class="task-meta">
+
+        <span>
+          📋 ${list.length} задач
+        </span>
+
+        <span>
+          ✓ ${completed} выполнено
+        </span>
+
+        <span>
+          ${
+            list.length
+              ? Math.round(
+                  completed /
+                  list.length *
+                  100
+                )
+              : 0
+          }%
+        </span>
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* =========================================
+     ANALYTICS
+  ========================================= */
+
+  function renderAnalytics() {
+
+    const total =
+      tasks.length;
+
+
+    const completed =
+      tasks.filter(
+        task =>
+          task.completed
+      ).length;
+
+
+    const important =
+      tasks.filter(
+        task =>
+          task.important
+      ).length;
+
+
+    const efficiency =
+      total
+        ? Math.round(
+            completed /
+            total *
+            100
+          )
+        : 0;
+
+
+    document
+      .getElementById("statTotal")
+      .textContent =
+        total;
+
+
+    document
+      .getElementById("statCompleted")
+      .textContent =
+        completed;
+
+
+    document
+      .getElementById("statImportant")
+      .textContent =
+        important;
+
+
+    document
+      .getElementById("statEfficiency")
+      .textContent =
+        `${efficiency}%`;
+
+
+    renderWeekChart();
+
+  }
+
+
+  function renderWeekChart() {
+
+    const container =
+      document.getElementById(
+        "weekChart"
+      );
+
+
+    const today =
+      new Date();
+
+
+    const day =
+      today.getDay();
+
+
+    const mondayOffset =
+      day === 0
+        ? -6
+        : 1 - day;
+
+
+    const monday =
+      new Date(today);
+
+    monday.setDate(
+      today.getDate() +
+      mondayOffset
+    );
+
+
+    const names =
+      [
+        "Пн",
+        "Вт",
+        "Ср",
+        "Чт",
+        "Пт",
+        "Сб",
+        "Вс"
+      ];
+
+
+    const data =
+      [];
 
 
     for (
@@ -3262,1388 +2987,219 @@
     ) {
 
       const date =
-        addDays(
-          weekStart,
-          i
-        );
+        new Date(monday);
+
+      date.setDate(
+        monday.getDate() + i
+      );
 
 
-      const dateKey =
-        getDateKey(
-          date
-        );
+      const dateString =
+        formatDate(date);
 
 
-      const dayTasks =
+      const list =
         getTasksForDate(
-          dateKey
+          dateString
         );
 
 
       const completed =
-        dayTasks.filter(
+        list.filter(
           task =>
-            isTaskCompleted(
-              task,
-              dateKey
-            )
+            task.completed
         ).length;
 
 
-      const total =
-        dayTasks.length;
-
-
-      const percentage =
-        total === 0
-          ? 0
-          : Math.round(
-              completed /
-              total *
-              100
-            );
-
-
-      days.push({
+      data.push({
 
         date,
-        dateKey,
-        total,
-        completed,
-        percentage
+        total: list.length,
+        completed
 
       });
 
     }
 
 
-    return days;
-
-  }
-
-
-  function renderAnalytics() {
-
-    const weekDays =
-      getWeekStats(
-        analyticsWeekStart
-      );
-
-
-    const total =
-      weekDays.reduce(
-        (sum, day) =>
-          sum + day.total,
-        0
-      );
-
-
-    const completed =
-      weekDays.reduce(
-        (sum, day) =>
-          sum + day.completed,
-        0
-      );
-
-
-    const percentage =
-      total === 0
-        ? 0
-        : Math.round(
-            completed /
-            total *
-            100
-          );
-
-
-    document.getElementById(
-      "weekPercent"
-    ).textContent =
-      `${percentage}%`;
-
-
-    document.getElementById(
-      "weekSummary"
-    ).textContent =
-      `${completed} выполнено из ${total} ${getTaskWord(total)}`;
-
-
-    document.getElementById(
-      "weekProgressFill"
-    ).style.width =
-      `${percentage}%`;
-
-
-    renderWeekTitle();
-
-    renderWeekDays();
-
-    renderAnalyticsDetails();
-
-  }
-
-
-  function renderWeekTitle() {
-
-    const start =
-      analyticsWeekStart;
-
-
-    const end =
-      addDays(
-        start,
-        6
-      );
-
-
-    const startText =
-      start.toLocaleDateString(
-        "ru-RU",
-        {
-          day: "numeric",
-          month: "short"
-        }
-      );
-
-
-    const endText =
-      end.toLocaleDateString(
-        "ru-RU",
-        {
-          day: "numeric",
-          month: "short"
-        }
-      );
-
-
-    const currentKey =
-      getDateKey(
-        getMonday(
-          new Date()
-        )
-      );
-
-
-    const selectedKey =
-      getDateKey(
-        start
-      );
-
-
-    document.getElementById(
-      "weekTitle"
-    ).textContent =
-      currentKey === selectedKey
-        ? "Эта неделя"
-        : `${startText} — ${endText}`;
-
-  }
-
-
-  function renderWeekDays() {
-
-    const container =
-      document.getElementById(
-        "weekDays"
+    const max =
+      Math.max(
+        ...data.map(
+          item =>
+            item.total
+        ),
+        1
       );
 
 
     container.innerHTML =
-      "";
+      data
+        .map(
+          (item, index) => {
+
+            const height =
+              item.total
+                ? Math.max(
+                    8,
+                    item.total /
+                    max *
+                    100
+                  )
+                : 4;
 
 
-    const stats =
-      getWeekStats(
-        analyticsWeekStart
-      );
+            return `
 
+              <div
+                class="chart-day"
+                onclick="selectAnalyticsDay('${formatDate(item.date)}')"
+              >
 
-    const names = [
+                <div class="bar-wrapper">
 
-      "Понедельник",
-      "Вторник",
-      "Среда",
-      "Четверг",
-      "Пятница",
-      "Суббота",
-      "Воскресенье"
+                  <div
+                    class="bar"
+                    style="height:${height}%"
+                  ></div>
 
-    ];
+                </div>
 
+                <div class="chart-day-name">
+                  ${names[index]}
+                </div>
 
-    stats.forEach(
-      (
-        day,
-        index
-      ) => {
+              </div>
 
-        const element =
-          document.createElement(
-            "div"
-          );
-
-
-        element.className =
-          "week-day";
-
-
-        if (
-          day.dateKey ===
-          getTodayKey()
-        ) {
-
-          element.classList.add(
-            "today"
-          );
-
-        }
-
-
-        if (
-          day.dateKey ===
-          analyticsSelectedDate
-        ) {
-
-          element.classList.add(
-            "selected"
-          );
-
-        }
-
-
-        const badge =
-          day.total > 0 &&
-          day.completed ===
-            day.total
-            ? `
-              <span class="week-day-badge complete">
-                ✓ Всё выполнено
-              </span>
-            `
-            : `
-              <span class="week-day-badge">
-                ${day.total} ${getTaskWord(day.total)}
-              </span>
             `;
 
-
-        element.innerHTML = `
-
-          <div class="week-day-top">
-
-            <div class="week-day-name">
-
-              <span class="week-day-label">
-                ${names[index]}
-              </span>
-
-              <span class="week-day-date">
-                ${day.date.toLocaleDateString(
-                  "ru-RU",
-                  {
-                    day: "numeric",
-                    month: "short"
-                  }
-                )}
-              </span>
-
-            </div>
-
-
-            <div class="week-day-percent">
-              ${day.percentage}%
-            </div>
-
-          </div>
-
-
-          <div class="week-day-progress">
-
-            <div
-              class="week-day-fill"
-              style="width: ${day.percentage}%"
-            ></div>
-
-          </div>
-
-
-          <div class="week-day-bottom">
-
-            <span class="week-day-stat">
-
-              <strong>
-                ${day.completed}
-              </strong>
-
-              выполнено из
-
-              <strong>
-                ${day.total}
-              </strong>
-
-            </span>
-
-            ${badge}
-
-          </div>
-
-        `;
-
-
-        element.addEventListener(
-          "click",
-          () => {
-
-            analyticsSelectedDate =
-              day.dateKey;
-
-
-            renderAnalytics();
-
           }
-        );
-
-
-        container.appendChild(
-          element
-        );
-
-      }
-    );
+        )
+        .join("");
 
   }
 
 
-  function renderAnalyticsDetails() {
-
-    const container =
-      document.getElementById(
-        "analyticsDayDetails"
-      );
-
-
-    const dateKey =
-      analyticsSelectedDate;
-
-
-    const date =
-      parseDate(
-        dateKey
-      );
-
-
-    const dayTasks =
-      getTasksForDate(
-        dateKey
-      );
-
-
-    const completed =
-      dayTasks.filter(
-        task =>
-          isTaskCompleted(
-            task,
-            dateKey
-          )
-      ).length;
-
-
-    const percentage =
-      dayTasks.length === 0
-        ? 0
-        : Math.round(
-            completed /
-            dayTasks.length *
-            100
-          );
-
-
-    const formatted =
-      date.toLocaleDateString(
-        "ru-RU",
-        {
-          weekday: "long",
-          day: "numeric",
-          month: "long"
-        }
-      );
-
-
-    const title =
-      formatted.charAt(0).toUpperCase() +
-      formatted.slice(1);
-
-
-    container.innerHTML = `
-
-      <div class="analytics-details-title">
-        ${title}
-      </div>
-
-      <div class="selected-day-card">
-
-        <div class="selected-day-header">
-
-          <div>
-
-            <div class="selected-day-title">
-              ${completed} из ${dayTasks.length}
-            </div>
-
-            <div class="selected-day-subtitle">
-              выполнено · ${percentage}%
-            </div>
-
-          </div>
-
-          <div class="day-progress">
-
-            <div class="day-progress-value">
-              ${percentage}%
-            </div>
-
-            <div class="day-progress-label">
-              результат
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div
-          class="tasks"
-          id="analyticsTasks"
-        ></div>
-
-      </div>
-
-    `;
-
-
-    const tasksElement =
-      document.getElementById(
-        "analyticsTasks"
-      );
-
-
-    if (
-      dayTasks.length === 0
-    ) {
-
-      tasksElement.innerHTML = `
-
-        <div class="empty">
-
-          <div class="empty-icon">
-            🌿
-          </div>
-
-          <div class="empty-title">
-            Нет задач
-          </div>
-
-          <div class="empty-text">
-            На этот день ничего
-            не запланировано.
-          </div>
-
-        </div>
-
-      `;
-
-      return;
-
-    }
-
-
-    dayTasks.forEach(
-      task => {
-
-        tasksElement.appendChild(
-          createTaskElement(
-            task,
-            dateKey
-          )
-        );
-
-      }
-    );
-
-  }
-
-
-  document
-    .getElementById(
-      "prevWeek"
-    )
-    .addEventListener(
-      "click",
-      () => {
-
-        analyticsWeekStart =
-          addDays(
-            analyticsWeekStart,
-            -7
-          );
-
-
-        analyticsSelectedDate =
-          getDateKey(
-            analyticsWeekStart
-          );
-
-
-        renderAnalytics();
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "nextWeek"
-    )
-    .addEventListener(
-      "click",
-      () => {
-
-        analyticsWeekStart =
-          addDays(
-            analyticsWeekStart,
-            7
-          );
-
-
-        analyticsSelectedDate =
-          getDateKey(
-            analyticsWeekStart
-          );
-
-
-        renderAnalytics();
-
-      }
-    );
-
-
-  /* =====================================================
-     MODAL
-  ===================================================== */
-
-  function openModal() {
-
-    modalOverlay.classList.add(
-      "show"
-    );
-
-
-    setTimeout(
-      () => {
-
-        taskInput.focus();
-
-      },
-      150
-    );
-
-  }
-
-
-  function closeModal() {
-
-    modalOverlay.classList.remove(
-      "show"
-    );
-
-
-    taskInput.value =
-      "";
-
-
-    document.querySelector(
-      'input[name="repeat"][value="none"]'
-    ).checked = true;
-
-  }
-
-
-  function addTask() {
-
-    const title =
-      taskInput.value.trim();
-
-
-    if (!title) {
-
-      showToast(
-        "Введите название задачи"
-      );
-
-      taskInput.focus();
-
-      return;
-
-    }
-
-
-    const repeat =
-      document.querySelector(
-        'input[name="repeat"]:checked'
-      ).value;
-
-
-    const todayKey =
-      getTodayKey();
-
-
-    tasks.push({
-
-      id:
-        Date.now().toString(),
-
-      title,
-
-      date:
-        todayKey,
-
-      startDate:
-        todayKey,
-
-      recurring:
-        repeat,
-
-      completed:
-        false,
-
-      completedDates: [],
-
-      createdAt:
-        new Date().toISOString()
-
-    });
-
-
-    saveTasks();
-
-
-    renderHome();
-
-    renderCalendar();
-
-    renderAnalytics();
-
-
-    closeModal();
-
-
-    showToast(
-      repeat === "none"
-        ? "Задача добавлена ✓"
-        : "Регулярная задача создана 🔁"
-    );
-
-  }
-
-
-  /* =====================================================
-     TASK EVENTS
-  ===================================================== */
-
-  document.addEventListener(
-    "click",
-    event => {
-
-      const check =
-        event.target.closest(
-          "[data-task-id]"
-        );
-
-
-      if (check) {
-
-        toggleTask(
-          check.dataset.taskId,
-          check.dataset.date
-        );
-
-        return;
-
-      }
-
-
-      const deleteButton =
-        event.target.closest(
-          "[data-delete-id]"
-        );
-
-
-      if (
-        deleteButton
-      ) {
-
-        deleteTask(
-          deleteButton.dataset.deleteId
-        );
-
-      }
-
-    }
-  );
-
-
-  function toggleTask(
-    id,
-    dateKey
+  function selectAnalyticsDay(
+    dateString
   ) {
 
-    const task =
-      tasks.find(
-        item =>
-          item.id === id
-      );
+    selectedCalendarDate =
+      dateString;
 
-
-    if (!task) return;
-
-
-    const completed =
-      isTaskCompleted(
-        task,
-        dateKey
-      );
-
-
-    setTaskCompleted(
-      task,
-      dateKey,
-      !completed
-    );
-
-
-    saveTasks();
-
-
-    renderHome();
-
-    renderCalendar();
-
-    renderAnalytics();
-
-
-    if (!completed) {
-
-      showToast(
-        "Задача выполнена ✓"
-      );
-
-    }
+    showPage("calendar");
 
   }
 
 
-  function deleteTask(id) {
-
-    tasks =
-      tasks.filter(
-        task =>
-          task.id !== id
-      );
-
-
-    saveTasks();
-
-
-    renderHome();
-
-    renderCalendar();
-
-    renderAnalytics();
-
-
-    showToast(
-      "Задача удалена"
-    );
-
-  }
-
-
-  /* =====================================================
-     NAVIGATION
-  ===================================================== */
-
-  document
-    .querySelectorAll(
-      ".nav-button"
-    )
-    .forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const page =
-              button.dataset.page;
-
-
-            document
-              .querySelectorAll(
-                ".nav-button"
-              )
-              .forEach(
-                item =>
-                  item.classList.remove(
-                    "active"
-                  )
-              );
-
-
-            button.classList.add(
-              "active"
-            );
-
-
-            document
-              .querySelectorAll(
-                ".page"
-              )
-              .forEach(
-                item =>
-                  item.classList.remove(
-                    "active"
-                  )
-              );
-
-
-            const pageElement =
-              document.getElementById(
-                page + "Page"
-              );
-
-
-            if (pageElement) {
-
-              pageElement.classList.add(
-                "active"
-              );
-
-            }
-
-
-            if (
-              page === "home"
-            ) {
-
-              renderHome();
-
-            }
-
-
-            if (
-              page === "calendar"
-            ) {
-
-              renderCalendar();
-
-            }
-
-
-            if (
-              page === "analytics"
-            ) {
-
-              renderAnalytics();
-
-            }
-
-
-            updateAddButton(
-              page
-            );
-
-          }
-        );
-
-      }
-    );
-
-
-  function updateAddButton(
-    page
-  ) {
-
-    if (
-      page === "settings"
-    ) {
-
-      addButton.style.display =
-        "none";
-
-    } else {
-
-      addButton.style.display =
-        "flex";
-
-      addButton.style.alignItems =
-        "center";
-
-      addButton.style.justifyContent =
-        "center";
-
-    }
-
-  }
-
-
-  /* =====================================================
+  /* =========================================
      SETTINGS
-  ===================================================== */
+  ========================================= */
 
-  function saveSettings() {
-
-    localStorage.setItem(
-      SETTINGS_KEY,
-      JSON.stringify(
-        settings
-      )
-    );
-
-  }
-
-
-  function loadSettingsUI() {
-
-    document.getElementById(
-      "notificationsToggle"
-    ).checked =
-      settings.notifications;
-
-
-    document.getElementById(
-      "morningTime"
-    ).value =
-      settings.morningTime;
-
-
-    document.getElementById(
-      "eveningTime"
-    ).value =
-      settings.eveningTime;
-
-
-    document.getElementById(
-      "firstDay"
-    ).value =
-      settings.firstDay;
-
-
-    updateThemeButtons();
-
-  }
-
-
-  document
-    .getElementById(
-      "notificationsToggle"
-    )
-    .addEventListener(
-      "change",
-      event => {
-
-        settings.notifications =
-          event.target.checked;
-
-
-        saveSettings();
-
-
-        showToast(
-          event.target.checked
-            ? "Уведомления включены 🔔"
-            : "Уведомления выключены"
-        );
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "morningTime"
-    )
-    .addEventListener(
-      "change",
-      event => {
-
-        settings.morningTime =
-          event.target.value;
-
-
-        saveSettings();
-
-
-        showToast(
-          "Время утренней сводки сохранено"
-        );
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "eveningTime"
-    )
-    .addEventListener(
-      "change",
-      event => {
-
-        settings.eveningTime =
-          event.target.value;
-
-
-        saveSettings();
-
-
-        showToast(
-          "Время вечерней сводки сохранено"
-        );
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "firstDay"
-    )
-    .addEventListener(
-      "change",
-      event => {
-
-        settings.firstDay =
-          event.target.value;
-
-
-        saveSettings();
-
-
-        showToast(
-          "Настройка календаря сохранена"
-        );
-
-      }
-    );
-
-
-  document
-    .querySelectorAll(
-      ".theme-option"
-    )
-    .forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            settings.theme =
-              button.dataset.theme;
-
-
-            saveSettings();
-
-            applyTheme();
-
-            updateThemeButtons();
-
-            showToast(
-              "Тема изменена"
-            );
-
-          }
-        );
-
-      }
-    );
-
-
-  function updateThemeButtons() {
+  function renderSettings() {
 
     document
-      .querySelectorAll(
-        ".theme-option"
-      )
-      .forEach(
-        button => {
+      .getElementById("morningTime")
+      .value =
+        settings.morning ||
+        "08:00";
 
-          button.classList.toggle(
-            "active",
-            button.dataset.theme ===
-              settings.theme
-          );
 
-        }
-      );
+    document
+      .getElementById("eveningTime")
+      .value =
+        settings.evening ||
+        "21:00";
+
+
+    document
+      .getElementById("savedTaskCount")
+      .textContent =
+        tasks.length;
 
   }
 
 
-  function applyTheme() {
+  function toggleTheme() {
 
-    let dark = false;
+    const isDark =
+      document.body.classList.toggle(
+        "dark"
+      );
 
+
+    settings.theme =
+      isDark
+        ? "dark"
+        : "light";
+
+
+    localStorage.setItem(
+      "tracker_settings",
+      JSON.stringify(settings)
+    );
+
+
+    document
+      .getElementById("themeButton")
+      .textContent =
+        isDark
+          ? "Тёмная"
+          : "Светлая";
+
+  }
+
+
+  /* =========================================
+     RENDER ALL
+  ========================================= */
+
+  function renderAll() {
+
+    renderTasks();
+
+    renderSummary();
+
+    renderCalendar();
+
+    renderAnalytics();
+
+    renderSettings();
+
+  }
+
+
+  /* =========================================
+     INITIALIZATION
+  ========================================= */
+
+  function init() {
 
     if (
       settings.theme ===
       "dark"
     ) {
 
-      dark = true;
-
-    }
-
-
-    if (
-      settings.theme ===
-      "system"
-    ) {
-
-      dark =
-        window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-
-    }
-
-
-    document.body.classList.toggle(
-      "dark",
-      dark
-    );
-
-  }
-
-
-  /* =====================================================
-     SYSTEM THEME
-  ===================================================== */
-
-  window
-    .matchMedia(
-      "(prefers-color-scheme: dark)"
-    )
-    .addEventListener(
-      "change",
-      () => {
-
-        if (
-          settings.theme ===
-          "system"
-        ) {
-
-          applyTheme();
-
-        }
-
-      }
-    );
-
-
-  /* =====================================================
-     ADD MODAL
-  ===================================================== */
-
-  addButton.addEventListener(
-    "click",
-    openModal
-  );
-
-
-  cancelButton.addEventListener(
-    "click",
-    closeModal
-  );
-
-
-  saveButton.addEventListener(
-    "click",
-    addTask
-  );
-
-
-  taskInput.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key === "Enter"
-      ) {
-
-        addTask();
-
-      }
-
-    }
-  );
-
-
-  modalOverlay.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target ===
-        modalOverlay
-      ) {
-
-        closeModal();
-
-      }
-
-    }
-  );
-
-
-  /* =====================================================
-     PROFILE
-  ===================================================== */
-
-  document
-    .getElementById(
-      "profileButton"
-    )
-    .addEventListener(
-      "click",
-      () => {
-
-        showToast(
-          "Профиль добавим позже"
-        );
-
-      }
-    );
-
-
-  /* =====================================================
-     STORAGE
-  ===================================================== */
-
-  function saveTasks() {
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(
-        tasks
-      )
-    );
-
-  }
-
-
-  /* =====================================================
-     TOAST
-  ===================================================== */
-
-  let toastTimer;
-
-
-  function showToast(
-    message
-  ) {
-
-    clearTimeout(
-      toastTimer
-    );
-
-
-    toast.textContent =
-      message;
-
-
-    toast.classList.add(
-      "show"
-    );
-
-
-    toastTimer =
-      setTimeout(
-        () => {
-
-          toast.classList.remove(
-            "show"
-          );
-
-        },
-        1800
+      document.body.classList.add(
+        "dark"
       );
 
-  }
+    }
 
 
-  /* =====================================================
-     ESCAPE
-  ===================================================== */
-
-  function escapeHtml(
-    text
-  ) {
-
-    const div =
-      document.createElement(
-        "div"
-      );
+    document
+      .getElementById("themeButton")
+      .textContent =
+        settings.theme === "dark"
+          ? "Тёмная"
+          : "Светлая";
 
 
-    div.textContent =
-      text;
-
-
-    return div.innerHTML;
+    renderAll();
 
   }
 
 
-  /* =====================================================
-     TELEGRAM WEB APP
-  ===================================================== */
-
-  if (
-    window.Telegram &&
-    window.Telegram.WebApp
-  ) {
-
-    const tg =
-      window.Telegram.WebApp;
-
-
-    tg.ready();
-
-    tg.expand();
-
-  }
-
-
-  /* =====================================================
-     INIT
-  ===================================================== */
-
-  formatDate();
-
-  loadSettingsUI();
-
-  applyTheme();
-
-  renderHome();
-
-  renderCalendar();
-
-  renderAnalytics();
-
-  updateAddButton(
-    "home"
-  );
+  init();
 
 </script>
 
