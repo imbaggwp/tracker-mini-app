@@ -7,39 +7,55 @@ let selectedDate = getToday();
 
 let calendarDate = new Date();
 
+let analyticsPeriod = "week";
 
-/* =========================
-   DATE HELPERS
-========================= */
+let analyticsSelectedDate = null;
+
+
+/* =========================================================
+   DATE
+========================================================= */
 
 function getDateKey(date) {
-  const year = date.getFullYear();
 
-  const month = String(
-    date.getMonth() + 1
-  ).padStart(2, "0");
+  const year =
+    date.getFullYear();
 
-  const day = String(
-    date.getDate()
-  ).padStart(2, "0");
+  const month =
+    String(
+      date.getMonth() + 1
+    ).padStart(2, "0");
+
+  const day =
+    String(
+      date.getDate()
+    ).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
+
 }
 
 
 function getToday() {
-  return getDateKey(new Date());
+
+  return getDateKey(
+    new Date()
+  );
+
 }
 
 
 function parseDate(dateString) {
+
   return new Date(
     `${dateString}T12:00:00`
   );
+
 }
 
 
 function formatFullDate(dateString) {
+
   return new Intl.DateTimeFormat(
     "ru-RU",
     {
@@ -50,10 +66,12 @@ function formatFullDate(dateString) {
   ).format(
     parseDate(dateString)
   );
+
 }
 
 
 function formatShortDate(dateString) {
+
   return new Intl.DateTimeFormat(
     "ru-RU",
     {
@@ -63,10 +81,12 @@ function formatShortDate(dateString) {
   ).format(
     parseDate(dateString)
   );
+
 }
 
 
 function formatMonth(date) {
+
   return new Intl.DateTimeFormat(
     "ru-RU",
     {
@@ -74,12 +94,29 @@ function formatMonth(date) {
       year: "numeric"
     }
   ).format(date);
+
 }
 
 
-/* =========================
+function getWeekdayShort(dateString) {
+
+  return new Intl.DateTimeFormat(
+    "ru-RU",
+    {
+      weekday: "short"
+    }
+  )
+    .format(
+      parseDate(dateString)
+    )
+    .replace(".", "");
+
+}
+
+
+/* =========================================================
    STORAGE
-========================= */
+========================================================= */
 
 function saveTasks() {
 
@@ -91,9 +128,9 @@ function saveTasks() {
 }
 
 
-/* =========================
-   REPEAT LOGIC
-========================= */
+/* =========================================================
+   TASK REPETITION
+========================================================= */
 
 function taskOccursOnDate(
   task,
@@ -203,10 +240,6 @@ function taskOccursOnDate(
 }
 
 
-/* =========================
-   TASKS FOR DATE
-========================= */
-
 function getTasksForDate(
   dateString
 ) {
@@ -222,9 +255,9 @@ function getTasksForDate(
 }
 
 
-/* =========================
+/* =========================================================
    COMPLETION
-========================= */
+========================================================= */
 
 function isTaskCompleted(
   task,
@@ -241,14 +274,16 @@ function isTaskCompleted(
 }
 
 
-/* =========================
+/* =========================================================
    HTML SAFETY
-========================= */
+========================================================= */
 
 function escapeHtml(text) {
 
   const div =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   div.textContent = text;
 
@@ -257,9 +292,47 @@ function escapeHtml(text) {
 }
 
 
-/* =========================
+/* =========================================================
+   TASK REPEAT LABEL
+========================================================= */
+
+function getRepeatLabel(
+  repeat
+) {
+
+  const labels = {
+
+    none: "",
+
+    daily:
+      "каждый день",
+
+    weekdays:
+      "будни",
+
+    weekends:
+      "выходные",
+
+    weekly:
+      "каждую неделю",
+
+    biweekly:
+      "раз в 2 недели",
+
+    monthly:
+      "каждый месяц"
+
+  };
+
+
+  return labels[repeat] || "";
+
+}
+
+
+/* =========================================================
    ELEMENTS
-========================= */
+========================================================= */
 
 const tasksContainer =
   document.getElementById(
@@ -292,26 +365,15 @@ const taskForm =
   );
 
 
-/* =========================
-   CURRENT DATE
-========================= */
-
-document.getElementById(
-  "currentDate"
-).textContent =
-  formatFullDate(
-    getToday()
-  );
-
-
-/* =========================
+/* =========================================================
    HOME
-========================= */
+========================================================= */
 
 function renderHome() {
 
   const today =
     getToday();
+
 
   const todayTasks =
     getTasksForDate(
@@ -365,38 +427,12 @@ function renderHome() {
         );
 
 
-      const repeatNames = {
-
-        none: "",
-
-        daily:
-          "каждый день",
-
-        weekdays:
-          "будни",
-
-        weekends:
-          "выходные",
-
-        weekly:
-          "каждую неделю",
-
-        biweekly:
-          "раз в 2 недели",
-
-        monthly:
-          "каждый месяц"
-
-      };
-
-
       element.innerHTML = `
 
         <button
           class="task-check"
           data-id="${task.id}"
           type="button"
-          aria-label="Выполнить задачу"
         ></button>
 
         <div class="task-content">
@@ -421,9 +457,9 @@ function renderHome() {
           task.repeat !== "none"
             ? `
               <span class="task-repeat">
-                ${repeatNames[
+                ${getRepeatLabel(
                   task.repeat
-                ]}
+                )}
               </span>
             `
             : ""
@@ -433,7 +469,6 @@ function renderHome() {
           class="task-delete"
           data-delete="${task.id}"
           type="button"
-          aria-label="Удалить"
         >
           ×
         </button>
@@ -456,13 +491,13 @@ function renderHome() {
 }
 
 
-/* =========================
-   PROGRESS
-========================= */
-
 function updateProgress(
   todayTasks
 ) {
+
+  const today =
+    getToday();
+
 
   const total =
     todayTasks.length;
@@ -473,7 +508,7 @@ function updateProgress(
       task =>
         isTaskCompleted(
           task,
-          getToday()
+          today
         )
     ).length;
 
@@ -511,7 +546,8 @@ function updateProgress(
 
 
   if (
-    percent === 100
+    percent === 100 &&
+    total > 0
   ) {
 
     message =
@@ -549,9 +585,9 @@ function updateProgress(
 }
 
 
-/* =========================
+/* =========================================================
    CALENDAR
-========================= */
+========================================================= */
 
 function renderCalendar() {
 
@@ -596,14 +632,6 @@ function renderCalendar() {
     firstDay.getDay();
 
 
-  /*
-    JS:
-    воскресенье = 0
-
-    Нам нужен:
-    понедельник = 0
-  */
-
   startingDay =
     startingDay === 0
       ? 6
@@ -626,10 +654,6 @@ function renderCalendar() {
     ).getDate();
 
 
-  /*
-    Предыдущие дни
-  */
-
   for (
     let i = startingDay - 1;
     i >= 0;
@@ -640,7 +664,7 @@ function renderCalendar() {
       previousMonthDays - i;
 
 
-    const cell =
+    grid.appendChild(
       createCalendarDay(
         new Date(
           year,
@@ -648,17 +672,11 @@ function renderCalendar() {
           day
         ),
         true
-      );
-
-
-    grid.appendChild(cell);
+      )
+    );
 
   }
 
-
-  /*
-    Текущий месяц
-  */
 
   for (
     let day = 1;
@@ -666,29 +684,19 @@ function renderCalendar() {
     day++
   ) {
 
-    const date =
-      new Date(
-        year,
-        month,
-        day
-      );
-
-
-    const cell =
+    grid.appendChild(
       createCalendarDay(
-        date,
+        new Date(
+          year,
+          month,
+          day
+        ),
         false
-      );
-
-
-    grid.appendChild(cell);
+      )
+    );
 
   }
 
-
-  /*
-    Следующий месяц
-  */
 
   const totalCells =
     startingDay +
@@ -698,7 +706,8 @@ function renderCalendar() {
   const remaining =
     totalCells % 7 === 0
       ? 0
-      : 7 - (
+      : 7 -
+        (
           totalCells % 7
         );
 
@@ -709,7 +718,7 @@ function renderCalendar() {
     day++
   ) {
 
-    const cell =
+    grid.appendChild(
       createCalendarDay(
         new Date(
           year,
@@ -717,19 +726,13 @@ function renderCalendar() {
           day
         ),
         true
-      );
-
-
-    grid.appendChild(cell);
+      )
+    );
 
   }
 
 }
 
-
-/* =========================
-   CALENDAR DAY
-========================= */
 
 function createCalendarDay(
   date,
@@ -832,13 +835,6 @@ function createCalendarDay(
         dateString;
 
 
-      /*
-        Если пользователь
-        нажал день другого
-        месяца — переключаем
-        календарь
-      */
-
       if (
         date.getMonth() !==
         calendarDate.getMonth()
@@ -867,37 +863,17 @@ function createCalendarDay(
 }
 
 
-/* =========================
-   SELECTED DAY
-========================= */
-
 function renderSelectedDay() {
 
-  const tasksForDay =
+  const dayTasks =
     getTasksForDate(
       selectedDate
     );
 
 
-  const title =
-    document.getElementById(
-      "selectedDayTitle"
-    );
-
-
-  const weekday =
-    document.getElementById(
-      "selectedDayWeekday"
-    );
-
-
-  const stat =
-    document.getElementById(
-      "selectedDayStat"
-    );
-
-
-  weekday.textContent =
+  document.getElementById(
+    "selectedDayWeekday"
+  ).textContent =
     new Intl.DateTimeFormat(
       "ru-RU",
       {
@@ -910,14 +886,16 @@ function renderSelectedDay() {
     );
 
 
-  title.textContent =
+  document.getElementById(
+    "selectedDayTitle"
+  ).textContent =
     formatShortDate(
       selectedDate
     );
 
 
   const completed =
-    tasksForDay.filter(
+    dayTasks.filter(
       task =>
         isTaskCompleted(
           task,
@@ -926,15 +904,17 @@ function renderSelectedDay() {
     ).length;
 
 
-  stat.textContent =
-    `${completed} / ${tasksForDay.length}`;
+  document.getElementById(
+    "selectedDayStat"
+  ).textContent =
+    `${completed} / ${dayTasks.length}`;
 
 
   calendarTasks.innerHTML = "";
 
 
   if (
-    tasksForDay.length === 0
+    dayTasks.length === 0
   ) {
 
     calendarTasks.innerHTML = `
@@ -948,7 +928,7 @@ function renderSelectedDay() {
   }
 
 
-  tasksForDay.forEach(
+  dayTasks.forEach(
     task => {
 
       const element =
@@ -971,31 +951,6 @@ function renderSelectedDay() {
             ? " completed"
             : ""
         );
-
-
-      const repeatNames = {
-
-        none: "",
-
-        daily:
-          "каждый день",
-
-        weekdays:
-          "будни",
-
-        weekends:
-          "выходные",
-
-        weekly:
-          "каждую неделю",
-
-        biweekly:
-          "раз в 2 недели",
-
-        monthly:
-          "каждый месяц"
-
-      };
 
 
       element.innerHTML = `
@@ -1028,9 +983,9 @@ function renderSelectedDay() {
           task.repeat !== "none"
             ? `
               <span class="task-repeat">
-                ${repeatNames[
+                ${getRepeatLabel(
                   task.repeat
-                ]}
+                )}
               </span>
             `
             : ""
@@ -1049,9 +1004,9 @@ function renderSelectedDay() {
 }
 
 
-/* =========================
-   CALENDAR TASK ACTIONS
-========================= */
+/* =========================================================
+   CALENDAR ACTIONS
+========================================================= */
 
 calendarTasks.addEventListener(
   "click",
@@ -1068,70 +1023,16 @@ calendarTasks.addEventListener(
     }
 
 
-    const id =
+    toggleTaskCompletion(
       Number(
         button.dataset.calendarId
-      );
-
-
-    const task =
-      tasks.find(
-        item =>
-          item.id === id
-      );
-
-
-    if (!task) {
-      return;
-    }
-
-
-    if (
-      !task.completedDates
-    ) {
-
-      task.completedDates = [];
-
-    }
-
-
-    const index =
-      task.completedDates.indexOf(
-        selectedDate
-      );
-
-
-    if (index === -1) {
-
-      task.completedDates.push(
-        selectedDate
-      );
-
-    } else {
-
-      task.completedDates.splice(
-        index,
-        1
-      );
-
-    }
-
-
-    saveTasks();
-
-    renderCalendar();
-
-    renderSelectedDay();
-
-    renderHome();
+      ),
+      selectedDate
+    );
 
   }
 );
 
-
-/* =========================
-   MONTH NAVIGATION
-========================= */
 
 document
   .getElementById(
@@ -1177,10 +1078,6 @@ document
   );
 
 
-/* =========================
-   TODAY BUTTON
-========================= */
-
 document
   .getElementById(
     "calendarToday"
@@ -1193,14 +1090,14 @@ document
         getToday();
 
 
-      const todayDate =
+      const today =
         new Date();
 
 
       calendarDate =
         new Date(
-          todayDate.getFullYear(),
-          todayDate.getMonth(),
+          today.getFullYear(),
+          today.getMonth(),
           1
         );
 
@@ -1213,9 +1110,74 @@ document
   );
 
 
-/* =========================
+/* =========================================================
+   TOGGLE COMPLETION
+========================================================= */
+
+function toggleTaskCompletion(
+  taskId,
+  dateString
+) {
+
+  const task =
+    tasks.find(
+      item =>
+        item.id === taskId
+    );
+
+
+  if (!task) {
+    return;
+  }
+
+
+  if (
+    !task.completedDates
+  ) {
+
+    task.completedDates = [];
+
+  }
+
+
+  const index =
+    task.completedDates.indexOf(
+      dateString
+    );
+
+
+  if (index === -1) {
+
+    task.completedDates.push(
+      dateString
+    );
+
+  } else {
+
+    task.completedDates.splice(
+      index,
+      1
+    );
+
+  }
+
+
+  saveTasks();
+
+  renderHome();
+
+  renderCalendar();
+
+  renderSelectedDay();
+
+  renderAnalytics();
+
+}
+
+
+/* =========================================================
    MODAL
-========================= */
+========================================================= */
 
 function openModal() {
 
@@ -1241,7 +1203,7 @@ function openModal() {
         .focus();
 
     },
-    200
+    150
   );
 
 }
@@ -1286,9 +1248,9 @@ modal.addEventListener(
 );
 
 
-/* =========================
+/* =========================================================
    CREATE TASK
-========================= */
+========================================================= */
 
 taskForm.addEventListener(
   "submit",
@@ -1331,9 +1293,10 @@ taskForm.addEventListener(
     }
 
 
-    const task = {
+    tasks.push({
 
-      id: Date.now(),
+      id:
+        Date.now(),
 
       title,
 
@@ -1345,12 +1308,7 @@ taskForm.addEventListener(
 
       completedDates: []
 
-    };
-
-
-    tasks.push(
-      task
-    );
+    });
 
 
     saveTasks();
@@ -1361,15 +1319,17 @@ taskForm.addEventListener(
 
     renderSelectedDay();
 
+    renderAnalytics();
+
     closeTaskModal();
 
   }
 );
 
 
-/* =========================
-   HOME TASK ACTIONS
-========================= */
+/* =========================================================
+   HOME ACTIONS
+========================================================= */
 
 tasksContainer.addEventListener(
   "click",
@@ -1389,66 +1349,12 @@ tasksContainer.addEventListener(
 
     if (check) {
 
-      const id =
+      toggleTaskCompletion(
         Number(
           check.dataset.id
-        );
-
-
-      const task =
-        tasks.find(
-          item =>
-            item.id === id
-        );
-
-
-      if (!task) {
-        return;
-      }
-
-
-      if (
-        !task.completedDates
-      ) {
-
-        task.completedDates = [];
-
-      }
-
-
-      const today =
-        getToday();
-
-
-      const index =
-        task.completedDates.indexOf(
-          today
-        );
-
-
-      if (index === -1) {
-
-        task.completedDates.push(
-          today
-        );
-
-      } else {
-
-        task.completedDates.splice(
-          index,
-          1
-        );
-
-      }
-
-
-      saveTasks();
-
-      renderHome();
-
-      renderCalendar();
-
-      renderSelectedDay();
+        ),
+        getToday()
+      );
 
     }
 
@@ -1476,15 +1382,17 @@ tasksContainer.addEventListener(
 
       renderSelectedDay();
 
+      renderAnalytics();
+
     }
 
   }
 );
 
 
-/* =========================
+/* =========================================================
    CLEAR COMPLETED
-========================= */
+========================================================= */
 
 document
   .getElementById(
@@ -1517,16 +1425,6 @@ document
       );
 
 
-      /*
-        Здесь мы не удаляем
-        сами задачи.
-
-        Для регулярных задач
-        это особенно важно:
-        они должны продолжить
-        появляться завтра.
-      */
-
       saveTasks();
 
       renderHome();
@@ -1535,13 +1433,751 @@ document
 
       renderSelectedDay();
 
+      renderAnalytics();
+
     }
   );
 
 
-/* =========================
+/* =========================================================
+   ANALYTICS
+========================================================= */
+
+function getStartOfWeek(
+  date
+) {
+
+  const result =
+    new Date(date);
+
+
+  const day =
+    result.getDay();
+
+
+  const difference =
+    day === 0
+      ? -6
+      : 1 - day;
+
+
+  result.setDate(
+    result.getDate() +
+    difference
+  );
+
+
+  return result;
+
+}
+
+
+function getWeekDates() {
+
+  const today =
+    new Date();
+
+
+  const monday =
+    getStartOfWeek(
+      today
+    );
+
+
+  const dates = [];
+
+
+  for (
+    let i = 0;
+    i < 7;
+    i++
+  ) {
+
+    const date =
+      new Date(monday);
+
+
+    date.setDate(
+      monday.getDate() +
+      i
+    );
+
+
+    dates.push(
+      getDateKey(date)
+    );
+
+  }
+
+
+  return dates;
+
+}
+
+
+function getMonthDates() {
+
+  const now =
+    new Date();
+
+
+  const year =
+    now.getFullYear();
+
+
+  const month =
+    now.getMonth();
+
+
+  const days =
+    new Date(
+      year,
+      month + 1,
+      0
+    ).getDate();
+
+
+  const dates = [];
+
+
+  for (
+    let day = 1;
+    day <= days;
+    day++
+  ) {
+
+    dates.push(
+      getDateKey(
+        new Date(
+          year,
+          month,
+          day
+        )
+      )
+    );
+
+  }
+
+
+  return dates;
+
+}
+
+
+function getAnalyticsDates() {
+
+  if (
+    analyticsPeriod ===
+    "month"
+  ) {
+
+    return getMonthDates();
+
+  }
+
+
+  return getWeekDates();
+
+}
+
+
+function getDayStats(
+  dateString
+) {
+
+  const dayTasks =
+    getTasksForDate(
+      dateString
+    );
+
+
+  const completed =
+    dayTasks.filter(
+      task =>
+        isTaskCompleted(
+          task,
+          dateString
+        )
+    ).length;
+
+
+  const total =
+    dayTasks.length;
+
+
+  const percent =
+    total === 0
+      ? 0
+      : Math.round(
+          completed /
+          total *
+          100
+        );
+
+
+  return {
+
+    date:
+      dateString,
+
+    total,
+
+    completed,
+
+    missed:
+      total - completed,
+
+    percent
+
+  };
+
+}
+
+
+function renderAnalytics() {
+
+  const dates =
+    getAnalyticsDates();
+
+
+  const stats =
+    dates.map(
+      date =>
+        getDayStats(
+          date
+        )
+    );
+
+
+  const total =
+    stats.reduce(
+      (
+        sum,
+        item
+      ) =>
+        sum +
+        item.total,
+      0
+    );
+
+
+  const completed =
+    stats.reduce(
+      (
+        sum,
+        item
+      ) =>
+        sum +
+        item.completed,
+      0
+    );
+
+
+  const missed =
+    total -
+    completed;
+
+
+  const percent =
+    total === 0
+      ? 0
+      : Math.round(
+          completed /
+          total *
+          100
+        );
+
+
+  document.getElementById(
+    "analyticsPercent"
+  ).textContent =
+    `${percent}%`;
+
+
+  document.getElementById(
+    "analyticsCompleted"
+  ).textContent =
+    completed;
+
+
+  document.getElementById(
+    "analyticsTotal"
+  ).textContent =
+    total;
+
+
+  document.getElementById(
+    "analyticsDone"
+  ).textContent =
+    completed;
+
+
+  document.getElementById(
+    "analyticsMissed"
+  ).textContent =
+    missed;
+
+
+  /*
+    Круговая диаграмма
+  */
+
+  const ring =
+    document.getElementById(
+      "analyticsRing"
+    );
+
+
+  ring.style.setProperty(
+    "--progress",
+    `${percent}%`
+  );
+
+
+  /*
+    Дни
+  */
+
+  const container =
+    document.getElementById(
+      "analyticsDays"
+    );
+
+
+  container.innerHTML = "";
+
+
+  stats.forEach(
+    stat => {
+
+      const element =
+        document.createElement(
+          "button"
+        );
+
+
+      element.type =
+        "button";
+
+
+      element.className =
+        "analytics-day" +
+        (
+          stat.date ===
+          getToday()
+            ? " today"
+            : ""
+        );
+
+
+      if (
+        stat.date ===
+        analyticsSelectedDate
+      ) {
+
+        element.classList.add(
+          "selected"
+        );
+
+      }
+
+
+      element.innerHTML = `
+
+        <div class="analytics-day-top">
+
+          <span class="analytics-day-name">
+            ${getWeekdayShort(
+              stat.date
+            )}
+          </span>
+
+          <strong>
+            ${parseDate(
+              stat.date
+            ).getDate()}
+          </strong>
+
+        </div>
+
+
+        <div class="analytics-day-progress">
+
+          <div class="analytics-day-bar">
+
+            <span
+              style="width:${stat.percent}%"
+            ></span>
+
+          </div>
+
+          <small>
+            ${stat.completed}/${stat.total}
+          </small>
+
+        </div>
+
+      `;
+
+
+      element.addEventListener(
+        "click",
+        () => {
+
+          analyticsSelectedDate =
+            stat.date;
+
+
+          renderAnalytics();
+
+          renderAnalyticsDay(
+            stat.date
+          );
+
+        }
+      );
+
+
+      container.appendChild(
+        element
+      );
+
+    }
+  );
+
+
+  /*
+    Лучший день
+  */
+
+  const daysWithTasks =
+    stats.filter(
+      stat =>
+        stat.total > 0
+    );
+
+
+  let bestDay =
+    null;
+
+
+  if (
+    daysWithTasks.length
+  ) {
+
+    bestDay =
+      [...daysWithTasks]
+        .sort(
+          (
+            a,
+            b
+          ) =>
+            b.percent -
+            a.percent
+        )[0];
+
+  }
+
+
+  document.getElementById(
+    "bestDay"
+  ).textContent =
+    bestDay
+      ? `${formatShortDate(
+          bestDay.date
+        )} · ${bestDay.percent}%`
+      : "Пока нет данных";
+
+
+  /*
+    Средний результат
+  */
+
+  const average =
+    daysWithTasks.length === 0
+      ? 0
+      : Math.round(
+          daysWithTasks.reduce(
+            (
+              sum,
+              item
+            ) =>
+              sum +
+              item.percent,
+            0
+          ) /
+          daysWithTasks.length
+        );
+
+
+  document.getElementById(
+    "averageResult"
+  ).textContent =
+    `${average}%`;
+
+
+  /*
+    Если выбран день —
+    обновляем его
+  */
+
+  if (
+    analyticsSelectedDate
+  ) {
+
+    renderAnalyticsDay(
+      analyticsSelectedDate
+    );
+
+  }
+
+}
+
+
+function renderAnalyticsDay(
+  dateString
+) {
+
+  const details =
+    document.getElementById(
+      "analyticsDayDetails"
+    );
+
+
+  details.hidden = false;
+
+
+  const stats =
+    getDayStats(
+      dateString
+    );
+
+
+  document.getElementById(
+    "analyticsSelectedWeekday"
+  ).textContent =
+    new Intl.DateTimeFormat(
+      "ru-RU",
+      {
+        weekday: "long"
+      }
+    ).format(
+      parseDate(
+        dateString
+      )
+    );
+
+
+  document.getElementById(
+    "analyticsSelectedDate"
+  ).textContent =
+    formatShortDate(
+      dateString
+    );
+
+
+  document.getElementById(
+    "analyticsSelectedStat"
+  ).textContent =
+    `${stats.completed} / ${stats.total}`;
+
+
+  const container =
+    document.getElementById(
+      "analyticsDayTasks"
+    );
+
+
+  container.innerHTML = "";
+
+
+  const dayTasks =
+    getTasksForDate(
+      dateString
+    );
+
+
+  if (
+    dayTasks.length === 0
+  ) {
+
+    container.innerHTML = `
+      <div class="empty">
+        На этот день задач нет.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  dayTasks.forEach(
+    task => {
+
+      const element =
+        document.createElement(
+          "div"
+        );
+
+
+      const completed =
+        isTaskCompleted(
+          task,
+          dateString
+        );
+
+
+      element.className =
+        "task" +
+        (
+          completed
+            ? " completed"
+            : ""
+        );
+
+
+      element.innerHTML = `
+
+        <button
+          class="task-check"
+          data-analytics-id="${task.id}"
+          type="button"
+        ></button>
+
+        <div class="task-content">
+
+          <div class="task-title">
+            ${escapeHtml(
+              task.title
+            )}
+          </div>
+
+          <div class="task-time">
+            ${
+              task.time
+                ? task.time
+                : "Без времени"
+            }
+          </div>
+
+        </div>
+
+        ${
+          task.repeat !== "none"
+            ? `
+              <span class="task-repeat">
+                ${getRepeatLabel(
+                  task.repeat
+                )}
+              </span>
+            `
+            : ""
+        }
+
+      `;
+
+
+      container.appendChild(
+        element
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   ANALYTICS TASK ACTIONS
+========================================================= */
+
+document
+  .getElementById(
+    "analyticsDayTasks"
+  )
+  .addEventListener(
+    "click",
+    event => {
+
+      const button =
+        event.target.closest(
+          "[data-analytics-id]"
+        );
+
+
+      if (!button) {
+        return;
+      }
+
+
+      toggleTaskCompletion(
+        Number(
+          button.dataset.analyticsId
+        ),
+        analyticsSelectedDate
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   ANALYTICS TABS
+========================================================= */
+
+document
+  .querySelectorAll(
+    ".analytics-tab"
+  )
+  .forEach(
+    button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          analyticsPeriod =
+            button.dataset.period;
+
+
+          analyticsSelectedDate =
+            null;
+
+
+          document
+            .querySelectorAll(
+              ".analytics-tab"
+            )
+            .forEach(
+              tab => {
+
+                tab.classList.toggle(
+                  "active",
+                  tab === button
+                );
+
+              }
+            );
+
+
+          document.getElementById(
+            "analyticsDayDetails"
+          ).hidden = true;
+
+
+          renderAnalytics();
+
+        }
+      );
+
+    }
+  );
+
+
+/* =========================================================
    NAVIGATION
-========================= */
+========================================================= */
 
 const navItems =
   document.querySelectorAll(
@@ -1559,6 +2195,11 @@ const pages = {
   calendar:
     document.getElementById(
       "calendarPage"
+    ),
+
+  analytics:
+    document.getElementById(
+      "analyticsPage"
     )
 
 };
@@ -1569,14 +2210,12 @@ function showPage(
 ) {
 
   /*
-    Пока реально
-    существуют только
-    Главная и Календарь.
+    Настройки пока
+    ещё не реализованы.
   */
 
   if (
-    pageName !== "home" &&
-    pageName !== "calendar"
+    !pages[pageName]
   ) {
 
     return;
@@ -1584,12 +2223,16 @@ function showPage(
   }
 
 
-  Object.values(pages)
-    .forEach(page => {
+  Object.values(
+    pages
+  ).forEach(
+    page => {
 
-      page.hidden = true;
+      page.hidden =
+        true;
 
-    });
+    }
+  );
 
 
   pages[pageName].hidden =
@@ -1609,24 +2252,24 @@ function showPage(
   );
 
 
-  /*
-    Кнопку добавления
-    показываем пока
-    только на основных
-    экранах.
-  */
-
-  addButton.style.display =
-    "block";
-
-
   if (
-    pageName === "calendar"
+    pageName ===
+    "calendar"
   ) {
 
     renderCalendar();
 
     renderSelectedDay();
+
+  }
+
+
+  if (
+    pageName ===
+    "analytics"
+  ) {
+
+    renderAnalytics();
 
   }
 
@@ -1651,9 +2294,17 @@ navItems.forEach(
 );
 
 
-/* =========================
-   INITIALIZE
-========================= */
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+document.getElementById(
+  "currentDate"
+).textContent =
+  formatFullDate(
+    getToday()
+  );
+
 
 renderHome();
 
@@ -1661,4 +2312,8 @@ renderCalendar();
 
 renderSelectedDay();
 
-showPage("home");
+renderAnalytics();
+
+showPage(
+  "home"
+);
