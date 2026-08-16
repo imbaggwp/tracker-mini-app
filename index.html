@@ -885,6 +885,68 @@
       transform: translate(-50%, 0);
     }
 
+    .calendar-day-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 15px;
+    }
+
+    .calendar-day-stats span {
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--card-soft);
+      padding: 7px 9px;
+      border-radius: 9px;
+    }
+
+    .calendar-task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .calendar-task-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: var(--card-soft);
+      border-radius: 13px;
+    }
+
+    .calendar-task-row.completed {
+      opacity: .55;
+    }
+
+    .calendar-task-row.completed .calendar-task-title {
+      text-decoration: line-through;
+    }
+
+    .calendar-task-content {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .calendar-task-title {
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.3;
+    }
+
+    .calendar-task-meta {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .calendar-empty {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      padding: 15px 5px 5px;
+    }
+
     @media (min-width: 700px) {
       .page {
         padding-left: 0;
@@ -1636,6 +1698,35 @@
       localStorage.getItem("tracker_tasks") || "[]"
     );
 
+  // Версия 0.3: выполнение регулярных задач хранится отдельно
+  // для каждого календарного дня.
+  tasks = tasks.map(task => {
+    if (!task.completions || typeof task.completions !== "object") {
+      task.completions = {};
+
+      // Совместимость со старой версией:
+      // старое completed переносим на дату задачи.
+      if (task.completed && task.date) {
+        task.completions[task.date] = true;
+      }
+    }
+
+    return task;
+  });
+
+  function isTaskCompleted(task, dateString) {
+    if (task.completions && Object.prototype.hasOwnProperty.call(task.completions, dateString)) {
+      return Boolean(task.completions[dateString]);
+    }
+
+    // Старые одноразовые задачи без completions.
+    if ((!task.repeat || task.repeat === "none") && task.date === dateString) {
+      return Boolean(task.completed);
+    }
+
+    return false;
+  }
+
   let settings =
     JSON.parse(
       localStorage.getItem("tracker_settings") || "{}"
@@ -2043,6 +2134,8 @@
 
         completed: false,
 
+        completions: {},
+
         createdAt:
           new Date().toISOString()
 
@@ -2063,6 +2156,7 @@
 
     closeTaskModal();
 
+    saveTasks();
     renderAll();
 
   }
@@ -2072,7 +2166,7 @@
      TASK ACTIONS
   ========================================= */
 
-  function toggleTask(id) {
+  function toggleTask(id, dateString = null) {
 
     const task =
       tasks.find(
@@ -2081,26 +2175,38 @@
 
     if (!task) return;
 
-    task.completed =
-      !task.completed;
+    const targetDate =
+      dateString || formatDate(new Date());
 
+    if (!task.completions || typeof task.completions !== "object") {
+      task.completions = {};
+    }
 
-    task.completedAt =
-      task.completed
-        ? new Date().toISOString()
-        : null;
+    const nextValue =
+      !isTaskCompleted(task, targetDate);
 
+    task.completions[targetDate] =
+      nextValue;
+
+    // Оставляем completed для совместимости
+    // со старыми данными, но больше не используем
+    // его как источник истины для повторяющихся задач.
+    if ((!task.repeat || task.repeat === "none") && task.date === targetDate) {
+      task.completed = nextValue;
+      task.completedAt =
+        nextValue
+          ? new Date().toISOString()
+          : null;
+    }
 
     saveTasks();
-
     renderAll();
 
     showToast(
-      task.completed
+      nextValue
         ? "Задача выполнена ✓"
         : "Задача возвращена"
     );
-
   }
 
 
@@ -2281,37 +2387,31 @@
     const today =
       formatDate(new Date());
 
-
     if (currentFilter === "today") {
-
-      return getTasksForDate(
-        today
-      );
-
+      return getTasksForDate(today);
     }
-
 
     if (currentFilter === "important") {
-
-      return tasks.filter(
-        task =>
-          task.important
-      );
-
+      return tasks
+        .filter(task => task.important)
+        .sort((a, b) =>
+          (a.date + (a.time || ""))
+            .localeCompare(
+              b.date + (b.time || "")
+            )
+        );
     }
-
 
     return [
       ...tasks
     ].sort(
       (a, b) =>
         (
-          a.date + a.time
+          a.date + (a.time || "")
         ).localeCompare(
-          b.date + b.time
+          b.date + (b.time || "")
         )
     );
-
   }
 
 
@@ -2378,11 +2478,19 @@
           }[task.repeat] || "";
 
 
+          const displayDate =
+            currentFilter === "today"
+              ? formatDate(new Date())
+              : task.date;
+
+          const taskCompleted =
+            isTaskCompleted(task, displayDate);
+
           return `
 
             <div
               class="task ${
-                task.completed
+                taskCompleted
                   ? "completed"
                   : ""
               }"
@@ -2390,7 +2498,7 @@
 
               <button
                 class="check"
-                onclick="toggleTask('${task.id}')"
+                onclick="toggleTask('${task.id}', '${displayDate}')"
                 aria-label="Выполнить"
               >
 
@@ -2493,20 +2601,17 @@
     const today =
       formatDate(new Date());
 
-
     const list =
       getTasksForDate(today);
 
-
     const completed =
       list.filter(
-        task => task.completed
+        task =>
+          isTaskCompleted(task, today)
       ).length;
-
 
     const total =
       list.length;
-
 
     const percent =
       total
@@ -2515,24 +2620,20 @@
           )
         : 0;
 
-
     document
       .getElementById("todayCount")
       .textContent =
         `${completed} из ${total}`;
-
 
     document
       .getElementById("todayPercent")
       .textContent =
         `${percent}%`;
 
-
     document
       .getElementById("todayProgress")
       .style.width =
         `${percent}%`;
-
   }
 
 
@@ -2730,7 +2831,7 @@
     const completed =
       list.filter(
         task =>
-          task.completed
+          isTaskCompleted(task, dateString)
       ).length;
 
 
@@ -2819,29 +2920,95 @@
         dateString
       );
 
-
     const completed =
       list.filter(
         task =>
-          task.completed
+          isTaskCompleted(task, dateString)
       ).length;
-
 
     const info =
       document.getElementById(
         "calendarInfo"
       );
 
+    const percent =
+      list.length
+        ? Math.round(
+            completed /
+            list.length *
+            100
+          )
+        : 0;
+
+    const taskRows =
+      list.length
+        ? list.map(task => {
+
+            const done =
+              isTaskCompleted(
+                task,
+                dateString
+              );
+
+            return `
+              <div
+                class="calendar-task-row ${done ? "completed" : ""}"
+              >
+                <button
+                  class="check"
+                  onclick="toggleTask('${task.id}', '${dateString}')"
+                  aria-label="Выполнить"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <path d="M5 12l4 4L19 7" />
+                  </svg>
+                </button>
+
+                <div class="calendar-task-content">
+                  <div class="calendar-task-title">
+                    ${
+                      task.important
+                        ? '<span class="important">★ </span>'
+                        : ''
+                    }
+                    ${escapeHtml(task.title)}
+                  </div>
+
+                  <div class="calendar-task-meta">
+                    ${
+                      task.time
+                        ? `⏰ ${task.time}`
+                        : "Без времени"
+                    }
+
+                    ${
+                      task.repeat && task.repeat !== "none"
+                        ? ` · ${getRepeatLabel(task.repeat)}`
+                        : ""
+                    }
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("")
+        : `
+          <div class="calendar-empty">
+            На этот день задач нет
+          </div>
+        `;
 
     info.innerHTML = `
 
       <div class="calendar-info-title">
-
         ${formatHumanDate(dateString)}
-
       </div>
 
-      <div class="task-meta">
+      <div class="calendar-day-stats">
 
         <span>
           📋 ${list.length} задач
@@ -2852,21 +3019,27 @@
         </span>
 
         <span>
-          ${
-            list.length
-              ? Math.round(
-                  completed /
-                  list.length *
-                  100
-                )
-              : 0
-          }%
+          ${percent}%
         </span>
 
       </div>
 
-    `;
+      <div class="calendar-task-list">
+        ${taskRows}
+      </div>
 
+    `;
+  }
+
+  function getRepeatLabel(repeat) {
+
+    return {
+      none: "",
+      daily: "Каждый день",
+      weekdays: "По будням",
+      weekly: "Каждую неделю",
+      monthly: "Каждый месяц"
+    }[repeat] || "";
   }
 
 
@@ -2876,16 +3049,20 @@
 
   function renderAnalytics() {
 
-    const total =
-      tasks.length;
+    const today =
+      formatDate(new Date());
 
+    const todayTasks =
+      getTasksForDate(today);
 
-    const completed =
-      tasks.filter(
+    const totalToday =
+      todayTasks.length;
+
+    const completedToday =
+      todayTasks.filter(
         task =>
-          task.completed
+          isTaskCompleted(task, today)
       ).length;
-
 
     const important =
       tasks.filter(
@@ -2893,189 +3070,36 @@
           task.important
       ).length;
 
-
     const efficiency =
-      total
+      totalToday
         ? Math.round(
-            completed /
-            total *
+            completedToday /
+            totalToday *
             100
           )
         : 0;
 
-
     document
       .getElementById("statTotal")
       .textContent =
-        total;
-
+        totalToday;
 
     document
       .getElementById("statCompleted")
       .textContent =
-        completed;
-
+        completedToday;
 
     document
       .getElementById("statImportant")
       .textContent =
         important;
 
-
     document
       .getElementById("statEfficiency")
       .textContent =
         `${efficiency}%`;
 
-
     renderWeekChart();
-
-  }
-
-
-  function renderWeekChart() {
-
-    const container =
-      document.getElementById(
-        "weekChart"
-      );
-
-
-    const today =
-      new Date();
-
-
-    const day =
-      today.getDay();
-
-
-    const mondayOffset =
-      day === 0
-        ? -6
-        : 1 - day;
-
-
-    const monday =
-      new Date(today);
-
-    monday.setDate(
-      today.getDate() +
-      mondayOffset
-    );
-
-
-    const names =
-      [
-        "Пн",
-        "Вт",
-        "Ср",
-        "Чт",
-        "Пт",
-        "Сб",
-        "Вс"
-      ];
-
-
-    const data =
-      [];
-
-
-    for (
-      let i = 0;
-      i < 7;
-      i++
-    ) {
-
-      const date =
-        new Date(monday);
-
-      date.setDate(
-        monday.getDate() + i
-      );
-
-
-      const dateString =
-        formatDate(date);
-
-
-      const list =
-        getTasksForDate(
-          dateString
-        );
-
-
-      const completed =
-        list.filter(
-          task =>
-            task.completed
-        ).length;
-
-
-      data.push({
-
-        date,
-        total: list.length,
-        completed
-
-      });
-
-    }
-
-
-    const max =
-      Math.max(
-        ...data.map(
-          item =>
-            item.total
-        ),
-        1
-      );
-
-
-    container.innerHTML =
-      data
-        .map(
-          (item, index) => {
-
-            const height =
-              item.total
-                ? Math.max(
-                    8,
-                    item.total /
-                    max *
-                    100
-                  )
-                : 4;
-
-
-            return `
-
-              <div
-                class="chart-day"
-                onclick="selectAnalyticsDay('${formatDate(item.date)}')"
-              >
-
-                <div class="bar-wrapper">
-
-                  <div
-                    class="bar"
-                    style="height:${height}%"
-                  ></div>
-
-                </div>
-
-                <div class="chart-day-name">
-                  ${names[index]}
-                </div>
-
-              </div>
-
-            `;
-
-          }
-        )
-        .join("");
-
   }
 
 
