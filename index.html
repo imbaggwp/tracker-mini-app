@@ -36,16 +36,13 @@
 
 
     <!-- =========================
-         HOME PAGE
+         HOME
     ========================== -->
 
     <section
       id="homePage"
       class="page"
     >
-
-
-      <!-- HEADER -->
 
       <header class="header">
 
@@ -75,8 +72,6 @@
 
       </header>
 
-
-      <!-- PROGRESS -->
 
       <section
         class="progress-card"
@@ -127,8 +122,6 @@
       </section>
 
 
-      <!-- TASKS -->
-
       <section>
 
         <div class="section-header">
@@ -161,7 +154,7 @@
 
 
     <!-- =========================
-         CALENDAR PAGE
+         CALENDAR
     ========================== -->
 
     <section
@@ -169,7 +162,6 @@
       class="page"
       hidden
     >
-
 
       <header class="page-header">
 
@@ -197,10 +189,7 @@
       </header>
 
 
-      <!-- MONTH -->
-
       <section class="calendar-card">
-
 
         <div class="calendar-header">
 
@@ -208,15 +197,12 @@
             class="calendar-arrow"
             id="previousMonth"
             type="button"
-            aria-label="Предыдущий месяц"
           >
             ‹
           </button>
 
 
-          <h2
-            id="calendarMonth"
-          >
+          <h2 id="calendarMonth">
             Август 2026
           </h2>
 
@@ -225,15 +211,12 @@
             class="calendar-arrow"
             id="nextMonth"
             type="button"
-            aria-label="Следующий месяц"
           >
             ›
           </button>
 
         </div>
 
-
-        <!-- WEEK DAYS -->
 
         <div class="calendar-weekdays">
 
@@ -248,21 +231,15 @@
         </div>
 
 
-        <!-- DAYS -->
-
         <div
           class="calendar-grid"
           id="calendarGrid"
         ></div>
 
-
       </section>
 
 
-      <!-- SELECTED DAY -->
-
       <section class="selected-day">
-
 
         <div class="selected-day-header">
 
@@ -275,9 +252,7 @@
               Сегодня
             </div>
 
-            <h2
-              id="selectedDayTitle"
-            >
+            <h2 id="selectedDayTitle">
               15 августа
             </h2>
 
@@ -299,6 +274,271 @@
           id="calendarTasks"
         ></div>
 
+      </section>
+
+
+    </section>
+
+
+    <!-- =========================
+         ANALYTICS
+    ========================== -->
+
+    <section
+      id="analyticsPage"
+      class="page"
+      hidden
+    >
+
+      <header class="page-header">
+
+        <div>
+
+          <div class="page-eyebrow">
+            Статистика
+          </div>
+
+          <h1>
+            Аналитика
+          </h1>
+
+        </div>
+
+      </header>
+
+
+      <!-- PERIOD SWITCH -->
+
+      <div class="analytics-switch">
+
+        <button
+          class="analytics-tab active"
+          data-period="week"
+          type="button"
+        >
+          Неделя
+        </button>
+
+
+        <button
+          class="analytics-tab"
+          data-period="month"
+          type="button"
+        >
+          Месяц
+        </button>
+
+      </div>
+
+
+      <!-- MAIN STAT -->
+
+      <section class="analytics-main-card">
+
+        <div>
+
+          <div class="analytics-label">
+            Выполнено
+          </div>
+
+          <div
+            class="analytics-percent"
+            id="analyticsPercent"
+          >
+            0%
+          </div>
+
+        </div>
+
+
+        <div
+          class="analytics-ring"
+          id="analyticsRing"
+        >
+
+          <div>
+
+            <strong id="analyticsCompleted">
+              0
+            </strong>
+
+            <span>
+              выполнено
+            </span>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- SUMMARY -->
+
+      <section class="analytics-summary">
+
+        <div class="analytics-stat-card">
+
+          <span>
+            Запланировано
+          </span>
+
+          <strong
+            id="analyticsTotal"
+          >
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="analytics-stat-card">
+
+          <span>
+            Выполнено
+          </span>
+
+          <strong
+            id="analyticsDone"
+          >
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="analytics-stat-card">
+
+          <span>
+            Не выполнено
+          </span>
+
+          <strong
+            id="analyticsMissed"
+          >
+            0
+          </strong>
+
+        </div>
+
+      </section>
+
+
+      <!-- DAYS -->
+
+      <section class="analytics-section">
+
+        <div class="section-header">
+
+          <h2>
+            По дням
+          </h2>
+
+        </div>
+
+
+        <div
+          class="analytics-days"
+          id="analyticsDays"
+        ></div>
+
+      </section>
+
+
+      <!-- INSIGHTS -->
+
+      <section class="analytics-insights">
+
+        <div class="insight-card">
+
+          <span class="insight-icon">
+            ★
+          </span>
+
+          <div>
+
+            <span>
+              Лучший день
+            </span>
+
+            <strong
+              id="bestDay"
+            >
+              —
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="insight-card">
+
+          <span class="insight-icon">
+            ↗
+          </span>
+
+          <div>
+
+            <span>
+              Средний результат
+            </span>
+
+            <strong
+              id="averageResult"
+            >
+              0%
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- SELECTED ANALYTICS DAY -->
+
+      <section
+        class="analytics-day-details"
+        id="analyticsDayDetails"
+        hidden
+      >
+
+        <div class="selected-day-header">
+
+          <div>
+
+            <div
+              class="page-eyebrow"
+              id="analyticsSelectedWeekday"
+            >
+              День
+            </div>
+
+            <h2
+              id="analyticsSelectedDate"
+            >
+              —
+            </h2>
+
+          </div>
+
+
+          <div
+            class="day-stat"
+            id="analyticsSelectedStat"
+          >
+            0 / 0
+          </div>
+
+        </div>
+
+
+        <div
+          class="tasks"
+          id="analyticsDayTasks"
+        ></div>
 
       </section>
 
@@ -317,21 +557,19 @@
     class="add-button"
     id="addButton"
     type="button"
-    aria-label="Добавить задачу"
   >
     +
   </button>
 
 
   <!-- =========================
-       BOTTOM NAVIGATION
+       NAVIGATION
   ========================== -->
 
   <nav
     class="bottom-nav"
     aria-label="Основная навигация"
   >
-
 
     <button
       class="nav-item active"
@@ -412,29 +650,22 @@
 
     </button>
 
-
   </nav>
 
 
   <!-- =========================
-       CREATE TASK MODAL
+       MODAL
   ========================== -->
 
   <div
     class="modal-overlay"
     id="modalOverlay"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="modalTitle"
   >
-
 
     <div class="modal">
 
-
       <div
         class="modal-handle"
-        aria-hidden="true"
       ></div>
 
 
@@ -449,7 +680,6 @@
           class="modal-close"
           id="closeModal"
           type="button"
-          aria-label="Закрыть"
         >
           ×
         </button>
@@ -459,8 +689,6 @@
 
       <form id="taskForm">
 
-
-        <!-- TITLE -->
 
         <div class="form-group">
 
@@ -484,10 +712,7 @@
         </div>
 
 
-        <!-- DATE + TIME -->
-
         <div class="form-row">
-
 
           <div class="form-group">
 
@@ -527,11 +752,8 @@
 
           </div>
 
-
         </div>
 
-
-        <!-- REPEAT -->
 
         <div class="form-group">
 
@@ -595,8 +817,6 @@
 
   </div>
 
-
-  <!-- JAVASCRIPT -->
 
   <script src="app.js"></script>
 
