@@ -1122,6 +1122,242 @@
       margin-bottom: 8px;
     }
 
+
+    .section-subtitle {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .analytics-section-header {
+      margin-top: 24px;
+    }
+
+    .analytics-week-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .analytics-week-summary > div {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 15px;
+    }
+
+    .analytics-week-summary strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .analytics-week-summary span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .chart-scale {
+      position: absolute;
+      display: none;
+    }
+
+    .week-chart {
+      position: relative;
+    }
+
+    .chart-bars {
+      height: 215px;
+      padding-top: 18px;
+    }
+
+    .chart-day {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 0 2px;
+      position: relative;
+      border-radius: 15px;
+    }
+
+    .chart-day.selected {
+      background: rgba(128,128,128,.10);
+    }
+
+    .chart-day.today .chart-day-name {
+      font-weight: 800;
+    }
+
+    .chart-value {
+      min-height: 18px;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      white-space: nowrap;
+    }
+
+    .bar-wrapper {
+      height: 145px;
+      align-items: flex-end;
+    }
+
+    .bar-track {
+      width: min(30px, 70%);
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      background: rgba(128,128,128,.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .bar {
+      width: 100%;
+      min-height: 0;
+      border-radius: 10px;
+    }
+
+    .chart-date {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .analytics-day-card {
+      margin-top: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 17px;
+    }
+
+    .analytics-day-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .analytics-day-weekday {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: capitalize;
+    }
+
+    .analytics-day-title {
+      font-size: 19px;
+      font-weight: 750;
+      margin-top: 2px;
+    }
+
+    .analytics-day-percent {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .analytics-progress {
+      height: 7px;
+      margin-top: 15px;
+      border-radius: 99px;
+      background: rgba(128,128,128,.12);
+      overflow: hidden;
+    }
+
+    .analytics-progress > div {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+      transition: width .25s ease;
+    }
+
+    .analytics-day-count {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .analytics-day-count strong {
+      color: inherit;
+      font-size: 13px;
+    }
+
+    .analytics-task-list {
+      margin-top: 12px;
+    }
+
+    .analytics-task {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 0;
+      border-top: 1px solid rgba(128,128,128,.13);
+    }
+
+    .analytics-task-check {
+      width: 25px;
+      height: 25px;
+      flex: 0 0 25px;
+      border-radius: 50%;
+      border: 1.5px solid currentColor;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .analytics-task.done .analytics-task-check {
+      background: currentColor;
+      color: var(--bg);
+    }
+
+    .analytics-task-content {
+      min-width: 0;
+    }
+
+    .analytics-task-title {
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.3;
+    }
+
+    .analytics-task.done .analytics-task-title {
+      opacity: .48;
+      text-decoration: line-through;
+    }
+
+    .analytics-task-meta {
+      margin-top: 3px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .analytics-empty {
+      padding: 25px 5px 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 360px) {
+      .analytics-week-summary {
+        gap: 7px;
+      }
+
+      .analytics-week-summary > div {
+        padding: 12px;
+      }
+
+      .analytics-day-title {
+        font-size: 17px;
+      }
+    }
+
 </style>
 </head>
 
@@ -1330,87 +1566,55 @@
   >
 
     <div class="section-header">
-      <div class="section-title">
-        Аналитика
+      <div>
+        <div class="section-title">Аналитика</div>
+        <div class="section-subtitle">Твоя неделя в задачах</div>
       </div>
     </div>
-
 
     <div class="analytics-grid">
 
       <div class="stat-card">
-        <div class="stat-label">
-          Всего задач
-        </div>
-
-        <div
-          class="stat-value"
-          id="statTotal"
-        >
-          0
-        </div>
+        <div class="stat-label">Задач за сегодня</div>
+        <div class="stat-value" id="statTotal">0</div>
       </div>
 
-
       <div class="stat-card">
-        <div class="stat-label">
-          Выполнено
-        </div>
-
-        <div
-          class="stat-value"
-          id="statCompleted"
-        >
-          0
-        </div>
+        <div class="stat-label">Выполнено сегодня</div>
+        <div class="stat-value" id="statCompleted">0</div>
       </div>
 
-
       <div class="stat-card">
-        <div class="stat-label">
-          Важные
-        </div>
-
-        <div
-          class="stat-value"
-          id="statImportant"
-        >
-          0
-        </div>
+        <div class="stat-label">Важные задачи</div>
+        <div class="stat-value" id="statImportant">0</div>
       </div>
 
-
       <div class="stat-card">
-        <div class="stat-label">
-          Эффективность
-        </div>
-
-        <div
-          class="stat-value"
-          id="statEfficiency"
-        >
-          0%
-        </div>
+        <div class="stat-label">Эффективность</div>
+        <div class="stat-value" id="statEfficiency">0%</div>
       </div>
 
     </div>
 
+    <div class="analytics-week-summary" id="weekSummary"></div>
 
-    <div class="section-header">
-      <div class="section-title">
-        Эта неделя
+    <div class="section-header analytics-section-header">
+      <div>
+        <div class="section-title">Эта неделя</div>
+        <div class="section-subtitle">Нажми на день для подробностей</div>
       </div>
     </div>
-
 
     <div class="week-chart">
-
-      <div
-        class="chart-bars"
-        id="weekChart"
-      ></div>
-
+      <div class="chart-scale">
+        <span>100%</span>
+        <span>50%</span>
+        <span>0%</span>
+      </div>
+      <div class="chart-bars" id="weekChart"></div>
     </div>
+
+    <div class="analytics-day-card" id="analyticsDayCard"></div>
 
   </main>
 
@@ -3206,71 +3410,233 @@
      ANALYTICS
   ========================================= */
 
-  function renderAnalytics() {
-
-    const today =
-      formatDate(new Date());
-
-    const todayTasks =
-      getTasksForDate(today);
-
-    const totalToday =
-      todayTasks.length;
-
-    const completedToday =
-      todayTasks.filter(
-        task =>
-          isTaskCompleted(task, today)
-      ).length;
-
-    const important =
-      tasks.filter(
-        task =>
-          task.important
-      ).length;
-
-    const efficiency =
-      totalToday
-        ? Math.round(
-            completedToday /
-            totalToday *
-            100
-          )
-        : 0;
-
-    document
-      .getElementById("statTotal")
-      .textContent =
-        totalToday;
-
-    document
-      .getElementById("statCompleted")
-      .textContent =
-        completedToday;
-
-    document
-      .getElementById("statImportant")
-      .textContent =
-        important;
-
-    document
-      .getElementById("statEfficiency")
-      .textContent =
-        `${efficiency}%`;
-
-    renderWeekChart();
+  function getStartOfWeek(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    d.setDate(d.getDate() + diff);
+    d.setHours(0, 0, 0, 0);
+    return d;
   }
 
+  function getWeekDates(referenceDate = new Date()) {
+    const start = getStartOfWeek(referenceDate);
+    return Array.from({ length: 7 }, (_, index) => {
+      const d = new Date(start);
+      d.setDate(start.getDate() + index);
+      return d;
+    });
+  }
 
-  function selectAnalyticsDay(
-    dateString
-  ) {
+  function getDayStats(dateString) {
+    const list = getTasksForDate(dateString);
+    const completed = list.filter(task =>
+      isTaskCompleted(task, dateString)
+    ).length;
 
-    selectedCalendarDate =
-      dateString;
+    return {
+      date: dateString,
+      total: list.length,
+      completed,
+      remaining: Math.max(0, list.length - completed),
+      percent: list.length
+        ? Math.round(completed / list.length * 100)
+        : 0
+    };
+  }
 
-    showPage("calendar");
+  function renderAnalytics() {
+    const today = formatDate(new Date());
+    const todayStats = getDayStats(today);
 
+    const important = tasks.filter(task => task.important).length;
+
+    document.getElementById("statTotal").textContent =
+      todayStats.total;
+
+    document.getElementById("statCompleted").textContent =
+      todayStats.completed;
+
+    document.getElementById("statImportant").textContent =
+      important;
+
+    document.getElementById("statEfficiency").textContent =
+      `${todayStats.percent}%`;
+
+    renderWeekChart();
+
+    renderAnalyticsDay(
+      selectedAnalyticsDate || today
+    );
+  }
+
+  let selectedAnalyticsDate = formatDate(new Date());
+
+  function renderWeekChart() {
+    const container = document.getElementById("weekChart");
+    const summary = document.getElementById("weekSummary");
+
+    if (!container) return;
+
+    const dates = getWeekDates(new Date());
+    const today = formatDate(new Date());
+
+    const stats = dates.map(date =>
+      getDayStats(formatDate(date))
+    );
+
+    const weekTotal = stats.reduce(
+      (sum, item) => sum + item.total,
+      0
+    );
+
+    const weekCompleted = stats.reduce(
+      (sum, item) => sum + item.completed,
+      0
+    );
+
+    const weekPercent = weekTotal
+      ? Math.round(weekCompleted / weekTotal * 100)
+      : 0;
+
+    if (summary) {
+      summary.innerHTML = `
+        <div>
+          <strong>${weekPercent}%</strong>
+          <span>выполнено за неделю</span>
+        </div>
+        <div>
+          <strong>${weekCompleted}/${weekTotal}</strong>
+          <span>задач выполнено</span>
+        </div>
+      `;
+    }
+
+    const weekdays = [
+      "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"
+    ];
+
+    container.innerHTML = stats.map((item, index) => {
+      const date = dates[index];
+      const dateString = formatDate(date);
+      const isToday = dateString === today;
+      const isSelected = dateString === selectedAnalyticsDate;
+
+      const percent = item.percent;
+
+      return `
+        <button
+          class="chart-day ${isToday ? "today" : ""} ${isSelected ? "selected" : ""}"
+          onclick="selectAnalyticsDay('${dateString}')"
+        >
+          <div class="chart-value">
+            ${item.total ? `${item.completed}/${item.total}` : "—"}
+          </div>
+
+          <div class="bar-wrapper">
+            <div
+              class="bar-track"
+              aria-hidden="true"
+            >
+              <div
+                class="bar"
+                style="height:${item.total ? Math.max(percent, 5) : 0}%"
+              ></div>
+            </div>
+          </div>
+
+          <div class="chart-day-name">${weekdays[index]}</div>
+          <div class="chart-date">${date.getDate()}</div>
+        </button>
+      `;
+    }).join("");
+  }
+
+  function selectAnalyticsDay(dateString) {
+    selectedAnalyticsDate = dateString;
+    renderAnalytics();
+  }
+
+  function renderAnalyticsDay(dateString) {
+    const container = document.getElementById("analyticsDayCard");
+    if (!container) return;
+
+    const stats = getDayStats(dateString);
+    const date = new Date(dateString + "T00:00:00");
+    const list = getTasksForDate(dateString);
+
+    const weekday = date.toLocaleDateString("ru-RU", {
+      weekday: "long"
+    });
+
+    const human = date.toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "long"
+    });
+
+    const rows = list.length
+      ? list.map(task => {
+          const done = isTaskCompleted(task, dateString);
+
+          return `
+            <div class="analytics-task ${done ? "done" : ""}">
+              <button
+                class="analytics-task-check"
+                onclick="toggleTaskForDate('${task.id}', '${dateString}')"
+              >${done ? "✓" : ""}</button>
+
+              <div class="analytics-task-content">
+                <div class="analytics-task-title">
+                  ${task.important ? '<span class="important">★ </span>' : ""}
+                  ${escapeHtml(task.title)}
+                </div>
+
+                <div class="analytics-task-meta">
+                  ${
+                    task.time
+                      ? `⏰ ${task.time}`
+                      : "Без времени"
+                  }
+                  ${
+                    task.repeat && task.repeat !== "none"
+                      ? ` · 🔁 ${getRepeatLabel(task.repeat)}`
+                      : ""
+                  }
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("")
+      : `
+        <div class="analytics-empty">
+          На этот день задач нет
+        </div>
+      `;
+
+    container.innerHTML = `
+      <div class="analytics-day-head">
+        <div>
+          <div class="analytics-day-weekday">${weekday}</div>
+          <div class="analytics-day-title">${human}</div>
+        </div>
+
+        <div class="analytics-day-percent">
+          ${stats.percent}%
+        </div>
+      </div>
+
+      <div class="analytics-progress">
+        <div style="width:${stats.percent}%"></div>
+      </div>
+
+      <div class="analytics-day-count">
+        <strong>${stats.completed}</strong> из ${stats.total} выполнено
+      </div>
+
+      <div class="analytics-task-list">
+        ${rows}
+      </div>
+    `;
   }
 
 
