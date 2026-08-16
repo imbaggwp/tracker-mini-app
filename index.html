@@ -2,7 +2,6 @@
 <html lang="ru">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -22,27 +21,18 @@
 
   <title>Трекер</title>
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
-
+  <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
   <main class="app">
 
-
     <!-- =========================
-         HOME
+         ГЛАВНАЯ
     ========================== -->
 
-    <section
-      id="homePage"
-      class="page"
-    >
+    <section id="homePage" class="page">
 
       <header class="header">
 
@@ -55,17 +45,14 @@
             Загрузка...
           </span>
 
-          <h1>
-            Сегодня
-          </h1>
+          <h1>Сегодня</h1>
 
         </div>
-
 
         <button
           class="profile-button"
           type="button"
-          aria-label="Профиль"
+          id="profileButton"
         >
           •••
         </button>
@@ -73,10 +60,7 @@
       </header>
 
 
-      <section
-        class="progress-card"
-        aria-label="Прогресс дня"
-      >
+      <section class="progress-card">
 
         <div class="progress-top">
 
@@ -93,11 +77,7 @@
 
         </div>
 
-
-        <div
-          class="progress-bar"
-          aria-hidden="true"
-        >
+        <div class="progress-bar">
 
           <div
             class="progress-fill"
@@ -105,7 +85,6 @@
           ></div>
 
         </div>
-
 
         <div class="progress-bottom">
 
@@ -126,10 +105,7 @@
 
         <div class="section-header">
 
-          <h2>
-            Задачи
-          </h2>
-
+          <h2>Задачи</h2>
 
           <button
             class="section-link"
@@ -141,7 +117,6 @@
 
         </div>
 
-
         <div
           class="tasks"
           id="tasksContainer"
@@ -149,12 +124,11 @@
 
       </section>
 
-
     </section>
 
 
     <!-- =========================
-         CALENDAR
+         КАЛЕНДАРЬ
     ========================== -->
 
     <section
@@ -171,12 +145,9 @@
             Планирование
           </div>
 
-          <h1>
-            Календарь
-          </h1>
+          <h1>Календарь</h1>
 
         </div>
-
 
         <button
           class="today-button"
@@ -201,11 +172,9 @@
             ‹
           </button>
 
-
           <h2 id="calendarMonth">
             Август 2026
           </h2>
-
 
           <button
             class="calendar-arrow"
@@ -253,11 +222,10 @@
             </div>
 
             <h2 id="selectedDayTitle">
-              15 августа
+              Сегодня
             </h2>
 
           </div>
-
 
           <div
             class="day-stat"
@@ -268,7 +236,6 @@
 
         </div>
 
-
         <div
           class="tasks"
           id="calendarTasks"
@@ -276,12 +243,11 @@
 
       </section>
 
-
     </section>
 
 
     <!-- =========================
-         ANALYTICS
+         АНАЛИТИКА
     ========================== -->
 
     <section
@@ -298,16 +264,12 @@
             Статистика
           </div>
 
-          <h1>
-            Аналитика
-          </h1>
+          <h1>Аналитика</h1>
 
         </div>
 
       </header>
 
-
-      <!-- PERIOD SWITCH -->
 
       <div class="analytics-switch">
 
@@ -319,7 +281,6 @@
           Неделя
         </button>
 
-
         <button
           class="analytics-tab"
           data-period="month"
@@ -330,8 +291,6 @@
 
       </div>
 
-
-      <!-- MAIN STAT -->
 
       <section class="analytics-main-card">
 
@@ -373,49 +332,33 @@
       </section>
 
 
-      <!-- SUMMARY -->
-
       <section class="analytics-summary">
 
         <div class="analytics-stat-card">
 
-          <span>
-            Запланировано
-          </span>
+          <span>Запланировано</span>
 
-          <strong
-            id="analyticsTotal"
-          >
+          <strong id="analyticsTotal">
             0
           </strong>
 
         </div>
 
-
         <div class="analytics-stat-card">
 
-          <span>
-            Выполнено
-          </span>
+          <span>Выполнено</span>
 
-          <strong
-            id="analyticsDone"
-          >
+          <strong id="analyticsDone">
             0
           </strong>
 
         </div>
 
-
         <div class="analytics-stat-card">
 
-          <span>
-            Не выполнено
-          </span>
+          <span>Не выполнено</span>
 
-          <strong
-            id="analyticsMissed"
-          >
+          <strong id="analyticsMissed">
             0
           </strong>
 
@@ -424,18 +367,13 @@
       </section>
 
 
-      <!-- DAYS -->
-
       <section class="analytics-section">
 
         <div class="section-header">
 
-          <h2>
-            По дням
-          </h2>
+          <h2>По дням</h2>
 
         </div>
-
 
         <div
           class="analytics-days"
@@ -444,8 +382,6 @@
 
       </section>
 
-
-      <!-- INSIGHTS -->
 
       <section class="analytics-insights">
 
@@ -457,13 +393,9 @@
 
           <div>
 
-            <span>
-              Лучший день
-            </span>
+            <span>Лучший день</span>
 
-            <strong
-              id="bestDay"
-            >
+            <strong id="bestDay">
               —
             </strong>
 
@@ -480,13 +412,9 @@
 
           <div>
 
-            <span>
-              Средний результат
-            </span>
+            <span>Средний результат</span>
 
-            <strong
-              id="averageResult"
-            >
+            <strong id="averageResult">
               0%
             </strong>
 
@@ -496,8 +424,6 @@
 
       </section>
 
-
-      <!-- SELECTED ANALYTICS DAY -->
 
       <section
         class="analytics-day-details"
@@ -516,14 +442,11 @@
               День
             </div>
 
-            <h2
-              id="analyticsSelectedDate"
-            >
+            <h2 id="analyticsSelectedDate">
               —
             </h2>
 
           </div>
-
 
           <div
             class="day-stat"
@@ -534,7 +457,6 @@
 
         </div>
 
-
         <div
           class="tasks"
           id="analyticsDayTasks"
@@ -542,15 +464,116 @@
 
       </section>
 
-
     </section>
 
+
+    <!-- =========================
+         НАСТРОЙКИ
+    ========================== -->
+
+    <section
+      id="settingsPage"
+      class="page"
+      hidden
+    >
+
+      <header class="page-header">
+
+        <div>
+
+          <div class="page-eyebrow">
+            Персонализация
+          </div>
+
+          <h1>Настройки</h1>
+
+        </div>
+
+      </header>
+
+
+      <div class="settings-list">
+
+        <div class="settings-item">
+
+          <div>
+
+            <strong>
+              Утренний отчёт
+            </strong>
+
+            <span>
+              Время утренней сводки
+            </span>
+
+          </div>
+
+          <input
+            type="time"
+            id="morningSummary"
+            value="08:00"
+          >
+
+        </div>
+
+
+        <div class="settings-item">
+
+          <div>
+
+            <strong>
+              Вечерний отчёт
+            </strong>
+
+            <span>
+              Время вечерней сводки
+            </span>
+
+          </div>
+
+          <input
+            type="time"
+            id="eveningSummary"
+            value="21:00"
+          >
+
+        </div>
+
+
+        <div class="settings-item">
+
+          <div>
+
+            <strong>
+              Первый день недели
+            </strong>
+
+            <span>
+              Понедельник
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="danger-button"
+          id="clearAllData"
+          type="button"
+        >
+          Удалить все данные
+        </button>
+
+      </div>
+
+    </section>
 
   </main>
 
 
   <!-- =========================
-       ADD BUTTON
+       КНОПКА ДОБАВЛЕНИЯ
   ========================== -->
 
   <button
@@ -563,24 +586,18 @@
 
 
   <!-- =========================
-       NAVIGATION
+       НАВИГАЦИЯ
   ========================== -->
 
-  <nav
-    class="bottom-nav"
-    aria-label="Основная навигация"
-  >
+  <nav class="bottom-nav">
 
     <button
       class="nav-item active"
-      type="button"
       data-page="home"
+      type="button"
     >
 
-      <span
-        class="nav-icon"
-        aria-hidden="true"
-      >
+      <span class="nav-icon">
         ⌂
       </span>
 
@@ -593,14 +610,11 @@
 
     <button
       class="nav-item"
-      type="button"
       data-page="calendar"
+      type="button"
     >
 
-      <span
-        class="nav-icon"
-        aria-hidden="true"
-      >
+      <span class="nav-icon">
         □
       </span>
 
@@ -613,14 +627,11 @@
 
     <button
       class="nav-item"
-      type="button"
       data-page="analytics"
+      type="button"
     >
 
-      <span
-        class="nav-icon"
-        aria-hidden="true"
-      >
+      <span class="nav-icon">
         ◔
       </span>
 
@@ -633,14 +644,11 @@
 
     <button
       class="nav-item"
-      type="button"
       data-page="settings"
+      type="button"
     >
 
-      <span
-        class="nav-icon"
-        aria-hidden="true"
-      >
+      <span class="nav-icon">
         ⚙
       </span>
 
@@ -654,7 +662,7 @@
 
 
   <!-- =========================
-       MODAL
+       МОДАЛЬНОЕ ОКНО
   ========================== -->
 
   <div
@@ -664,9 +672,7 @@
 
     <div class="modal">
 
-      <div
-        class="modal-handle"
-      ></div>
+      <div class="modal-handle"></div>
 
 
       <div class="modal-header">
@@ -674,7 +680,6 @@
         <h2 id="modalTitle">
           Новая задача
         </h2>
-
 
         <button
           class="modal-close"
@@ -689,7 +694,6 @@
 
       <form id="taskForm">
 
-
         <div class="form-group">
 
           <label
@@ -698,7 +702,6 @@
           >
             Название
           </label>
-
 
           <input
             class="form-input"
@@ -720,9 +723,8 @@
               class="form-label"
               for="taskDate"
             >
-              Дата
+              Дата начала
             </label>
-
 
             <input
               class="form-input"
@@ -743,7 +745,6 @@
               Время
             </label>
 
-
             <input
               class="form-input"
               id="taskTime"
@@ -763,7 +764,6 @@
           >
             Периодичность
           </label>
-
 
           <select
             class="form-select"
@@ -786,6 +786,10 @@
               По выходным
             </option>
 
+            <option value="custom">
+              Выбрать дни
+            </option>
+
             <option value="weekly">
               Каждую неделю
             </option>
@@ -803,13 +807,107 @@
         </div>
 
 
+        <div
+          class="form-group"
+          id="customDaysGroup"
+          hidden
+        >
+
+          <label class="form-label">
+            Дни недели
+          </label>
+
+          <div class="weekday-picker">
+
+            <button
+              type="button"
+              class="weekday-button"
+              data-day="1"
+            >
+              Пн
+            </button>
+
+            <button
+              type="button"
+              class="weekday-button"
+              data-day="2"
+            >
+              Вт
+            </button>
+
+            <button
+              type="button"
+              class="weekday-button"
+              data-day="3"
+            >
+              Ср
+            </button>
+
+            <button
+              type="button"
+              class="weekday-button"
+              data-day="4"
+            >
+              Чт
+            </button>
+
+            <button
+              type="button"
+              class="weekday-button"
+              data-day="5"
+            >
+              Пт
+            </button>
+
+            <button
+              type="button"
+              class="weekday-button"
+              data-day="6"
+            >
+              Сб
+            </button>
+
+            <button
+              type="button"
+              class="weekday-button"
+              data-day="0"
+            >
+              Вс
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="form-group"
+          id="repeatEndGroup"
+          hidden
+        >
+
+          <label
+            class="form-label"
+            for="repeatEnd"
+          >
+            Повторять до
+          </label>
+
+          <input
+            class="form-input"
+            id="repeatEnd"
+            type="date"
+          >
+
+        </div>
+
+
         <button
           class="save-button"
           type="submit"
         >
           Создать задачу
         </button>
-
 
       </form>
 
