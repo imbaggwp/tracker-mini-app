@@ -3,7 +3,7 @@
   --card: #ffffff;
   --text: #171717;
   --secondary: #777;
-  --muted: #a4a4a0;
+  --muted: #aaa;
   --border: #e7e7e3;
 
   --accent: #d86f3d;
@@ -12,14 +12,10 @@
   --success: #5d8b6b;
   --success-soft: #e3eee6;
 
-  --nav: rgba(255, 255, 255, 0.92);
-  --overlay: rgba(0, 0, 0, 0.35);
+  --nav: rgba(255,255,255,.94);
+  --overlay: rgba(0,0,0,.35);
 }
 
-
-/* =========================
-   RESET
-========================= */
 
 * {
   box-sizing: border-box;
@@ -67,7 +63,7 @@ button {
 
 
 button:active {
-  transform: scale(0.97);
+  transform: scale(.97);
 }
 
 
@@ -86,13 +82,9 @@ button:active {
   padding:
     calc(24px + env(safe-area-inset-top))
     18px
-    calc(100px + env(safe-area-inset-bottom));
+    calc(105px + env(safe-area-inset-bottom));
 }
 
-
-/* =========================
-   PAGES
-========================= */
 
 .page {
   width: 100%;
@@ -110,7 +102,6 @@ button:active {
 
 .header {
   display: flex;
-
   justify-content: space-between;
   align-items: center;
 
@@ -128,19 +119,18 @@ button:active {
 
 .greeting-small {
   color: var(--secondary);
-
   font-size: 13px;
 
   text-transform: capitalize;
 }
 
 
-.greeting h1 {
+.greeting h1,
+.page-header h1 {
   font-size: 30px;
-
   line-height: 1.1;
 
-  letter-spacing: -0.8px;
+  letter-spacing: -.8px;
 }
 
 
@@ -153,12 +143,9 @@ button:active {
   border: 1px solid var(--border);
 
   background: var(--card);
-
   color: var(--text);
 
-  font-size: 16px;
-
-  transition: 0.2s;
+  font-size: 15px;
 }
 
 
@@ -168,7 +155,6 @@ button:active {
 
 .progress-card {
   background: var(--text);
-
   color: white;
 
   border-radius: 24px;
@@ -178,13 +164,12 @@ button:active {
   margin-bottom: 28px;
 
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.08);
+    0 12px 30px rgba(0,0,0,.08);
 }
 
 
 .progress-top {
   display: flex;
-
   justify-content: space-between;
   align-items: center;
 
@@ -194,24 +179,21 @@ button:active {
 
 .progress-title {
   font-size: 13px;
-
-  opacity: 0.62;
+  opacity: .62;
 }
 
 
 .progress-percent {
   font-size: 25px;
-
   font-weight: 700;
-
-  letter-spacing: -0.5px;
 }
 
 
 .progress-bar {
   height: 7px;
 
-  background: rgba(255, 255, 255, 0.13);
+  background:
+    rgba(255,255,255,.13);
 
   border-radius: 10px;
 
@@ -220,41 +202,37 @@ button:active {
 
 
 .progress-fill {
-  width: 0%;
-
+  width: 0;
   height: 100%;
 
   background: var(--accent);
 
   border-radius: inherit;
 
-  transition:
-    width 0.35s ease;
+  transition: width .35s ease;
 }
 
 
 .progress-bottom {
   display: flex;
-
   justify-content: space-between;
 
   margin-top: 13px;
 
   font-size: 12px;
-
-  opacity: 0.58;
+  opacity: .58;
 }
 
 
 /* =========================
-   SECTION
+   SECTIONS
 ========================= */
 
 .section-header {
   display: flex;
 
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 
   margin-bottom: 12px;
 }
@@ -263,7 +241,7 @@ button:active {
 .section-header h2 {
   font-size: 19px;
 
-  letter-spacing: -0.3px;
+  letter-spacing: -.3px;
 }
 
 
@@ -286,7 +264,6 @@ button:active {
 
 .tasks {
   display: flex;
-
   flex-direction: column;
 
   gap: 10px;
@@ -295,7 +272,6 @@ button:active {
 
 .task {
   display: flex;
-
   align-items: center;
 
   gap: 13px;
@@ -309,8 +285,8 @@ button:active {
   padding: 15px;
 
   transition:
-    transform 0.2s,
-    opacity 0.2s;
+    transform .2s,
+    opacity .2s;
 }
 
 
@@ -327,16 +303,11 @@ button:active {
   background: transparent;
 
   position: relative;
-
-  transition:
-    background 0.2s,
-    border-color 0.2s;
 }
 
 
 .task.completed .task-check {
   background: var(--success);
-
   border-color: var(--success);
 }
 
@@ -352,21 +323,18 @@ button:active {
   color: white;
 
   font-size: 14px;
-
   font-weight: 600;
 }
 
 
 .task-content {
   flex: 1;
-
   min-width: 0;
 }
 
 
 .task-title {
   font-size: 15px;
-
   font-weight: 600;
 
   line-height: 1.3;
@@ -377,20 +345,18 @@ button:active {
 
 .task-time {
   color: var(--secondary);
-
   font-size: 12px;
 }
 
 
 .task.completed .task-title {
   text-decoration: line-through;
-
-  opacity: 0.4;
+  opacity: .4;
 }
 
 
 .task.completed .task-time {
-  opacity: 0.4;
+  opacity: .4;
 }
 
 
@@ -411,16 +377,11 @@ button:active {
 
 .task-delete {
   border: none;
-
   background: none;
 
   color: #aaa;
 
   font-size: 19px;
-
-  line-height: 1;
-
-  padding: 3px;
 }
 
 
@@ -448,7 +409,7 @@ button:active {
 
 
 /* =========================
-   ADD BUTTON
+   ADD
 ========================= */
 
 .add-button {
@@ -481,24 +442,14 @@ button:active {
   line-height: 1;
 
   box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.14);
+    0 10px 25px rgba(0,0,0,.14);
 
   z-index: 30;
-
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-}
-
-
-.add-button:hover {
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.18);
 }
 
 
 /* =========================
-   BOTTOM NAV
+   NAVIGATION
 ========================= */
 
 .bottom-nav {
@@ -509,7 +460,7 @@ button:active {
 
   transform: translateX(-50%);
 
-  width: min(100%, 520px);
+  width: min(100%,520px);
 
   padding:
     9px 10px
@@ -520,16 +471,14 @@ button:active {
   display: grid;
 
   grid-template-columns:
-    repeat(4, 1fr);
+    repeat(4,1fr);
 
   background: var(--nav);
 
   backdrop-filter: blur(18px);
-
   -webkit-backdrop-filter: blur(18px);
 
-  border-top:
-    1px solid var(--border);
+  border-top: 1px solid var(--border);
 
   z-index: 20;
 }
@@ -537,17 +486,14 @@ button:active {
 
 .nav-item {
   border: none;
-
   background: none;
 
   color: var(--secondary);
 
   display: flex;
-
   flex-direction: column;
 
   align-items: center;
-
   justify-content: center;
 
   gap: 4px;
@@ -555,22 +501,17 @@ button:active {
   padding: 7px;
 
   font-size: 10px;
-
-  transition:
-    color 0.2s;
 }
 
 
 .nav-icon {
   font-size: 20px;
-
   line-height: 1;
 }
 
 
 .nav-item.active {
   color: var(--accent);
-
   font-weight: 600;
 }
 
@@ -583,19 +524,9 @@ button:active {
   display: flex;
 
   align-items: flex-end;
-
   justify-content: space-between;
 
   margin-bottom: 22px;
-}
-
-
-.page-header h1 {
-  font-size: 30px;
-
-  line-height: 1.1;
-
-  letter-spacing: -0.8px;
 }
 
 
@@ -628,7 +559,7 @@ button:active {
 
 
 /* =========================
-   CALENDAR CARD
+   CALENDAR
 ========================= */
 
 .calendar-card {
@@ -641,9 +572,6 @@ button:active {
   padding: 18px;
 
   margin-bottom: 28px;
-
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.025);
 }
 
 
@@ -651,7 +579,6 @@ button:active {
   display: flex;
 
   align-items: center;
-
   justify-content: space-between;
 
   margin-bottom: 20px;
@@ -664,8 +591,6 @@ button:active {
   font-weight: 650;
 
   text-transform: capitalize;
-
-  letter-spacing: -0.2px;
 }
 
 
@@ -683,34 +608,18 @@ button:active {
 
   font-size: 23px;
 
-  line-height: 1;
-
   display: flex;
 
   align-items: center;
-
   justify-content: center;
-
-  transition: 0.2s;
 }
 
-
-.calendar-arrow:hover {
-  background: var(--accent-soft);
-
-  color: var(--accent);
-}
-
-
-/* =========================
-   WEEK DAYS
-========================= */
 
 .calendar-weekdays {
   display: grid;
 
   grid-template-columns:
-    repeat(7, 1fr);
+    repeat(7,1fr);
 
   margin-bottom: 8px;
 }
@@ -727,30 +636,22 @@ button:active {
 }
 
 
-/* =========================
-   CALENDAR GRID
-========================= */
-
 .calendar-grid {
   display: grid;
 
   grid-template-columns:
-    repeat(7, 1fr);
+    repeat(7,1fr);
 
   gap: 5px;
 }
 
-
-/* =========================
-   CALENDAR DAY
-========================= */
 
 .calendar-day {
   position: relative;
 
   width: 100%;
 
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1;
 
   border: none;
 
@@ -765,15 +666,9 @@ button:active {
   flex-direction: column;
 
   align-items: center;
-
   justify-content: center;
 
   gap: 3px;
-
-  transition:
-    background 0.2s,
-    color 0.2s,
-    transform 0.15s;
 }
 
 
@@ -784,7 +679,6 @@ button:active {
 
 .calendar-day-number {
   font-size: 13px;
-
   line-height: 1;
 
   font-weight: 500;
@@ -804,52 +698,18 @@ button:active {
 }
 
 
-.calendar-day-stat.empty-stat {
-  color: #d0d0cb;
-}
-
-
 .calendar-day.outside {
   color: #c7c7c3;
 }
 
 
-.calendar-day.outside .calendar-day-stat {
-  opacity: 0.35;
-}
-
-
-/* =========================
-   TODAY
-========================= */
-
 .calendar-day.today
-  .calendar-day-number {
+.calendar-day-number {
   color: var(--accent);
 
   font-weight: 750;
 }
 
-
-.calendar-day.today::before {
-  content: "";
-
-  position: absolute;
-
-  top: 5px;
-
-  width: 4px;
-  height: 4px;
-
-  border-radius: 50%;
-
-  background: var(--accent);
-}
-
-
-/* =========================
-   SELECTED DAY
-========================= */
 
 .calendar-day.selected {
   background: var(--text);
@@ -859,14 +719,14 @@ button:active {
 
 
 .calendar-day.selected
-  .calendar-day-number {
+.calendar-day-number {
   color: white;
 }
 
 
 .calendar-day.selected
-  .calendar-day-stat {
-  color: rgba(255, 255, 255, 0.6);
+.calendar-day-stat {
+  color: rgba(255,255,255,.6);
 }
 
 
@@ -874,21 +734,6 @@ button:active {
   background: var(--accent);
 }
 
-
-.calendar-day.selected.today
-  .calendar-day-number {
-  color: white;
-}
-
-
-.calendar-day.selected.today::before {
-  display: none;
-}
-
-
-/* =========================
-   SELECTED DAY SECTION
-========================= */
 
 .selected-day {
   margin-bottom: 20px;
@@ -899,7 +744,6 @@ button:active {
   display: flex;
 
   align-items: flex-end;
-
   justify-content: space-between;
 
   margin-bottom: 14px;
@@ -913,19 +757,12 @@ button:active {
 
   text-transform: capitalize;
 
-  letter-spacing: -0.4px;
+  letter-spacing: -.4px;
 }
 
 
 .day-stat {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
   min-width: 42px;
-
   height: 30px;
 
   padding: 0 9px;
@@ -936,9 +773,440 @@ button:active {
 
   color: var(--success);
 
-  font-size: 11px;
+  display: flex;
 
+  align-items: center;
+  justify-content: center;
+
+  font-size: 11px;
   font-weight: 700;
+}
+
+
+/* =========================
+   ANALYTICS
+========================= */
+
+.analytics-switch {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  background: #e9e9e5;
+
+  padding: 4px;
+
+  border-radius: 14px;
+
+  margin-bottom: 16px;
+}
+
+
+.analytics-tab {
+  height: 38px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  background: transparent;
+
+  color: var(--secondary);
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+
+.analytics-tab.active {
+  background: var(--card);
+
+  color: var(--text);
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.05);
+}
+
+
+.analytics-main-card {
+  background: var(--text);
+
+  color: white;
+
+  border-radius: 24px;
+
+  padding: 24px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 12px;
+}
+
+
+.analytics-label {
+  color: rgba(255,255,255,.55);
+
+  font-size: 12px;
+
+  margin-bottom: 5px;
+}
+
+
+.analytics-percent {
+  font-size: 40px;
+
+  font-weight: 750;
+
+  letter-spacing: -1px;
+}
+
+
+.analytics-ring {
+  width: 92px;
+  height: 92px;
+
+  border-radius: 50%;
+
+  background:
+    conic-gradient(
+      var(--accent) var(--progress,0%),
+      rgba(255,255,255,.12) 0
+    );
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+.analytics-ring::before {
+  content: "";
+
+  position: absolute;
+}
+
+
+.analytics-ring > div {
+  width: 72px;
+  height: 72px;
+
+  border-radius: 50%;
+
+  background: var(--text);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+.analytics-ring strong {
+  font-size: 20px;
+}
+
+
+.analytics-ring span {
+  font-size: 8px;
+
+  color: rgba(255,255,255,.5);
+}
+
+
+.analytics-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap: 8px;
+
+  margin-bottom: 28px;
+}
+
+
+.analytics-stat-card {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  padding: 14px 12px;
+}
+
+
+.analytics-stat-card span {
+  display: block;
+
+  color: var(--secondary);
+
+  font-size: 10px;
+
+  margin-bottom: 6px;
+}
+
+
+.analytics-stat-card strong {
+  font-size: 20px;
+}
+
+
+.analytics-section {
+  margin-bottom: 22px;
+}
+
+
+.analytics-days {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+
+.analytics-day {
+  width: 100%;
+
+  border: 1px solid var(--border);
+
+  background: var(--card);
+
+  border-radius: 16px;
+
+  padding: 12px 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  text-align: left;
+}
+
+
+.analytics-day.selected {
+  border-color: var(--accent);
+
+  background: var(--accent-soft);
+}
+
+
+.analytics-day-top {
+  width: 48px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+
+.analytics-day-name {
+  color: var(--secondary);
+
+  font-size: 10px;
+
+  text-transform: uppercase;
+}
+
+
+.analytics-day-top strong {
+  font-size: 17px;
+}
+
+
+.analytics-day-progress {
+  flex: 1;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+.analytics-day-bar {
+  flex: 1;
+
+  height: 6px;
+
+  background: #ededeb;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+
+.analytics-day-bar span {
+  display: block;
+
+  height: 100%;
+
+  background: var(--accent);
+
+  border-radius: inherit;
+}
+
+
+.analytics-day-progress small {
+  width: 30px;
+
+  color: var(--secondary);
+
+  font-size: 10px;
+
+  text-align: right;
+}
+
+
+.analytics-insights {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 9px;
+
+  margin-bottom: 25px;
+}
+
+
+.insight-card {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 17px;
+
+  padding: 15px;
+
+  display: flex;
+
+  gap: 10px;
+}
+
+
+.insight-icon {
+  color: var(--accent);
+
+  font-size: 18px;
+}
+
+
+.insight-card div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+
+.insight-card span:not(.insight-icon) {
+  color: var(--secondary);
+
+  font-size: 10px;
+}
+
+
+.insight-card strong {
+  font-size: 12px;
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+.settings-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.settings-item {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  padding: 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+}
+
+
+.settings-item div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+
+.settings-item strong {
+  font-size: 14px;
+}
+
+
+.settings-item span {
+  color: var(--secondary);
+
+  font-size: 11px;
+}
+
+
+.settings-item input {
+  border: none;
+
+  background: #f1f1ee;
+
+  border-radius: 10px;
+
+  padding: 8px;
+
+  color: var(--text);
+}
+
+
+.danger-button {
+  height: 50px;
+
+  border: 1px solid #ead5d0;
+
+  background: #fff7f5;
+
+  color: #b44e39;
+
+  border-radius: 15px;
+
+  margin-top: 10px;
 }
 
 
@@ -963,8 +1231,7 @@ button:active {
 
   pointer-events: none;
 
-  transition:
-    opacity 0.25s;
+  transition: opacity .25s;
 
   z-index: 100;
 }
@@ -978,7 +1245,11 @@ button:active {
 
 
 .modal {
-  width: min(100%, 520px);
+  width: min(100%,520px);
+
+  max-height: 92vh;
+
+  overflow-y: auto;
 
   background: var(--bg);
 
@@ -988,14 +1259,15 @@ button:active {
   padding:
     12px 18px
     calc(
-      20px + env(safe-area-inset-bottom)
+      20px +
+      env(safe-area-inset-bottom)
     );
 
   transform:
     translateY(30px);
 
   transition:
-    transform 0.25s;
+    transform .25s;
 }
 
 
@@ -1013,8 +1285,7 @@ button:active {
 
   background: #ccc;
 
-  margin:
-    0 auto 20px;
+  margin: 0 auto 20px;
 }
 
 
@@ -1022,7 +1293,6 @@ button:active {
   display: flex;
 
   justify-content: space-between;
-
   align-items: center;
 
   margin-bottom: 22px;
@@ -1032,7 +1302,7 @@ button:active {
 .modal-header h2 {
   font-size: 22px;
 
-  letter-spacing: -0.4px;
+  letter-spacing: -.4px;
 }
 
 
@@ -1077,8 +1347,7 @@ button:active {
   width: 100%;
   height: 50px;
 
-  border:
-    1px solid var(--border);
+  border: 1px solid var(--border);
 
   border-radius: 15px;
 
@@ -1089,10 +1358,6 @@ button:active {
   padding: 0 15px;
 
   outline: none;
-
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
 }
 
 
@@ -1102,7 +1367,7 @@ button:active {
 
   box-shadow:
     0 0 0 3px
-    rgba(216, 111, 61, 0.1);
+    rgba(216,111,61,.1);
 }
 
 
@@ -1113,6 +1378,42 @@ button:active {
     1fr 1fr;
 
   gap: 10px;
+}
+
+
+.weekday-picker {
+  display: grid;
+
+  grid-template-columns:
+    repeat(7,1fr);
+
+  gap: 6px;
+}
+
+
+.weekday-button {
+  height: 42px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  background: var(--card);
+
+  color: var(--secondary);
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+
+.weekday-button.active {
+  background: var(--accent);
+
+  border-color: var(--accent);
+
+  color: white;
 }
 
 
@@ -1132,15 +1433,6 @@ button:active {
   font-weight: 650;
 
   margin-top: 6px;
-
-  transition:
-    opacity 0.2s,
-    transform 0.2s;
-}
-
-
-.save-button:hover {
-  opacity: 0.92;
 }
 
 
@@ -1186,25 +1478,14 @@ button:active {
     border-radius: 11px;
   }
 
-}
+
+  .analytics-summary {
+    gap: 5px;
+  }
 
 
-/* =========================
-   REDUCED MOTION
-========================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-
-    transition-duration:
-      0.01ms !important;
-
-    animation-duration:
-      0.01ms !important;
+  .analytics-stat-card {
+    padding: 12px 8px;
   }
 
 }
