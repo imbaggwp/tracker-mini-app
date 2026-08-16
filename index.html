@@ -1,333 +1,345 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  />
+  >
 
-  <meta name="theme-color" content="#222f3f" />
+  <meta name="theme-color" content="#222f3f">
 
   <title>Трекер</title>
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="app">
+  <div class="app">
 
-  <!-- ================= HEADER ================= -->
+    <!-- HEADER -->
 
-  <header class="header">
+    <header class="header">
 
-    <div class="header-title">
-      Трекер
-    </div>
-
-    <button
-      class="header-button"
-      id="menuButton"
-      aria-label="Меню"
-    >
-      ⋮
-    </button>
-
-  </header>
-
-
-  <!-- ================= MAIN ================= -->
-
-  <main class="main">
-
-    <!-- DATE -->
-
-    <section class="date-section">
-
-      <button
-        class="round-button"
-        id="prevDay"
-        aria-label="Предыдущий день"
-      >
-        ‹
-      </button>
-
-      <div class="date-center">
-
-        <div
-          class="date-title"
-          id="dateTitle"
-        >
-          Сегодня
-        </div>
-
-        <div
-          class="date-subtitle"
-          id="dateSubtitle"
-        >
-          Вс, 16 авг.
-        </div>
-
+      <div class="header-title">
+        Трекер
       </div>
 
       <button
-        class="round-button"
-        id="nextDay"
-        aria-label="Следующий день"
+        class="header-menu"
+        id="headerMenu"
+        type="button"
       >
-        ›
+        ⋮
       </button>
 
-      <button
-        class="calendar-button"
-        id="calendarButton"
-        aria-label="Календарь"
-      >
-        ▣
-      </button>
-
-    </section>
+    </header>
 
 
-    <!-- PROGRESS -->
+    <!-- MAIN -->
 
-    <section class="progress-card">
+    <main class="main">
 
-      <div class="progress-number">
+      <!-- DATE -->
 
-        <span id="completedCount">
-          0
-        </span>
-
-        <span class="progress-divider">
-          /
-        </span>
-
-        <span id="totalCount">
-          0
-        </span>
-
-      </div>
-
-    </section>
-
-
-    <!-- EMPTY -->
-
-    <section
-      class="empty-card"
-      id="emptyState"
-    >
-
-      <div class="empty-icon">
-        🐥
-      </div>
-
-      <div class="empty-title">
-        На сегодня задач нет
-      </div>
-
-    </section>
-
-
-    <!-- TASKS -->
-
-    <section
-      class="tasks"
-      id="tasksList"
-    ></section>
-
-
-    <!-- ADD TASK -->
-
-    <button
-      class="add-task-button"
-      id="addTaskButton"
-    >
-
-      <span class="plus">
-        +
-      </span>
-
-      <span>
-        Добавить задачу
-      </span>
-
-    </button>
-
-
-    <!-- MORE -->
-
-    <button
-      class="more-button"
-      id="moreButton"
-    >
-
-      <span>
-        ˅
-      </span>
-
-      <span>
-        Ещё
-      </span>
-
-    </button>
-
-  </main>
-
-
-  <!-- ================= BOTTOM NAV ================= -->
-
-  <nav class="bottom-navigation">
-
-    <button
-      class="nav-item active"
-      data-page="tasks"
-    >
-
-      <div class="nav-icon">
-        ✓
-      </div>
-
-      <div class="nav-label">
-        Задачи
-      </div>
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      data-page="habits"
-    >
-
-      <div class="nav-icon">
-        ◉
-      </div>
-
-      <div class="nav-label">
-        Привычки
-      </div>
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      data-page="goals"
-    >
-
-      <div class="nav-icon">
-        ◎
-      </div>
-
-      <div class="nav-label">
-        Цели на год
-      </div>
-
-    </button>
-
-
-    <button
-      class="nav-item"
-      data-page="analytics"
-    >
-
-      <div class="nav-icon">
-        ▥
-      </div>
-
-      <div class="nav-label">
-        Аналитика
-      </div>
-
-    </button>
-
-  </nav>
-
-
-  <!-- ================= TASK MODAL ================= -->
-
-  <div
-    class="modal hidden"
-    id="taskModal"
-  >
-
-    <div
-      class="modal-overlay"
-      id="modalOverlay"
-    ></div>
-
-
-    <div class="modal-window">
-
-      <div class="modal-header">
-
-        <div
-          class="modal-title"
-          id="modalTitle"
-        >
-          Новая задача
-        </div>
+      <section class="date-navigation">
 
         <button
-          class="modal-close"
-          id="closeModal"
-          aria-label="Закрыть"
+          class="date-arrow"
+          id="previousDay"
+          type="button"
         >
-          ×
+          ‹
         </button>
 
-      </div>
+        <button
+          class="date-center"
+          id="todayButton"
+          type="button"
+        >
+
+          <span
+            class="date-main"
+            id="dateMain"
+          >
+            Сегодня
+          </span>
+
+          <span
+            class="date-small"
+            id="dateSmall"
+          >
+            воскресенье, 16 августа
+          </span>
+
+        </button>
+
+        <button
+          class="date-arrow"
+          id="nextDay"
+          type="button"
+        >
+          ›
+        </button>
+
+        <button
+          class="calendar-button"
+          id="calendarButton"
+          type="button"
+        >
+          ▣
+        </button>
+
+      </section>
 
 
-      <!-- TITLE -->
+      <!-- PROGRESS -->
 
-      <input
-        class="task-input"
-        id="taskInput"
-        type="text"
-        placeholder="Название задачи"
-        autocomplete="off"
-      />
+      <section class="progress-card">
+
+        <div class="progress-left">
+
+          <div class="progress-title">
+            Прогресс дня
+          </div>
+
+          <div class="progress-bar">
+
+            <div
+              class="progress-fill"
+              id="progressFill"
+            ></div>
+
+          </div>
+
+        </div>
+
+        <div
+          class="progress-count"
+          id="progressCount"
+        >
+          0 / 0
+        </div>
+
+      </section>
 
 
-      <!-- DESCRIPTION -->
+      <!-- TASKS -->
 
-      <textarea
-        class="task-description"
-        id="taskDescription"
-        placeholder="Описание"
-      ></textarea>
+      <section
+        class="tasks-list"
+        id="tasksList"
+      ></section>
 
 
-      <!-- OPTIONS -->
+      <!-- EMPTY STATE -->
 
-      <div class="task-options">
+      <section
+        class="empty-state"
+        id="emptyState"
+      >
+
+        <div class="empty-icon">
+          ✓
+        </div>
+
+        <div class="empty-title">
+          На сегодня задач нет
+        </div>
+
+        <div class="empty-subtitle">
+          Добавьте первую задачу
+        </div>
+
+      </section>
+
+
+      <!-- ADD TASK -->
+
+      <button
+        class="add-task-button"
+        id="addTaskButton"
+        type="button"
+      >
+
+        <span class="add-icon">
+          +
+        </span>
+
+        <span>
+          Добавить задачу
+        </span>
+
+      </button>
+
+    </main>
+
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <nav class="bottom-navigation">
+
+      <button
+        class="nav-item active"
+        type="button"
+        data-page="tasks"
+      >
+
+        <span class="nav-icon">
+          ✓
+        </span>
+
+        <span class="nav-text">
+          Задачи
+        </span>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        data-page="habits"
+      >
+
+        <span class="nav-icon">
+          ↻
+        </span>
+
+        <span class="nav-text">
+          Привычки
+        </span>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        data-page="goals"
+      >
+
+        <span class="nav-icon">
+          ◎
+        </span>
+
+        <span class="nav-text">
+          Цели
+        </span>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        data-page="analytics"
+      >
+
+        <span class="nav-icon">
+          ▥
+        </span>
+
+        <span class="nav-text">
+          Аналитика
+        </span>
+
+      </button>
+
+    </nav>
+
+
+    <!-- TASK MODAL -->
+
+    <div
+      class="modal hidden"
+      id="taskModal"
+    >
+
+      <div
+        class="modal-backdrop"
+        id="modalBackdrop"
+      ></div>
+
+
+      <div class="modal-sheet">
+
+        <div class="modal-header">
+
+          <h2
+            class="modal-title"
+            id="modalTitle"
+          >
+            Новая задача
+          </h2>
+
+          <button
+            class="modal-close"
+            id="closeModal"
+            type="button"
+          >
+            ×
+          </button>
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <label class="field-label">
+          Название
+
+          <input
+            class="text-input"
+            id="taskTitle"
+            type="text"
+            placeholder="Например: Прочитать 20 страниц"
+            maxlength="200"
+            autocomplete="off"
+          >
+
+        </label>
+
+
+        <!-- DESCRIPTION -->
+
+        <label class="field-label">
+
+          Описание
+
+          <textarea
+            class="description-input"
+            id="taskDescription"
+            placeholder="Дополнительная информация"
+            maxlength="1000"
+          ></textarea>
+
+        </label>
 
 
         <!-- DATE -->
 
         <button
-          class="task-option"
-          id="dateOption"
+          class="option-row"
+          id="taskDateButton"
+          type="button"
         >
 
           <span class="option-icon">
             📅
           </span>
 
-          <span class="option-content">
+          <span class="option-text">
 
-            <span class="option-title">
+            <span class="option-name">
               Дата
             </span>
 
             <span
               class="option-value"
-              id="dateValue"
+              id="taskDateValue"
             >
               Сегодня
             </span>
@@ -344,23 +356,24 @@
         <!-- TIME -->
 
         <button
-          class="task-option"
-          id="timeOption"
+          class="option-row"
+          id="taskTimeButton"
+          type="button"
         >
 
           <span class="option-icon">
             🕐
           </span>
 
-          <span class="option-content">
+          <span class="option-text">
 
-            <span class="option-title">
+            <span class="option-name">
               Время
             </span>
 
             <span
               class="option-value"
-              id="timeValue"
+              id="taskTimeValue"
             >
               Без времени
             </span>
@@ -377,23 +390,24 @@
         <!-- REPEAT -->
 
         <button
-          class="task-option"
-          id="repeatOption"
+          class="option-row"
+          id="taskRepeatButton"
+          type="button"
         >
 
           <span class="option-icon">
             🔁
           </span>
 
-          <span class="option-content">
+          <span class="option-text">
 
-            <span class="option-title">
+            <span class="option-name">
               Повторение
             </span>
 
             <span
               class="option-value"
-              id="repeatValue"
+              id="taskRepeatValue"
             >
               Не повторять
             </span>
@@ -410,17 +424,18 @@
         <!-- IMPORTANT -->
 
         <button
-          class="task-option"
-          id="importantOption"
+          class="option-row"
+          id="importantButton"
+          type="button"
         >
 
           <span class="option-icon">
             ⭐
           </span>
 
-          <span class="option-content">
+          <span class="option-text">
 
-            <span class="option-title">
+            <span class="option-name">
               Важная задача
             </span>
 
@@ -433,240 +448,299 @@
 
           </span>
 
-          <span class="option-toggle">
+          <span
+            class="switch"
+            id="importantSwitch"
+          >
 
-            <span class="toggle-circle"></span>
+            <span class="switch-circle"></span>
 
           </span>
 
         </button>
 
+
+        <!-- SUBTASKS -->
+
+        <div class="subtasks-section">
+
+          <div class="subtasks-title">
+            Подзадачи
+          </div>
+
+          <div
+            class="subtasks-list"
+            id="subtasksList"
+          ></div>
+
+          <button
+            class="add-subtask-button"
+            id="addSubtaskButton"
+            type="button"
+          >
+            + Добавить подзадачу
+          </button>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button
+          class="primary-button"
+          id="saveTaskButton"
+          type="button"
+        >
+          Сохранить
+        </button>
+
+
+        <!-- DELETE -->
+
+        <button
+          class="delete-button hidden"
+          id="deleteTaskButton"
+          type="button"
+        >
+          Удалить задачу
+        </button>
+
       </div>
 
+    </div>
 
-      <!-- SUBTASK -->
 
-      <button
-        class="add-subtask"
-        id="addSubtaskButton"
-      >
+    <!-- DATE PICKER -->
 
-        <span>
-          +
-        </span>
-
-        <span>
-          Добавить подзадачу
-        </span>
-
-      </button>
-
+    <div
+      class="picker hidden"
+      id="datePicker"
+    >
 
       <div
-        class="subtasks"
-        id="subtasks"
+        class="picker-backdrop"
+        id="datePickerBackdrop"
       ></div>
 
+      <div class="picker-sheet">
 
-      <!-- SAVE -->
+        <div class="picker-header">
 
-      <button
-        class="save-task-button"
-        id="saveTaskButton"
-      >
-        Сохранить
-      </button>
+          <h3>
+            Выберите дату
+          </h3>
 
+          <button
+            id="closeDatePicker"
+            type="button"
+          >
+            ×
+          </button>
 
-      <!-- DELETE -->
+        </div>
 
-      <button
-        class="delete-task-button hidden"
-        id="deleteTaskButton"
-      >
-        Удалить задачу
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- ================= DATE PICKER ================= -->
-
-  <div
-    class="picker hidden"
-    id="datePicker"
-  >
-
-    <div
-      class="picker-overlay"
-      id="datePickerOverlay"
-    ></div>
-
-    <div class="picker-window">
-
-      <div class="picker-header">
+        <input
+          id="dateInput"
+          class="picker-input"
+          type="date"
+        >
 
         <button
-          class="picker-close"
-          id="closeDatePicker"
+          id="confirmDate"
+          class="primary-button"
+          type="button"
         >
-          ×
+          Готово
         </button>
-
-        <div class="picker-title">
-          Выберите дату
-        </div>
 
       </div>
 
-      <input
-        class="date-input"
-        id="dateInput"
-        type="date"
-      />
-
-      <button
-        class="picker-confirm"
-        id="confirmDate"
-      >
-        Готово
-      </button>
-
     </div>
 
-  </div>
 
-
-  <!-- ================= TIME PICKER ================= -->
-
-  <div
-    class="picker hidden"
-    id="timePicker"
-  >
+    <!-- TIME PICKER -->
 
     <div
-      class="picker-overlay"
-      id="timePickerOverlay"
-    ></div>
+      class="picker hidden"
+      id="timePicker"
+    >
 
-    <div class="picker-window">
+      <div
+        class="picker-backdrop"
+        id="timePickerBackdrop"
+      ></div>
 
-      <div class="picker-header">
+      <div class="picker-sheet">
+
+        <div class="picker-header">
+
+          <h3>
+            Выберите время
+          </h3>
+
+          <button
+            id="closeTimePicker"
+            type="button"
+          >
+            ×
+          </button>
+
+        </div>
+
+        <input
+          id="timeInput"
+          class="picker-input"
+          type="time"
+        >
 
         <button
-          class="picker-close"
-          id="closeTimePicker"
+          id="removeTime"
+          class="secondary-button"
+          type="button"
         >
-          ×
+          Без времени
         </button>
 
-        <div class="picker-title">
-          Выберите время
-        </div>
+        <button
+          id="confirmTime"
+          class="primary-button"
+          type="button"
+        >
+          Готово
+        </button>
 
       </div>
 
-      <input
-        class="time-input"
-        id="timeInput"
-        type="time"
-      />
-
-      <button
-        class="picker-secondary"
-        id="removeTime"
-      >
-        Убрать время
-      </button>
-
-      <button
-        class="picker-confirm"
-        id="confirmTime"
-      >
-        Готово
-      </button>
-
     </div>
 
-  </div>
 
-
-  <!-- ================= REPEAT PICKER ================= -->
-
-  <div
-    class="picker hidden"
-    id="repeatPicker"
-  >
+    <!-- REPEAT PICKER -->
 
     <div
-      class="picker-overlay"
-      id="repeatPickerOverlay"
-    ></div>
+      class="picker hidden"
+      id="repeatPicker"
+    >
 
-    <div class="picker-window">
+      <div
+        class="picker-backdrop"
+        id="repeatPickerBackdrop"
+      ></div>
 
-      <div class="picker-header">
+      <div class="picker-sheet">
+
+        <div class="picker-header">
+
+          <h3>
+            Повторение
+          </h3>
+
+          <button
+            id="closeRepeatPicker"
+            type="button"
+          >
+            ×
+          </button>
+
+        </div>
+
 
         <button
-          class="picker-close"
-          id="closeRepeatPicker"
+          class="repeat-option"
+          data-repeat="none"
+          type="button"
         >
-          ×
+          Не повторять
         </button>
 
-        <div class="picker-title">
-          Повторение
-        </div>
+        <button
+          class="repeat-option"
+          data-repeat="daily"
+          type="button"
+        >
+          Каждый день
+        </button>
+
+        <button
+          class="repeat-option"
+          data-repeat="weekdays"
+          type="button"
+        >
+          По будням
+        </button>
+
+        <button
+          class="repeat-option"
+          data-repeat="weekly"
+          type="button"
+        >
+          Каждую неделю
+        </button>
+
+        <button
+          class="repeat-option"
+          data-repeat="monthly"
+          type="button"
+        >
+          Каждый месяц
+        </button>
 
       </div>
 
+    </div>
 
-      <button
-        class="repeat-choice"
-        data-repeat="none"
-      >
-        Не повторять
-      </button>
 
-      <button
-        class="repeat-choice"
-        data-repeat="daily"
-      >
-        Каждый день
-      </button>
+    <!-- CALENDAR -->
 
-      <button
-        class="repeat-choice"
-        data-repeat="weekdays"
-      >
-        По будням
-      </button>
+    <div
+      class="picker hidden"
+      id="calendarPicker"
+    >
 
-      <button
-        class="repeat-choice"
-        data-repeat="weekly"
-      >
-        Каждую неделю
-      </button>
+      <div
+        class="picker-backdrop"
+        id="calendarPickerBackdrop"
+      ></div>
 
-      <button
-        class="repeat-choice"
-        data-repeat="monthly"
-      >
-        Каждый месяц
-      </button>
+      <div class="picker-sheet calendar-sheet">
 
+        <div class="picker-header">
+
+          <h3>
+            Перейти к дате
+          </h3>
+
+          <button
+            id="closeCalendarPicker"
+            type="button"
+          >
+            ×
+          </button>
+
+        </div>
+
+        <input
+          id="calendarInput"
+          class="picker-input"
+          type="date"
+        >
+
+        <button
+          id="goToDate"
+          class="primary-button"
+          type="button"
+        >
+          Перейти
+        </button>
+
+      </div>
 
     </div>
+
 
   </div>
 
 
   <script src="app.js"></script>
-
-</div>
 
 </body>
 </html>
