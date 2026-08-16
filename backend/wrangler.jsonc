@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/wrangler@latest/config-schema.json",
+  "name": "tracker-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-16",
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tracker-db",
+      "database_id": "СЮДА_ВСТАВЬ_DATABASE_ID"
+    }
+  ],
+
+  "triggers": {
+    "crons": [
+      "0 * * * *"
+    ]
+  }
+}
