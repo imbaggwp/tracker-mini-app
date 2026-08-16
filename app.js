@@ -1,6 +1,6 @@
 /* =====================================================
    TRACKER
-   Автономная версия для GitHub Pages
+   Задачи + повторения + календарь
    ===================================================== */
 
 
@@ -17,6 +17,8 @@ let taskFormTime = "";
 let taskFormRepeat = "none";
 let taskFormImportant = false;
 
+let calendarDate = new Date();
+
 
 /* ================= STORAGE ================= */
 
@@ -31,52 +33,59 @@ function loadTasks() {
       localStorage.getItem(STORAGE_KEY);
 
     if (!saved) {
+
       tasks = [];
+
       return;
+
     }
 
     const parsed =
       JSON.parse(saved);
 
     if (!Array.isArray(parsed)) {
+
       tasks = [];
+
       return;
+
     }
 
-    /*
-     * Миграция старых задач.
-     * У старых задач completedDates ещё нет.
-     */
+    tasks =
+      parsed.map(task => {
 
-    tasks = parsed.map(task => {
-
-      let completedDates =
-        task.completedDates;
-
-      if (
-        !completedDates ||
-        typeof completedDates !== "object"
-      ) {
-
-        completedDates = {};
+        let completedDates =
+          task.completedDates;
 
         if (
-          task.completed &&
-          task.date
+          !completedDates ||
+          typeof completedDates !== "object"
         ) {
 
-          completedDates[task.date] = true;
+          completedDates = {};
+
+          if (
+            task.completed &&
+            task.date
+          ) {
+
+            completedDates[
+              task.date
+            ] = true;
+
+          }
 
         }
 
-      }
+        return {
 
-      return {
-        ...task,
-        completedDates
-      };
+          ...task,
 
-    });
+          completedDates
+
+        };
+
+      });
 
   } catch (error) {
 
@@ -104,7 +113,7 @@ function saveTasks() {
   } catch (error) {
 
     console.error(
-      "Ошибка сохранения задач:",
+      "Ошибка сохранения:",
       error
     );
 
@@ -136,16 +145,13 @@ function getDateKey(date) {
 
 function dateFromKey(key) {
 
-  const [
-    year,
-    month,
-    day
-  ] = key.split("-").map(Number);
+  const parts =
+    key.split("-").map(Number);
 
   return new Date(
-    year,
-    month - 1,
-    day
+    parts[0],
+    parts[1] - 1,
+    parts[2]
   );
 
 }
@@ -209,7 +215,9 @@ function formatShortDate(key) {
     dateFromKey(key);
 
   if (isToday(date)) {
+
     return "Сегодня";
+
   }
 
   return date.toLocaleDateString(
@@ -252,12 +260,7 @@ function repeatText(repeat) {
 }
 
 
-/* ================= REPEAT LOGIC ================= */
-
-/*
- * Проверяет, должна ли задача показываться
- * на конкретной дате.
- */
+/* ================= REPEAT ================= */
 
 function taskOccursOnDate(
   task,
@@ -274,16 +277,15 @@ function taskOccursOnDate(
   }
 
   const start =
-    dateFromKey(task.date);
+    dateFromKey(
+      task.date
+    );
 
   const target =
-    dateFromKey(dateKey);
+    dateFromKey(
+      dateKey
+    );
 
-
-  /*
-   * До даты начала задача
-   * не существует.
-   */
 
   if (target < start) {
 
@@ -296,10 +298,6 @@ function taskOccursOnDate(
     task.repeat || "none";
 
 
-  /*
-   * Обычная одноразовая задача.
-   */
-
   if (repeat === "none") {
 
     return (
@@ -309,20 +307,12 @@ function taskOccursOnDate(
   }
 
 
-  /*
-   * Каждый день.
-   */
-
   if (repeat === "daily") {
 
     return true;
 
   }
 
-
-  /*
-   * По будням.
-   */
 
   if (repeat === "weekdays") {
 
@@ -337,14 +327,6 @@ function taskOccursOnDate(
   }
 
 
-  /*
-   * Каждую неделю.
-   *
-   * Например задача создана
-   * в понедельник.
-   * Она появляется каждый понедельник.
-   */
-
   if (repeat === "weekly") {
 
     return (
@@ -354,13 +336,6 @@ function taskOccursOnDate(
 
   }
 
-
-  /*
-   * Каждый месяц.
-   *
-   * Например создана 16 числа.
-   * Появляется 16-го каждого месяца.
-   */
 
   if (repeat === "monthly") {
 
@@ -377,32 +352,33 @@ function taskOccursOnDate(
 }
 
 
-/*
- * Получает задачи выбранного дня.
- */
-
-function getTasksForSelectedDate() {
-
-  const key =
-    getDateKey(selectedDate);
+function getTasksForDate(
+  dateKey
+) {
 
   return tasks.filter(
     task =>
       taskOccursOnDate(
         task,
-        key
+        dateKey
       )
   );
 
 }
 
 
-/* ================= COMPLETION ================= */
+function getTasksForSelectedDate() {
 
-/*
- * Получить состояние выполнения
- * задачи именно для выбранной даты.
- */
+  return getTasksForDate(
+    getDateKey(
+      selectedDate
+    )
+  );
+
+}
+
+
+/* ================= COMPLETION ================= */
 
 function isTaskCompletedOnDate(
   task,
@@ -415,15 +391,13 @@ function isTaskCompletedOnDate(
   ) {
 
     return Boolean(
-      task.completedDates[dateKey]
+      task.completedDates[
+        dateKey
+      ]
     );
 
   }
 
-
-  /*
-   * Совместимость со старыми задачами.
-   */
 
   return Boolean(
     task.completed &&
@@ -432,11 +406,6 @@ function isTaskCompletedOnDate(
 
 }
 
-
-/*
- * Установить выполнение задачи
- * для конкретного дня.
- */
 
 function setTaskCompletedOnDate(
   task,
@@ -469,17 +438,8 @@ function setTaskCompletedOnDate(
   }
 
 
-  /*
-   * Оставляем старое поле
-   * для совместимости.
-   */
-
   task.completed =
-    Boolean(
-      task.completedDates[
-        dateKey
-      ]
-    );
+    completed;
 
 }
 
@@ -640,7 +600,7 @@ const deleteTaskButton =
   );
 
 
-/* ================= DATE PICKER ================= */
+/* ================= PICKERS ================= */
 
 const datePicker =
   document.getElementById(
@@ -667,8 +627,6 @@ const closeDatePicker =
     "closeDatePicker"
   );
 
-
-/* ================= TIME PICKER ================= */
 
 const timePicker =
   document.getElementById(
@@ -701,8 +659,6 @@ const closeTimePicker =
   );
 
 
-/* ================= REPEAT PICKER ================= */
-
 const repeatPicker =
   document.getElementById(
     "repeatPicker"
@@ -721,33 +677,48 @@ const closeRepeatPicker =
 
 /* ================= CALENDAR ================= */
 
-const calendarPicker =
+const calendarOverlay =
   document.getElementById(
-    "calendarPicker"
+    "calendarOverlay"
   );
 
-const calendarPickerBackdrop =
+const calendarBackdrop =
   document.getElementById(
-    "calendarPickerBackdrop"
+    "calendarBackdrop"
   );
 
-const calendarInput =
+const closeCalendar =
   document.getElementById(
-    "calendarInput"
+    "closeCalendar"
   );
 
-const goToDate =
+const calendarToday =
   document.getElementById(
-    "goToDate"
+    "calendarToday"
   );
 
-const closeCalendarPicker =
+const calendarPrevMonth =
   document.getElementById(
-    "closeCalendarPicker"
+    "calendarPrevMonth"
+  );
+
+const calendarNextMonth =
+  document.getElementById(
+    "calendarNextMonth"
+  );
+
+const calendarMonthLabel =
+  document.getElementById(
+    "calendarMonthLabel"
+  );
+
+const calendarGrid =
+  document.getElementById(
+    "calendarGrid"
   );
 
 
-/* ================= DATE RENDER ================= */
+/* ================= DATE HEADER ================= */
 
 function renderDate() {
 
@@ -783,7 +754,7 @@ function renderDate() {
 }
 
 
-/* ================= RENDER TASKS ================= */
+/* ================= TASK RENDER ================= */
 
 function renderTasks() {
 
@@ -794,10 +765,6 @@ function renderTasks() {
   tasksList.innerHTML =
     "";
 
-
-  /*
-   * Empty state.
-   */
 
   if (
     currentTasks.length === 0
@@ -819,7 +786,7 @@ function renderTasks() {
   let completed = 0;
 
 
-  const currentDateKey =
+  const dateKey =
     getDateKey(
       selectedDate
     );
@@ -831,7 +798,7 @@ function renderTasks() {
       const taskCompleted =
         isTaskCompletedOnDate(
           task,
-          currentDateKey
+          dateKey
         );
 
 
@@ -842,14 +809,11 @@ function renderTasks() {
       }
 
 
-      /*
-       * CARD
-       */
-
       const card =
         document.createElement(
           "article"
         );
+
 
       card.className =
         "task-card";
@@ -873,20 +837,19 @@ function renderTasks() {
       }
 
 
-      /*
-       * CHECK
-       */
-
       const check =
         document.createElement(
           "button"
         );
 
+
       check.className =
         "task-check";
 
+
       check.type =
         "button";
+
 
       check.textContent =
         taskCompleted
@@ -908,30 +871,25 @@ function renderTasks() {
       );
 
 
-      /*
-       * CONTENT
-       */
-
       const content =
         document.createElement(
           "div"
         );
 
+
       content.className =
         "task-content";
 
-
-      /*
-       * TITLE
-       */
 
       const title =
         document.createElement(
           "div"
         );
 
+
       title.className =
         "task-title";
+
 
       title.textContent =
         task.title;
@@ -942,10 +900,6 @@ function renderTasks() {
       );
 
 
-      /*
-       * DESCRIPTION
-       */
-
       if (task.description) {
 
         const description =
@@ -953,11 +907,14 @@ function renderTasks() {
             "div"
           );
 
+
         description.className =
           "task-description";
 
+
         description.textContent =
           task.description;
+
 
         content.appendChild(
           description
@@ -966,22 +923,15 @@ function renderTasks() {
       }
 
 
-      /*
-       * INFO
-       */
-
       const info =
         document.createElement(
           "div"
         );
 
+
       info.className =
         "task-info";
 
-
-      /*
-       * TIME
-       */
 
       if (task.time) {
 
@@ -1000,10 +950,6 @@ function renderTasks() {
 
       }
 
-
-      /*
-       * REPEAT
-       */
 
       if (
         task.repeat &&
@@ -1028,10 +974,6 @@ function renderTasks() {
       }
 
 
-      /*
-       * IMPORTANT
-       */
-
       if (task.important) {
 
         const star =
@@ -1039,11 +981,11 @@ function renderTasks() {
             "span"
           );
 
-        star.className =
-          "task-star";
-
         star.textContent =
           "★";
+
+        star.className =
+          "task-star";
 
         info.appendChild(
           star
@@ -1052,35 +994,31 @@ function renderTasks() {
       }
 
 
-      /*
-       * SUBTASK COUNT
-       */
-
       if (
         Array.isArray(
           task.subtasks
         ) &&
-        task.subtasks.length > 0
+        task.subtasks.length
       ) {
 
-        const subtasks =
+        const subtaskInfo =
           document.createElement(
             "span"
           );
 
-        subtasks.textContent =
+        subtaskInfo.textContent =
           "☷ " +
           task.subtasks.length;
 
         info.appendChild(
-          subtasks
+          subtaskInfo
         );
 
       }
 
 
       if (
-        info.children.length > 0
+        info.children.length
       ) {
 
         content.appendChild(
@@ -1098,10 +1036,6 @@ function renderTasks() {
         content
       );
 
-
-      /*
-       * CLICK CARD = EDIT
-       */
 
       card.addEventListener(
         "click",
@@ -1123,28 +1057,20 @@ function renderTasks() {
   );
 
 
-  /*
-   * PROGRESS
-   */
-
-  const total =
-    currentTasks.length;
+  progressCount.textContent =
+    `${completed} / ${currentTasks.length}`;
 
 
   const percent =
-    total === 0
-      ? 0
-      : Math.round(
+    currentTasks.length
+      ? Math.round(
           (
             completed /
-            total
+            currentTasks.length
           ) *
           100
-        );
-
-
-  progressCount.textContent =
-    `${completed} / ${total}`;
+        )
+      : 0;
 
 
   progressFill.style.width =
@@ -1153,7 +1079,7 @@ function renderTasks() {
 }
 
 
-/* ================= TOGGLE TASK ================= */
+/* ================= TOGGLE ================= */
 
 function toggleTask(id) {
 
@@ -1177,7 +1103,7 @@ function toggleTask(id) {
     );
 
 
-  const current =
+  const completed =
     isTaskCompletedOnDate(
       task,
       dateKey
@@ -1187,7 +1113,7 @@ function toggleTask(id) {
   setTaskCompletedOnDate(
     task,
     dateKey,
-    !current
+    !completed
   );
 
 
@@ -1195,30 +1121,28 @@ function toggleTask(id) {
 
   renderTasks();
 
+  renderCalendar();
+
 }
 
 
-/* ================= RESET FORM ================= */
+/* ================= FORM ================= */
 
 function resetForm() {
 
   editingTaskId =
     null;
 
-
   taskFormDate =
     getDateKey(
       selectedDate
     );
 
-
   taskFormTime =
     "";
 
-
   taskFormRepeat =
     "none";
-
 
   taskFormImportant =
     false;
@@ -1226,7 +1150,6 @@ function resetForm() {
 
   taskTitle.value =
     "";
-
 
   taskDescription.value =
     "";
@@ -1253,8 +1176,6 @@ function resetForm() {
 
 }
 
-
-/* ================= UPDATE FORM UI ================= */
 
 function updateFormUI() {
 
@@ -1306,12 +1227,9 @@ function updateFormUI() {
 }
 
 
-/* ================= OPEN NEW TASK ================= */
-
 function openNewTask() {
 
   resetForm();
-
 
   taskModal.classList.remove(
     "hidden"
@@ -1329,8 +1247,6 @@ function openNewTask() {
 
 }
 
-
-/* ================= OPEN EDIT TASK ================= */
 
 function openEditTask(id) {
 
@@ -1404,27 +1320,12 @@ function openEditTask(id) {
     task.subtasks.forEach(
       subtask => {
 
-        /*
-         * Поддерживаем как строки,
-         * так и будущие объекты.
-         */
-
-        if (
+        createSubtask(
           typeof subtask ===
-          "string"
-        ) {
-
-          createSubtask(
-            subtask
-          );
-
-        } else {
-
-          createSubtask(
-            subtask.text || ""
-          );
-
-        }
+            "string"
+            ? subtask
+            : subtask.text || ""
+        );
 
       }
     );
@@ -1434,15 +1335,12 @@ function openEditTask(id) {
 
   updateFormUI();
 
-
   taskModal.classList.remove(
     "hidden"
   );
 
 }
 
-
-/* ================= CLOSE MODAL ================= */
 
 function closeTaskModal() {
 
@@ -1453,7 +1351,7 @@ function closeTaskModal() {
 }
 
 
-/* ================= SAVE TASK ================= */
+/* ================= SAVE ================= */
 
 function saveTask() {
 
@@ -1486,13 +1384,9 @@ function saveTask() {
       )
       .filter(
         value =>
-          value.length > 0
+          value
       );
 
-
-  /*
-   * EDIT
-   */
 
   if (
     editingTaskId !== null
@@ -1516,36 +1410,24 @@ function saveTask() {
     task.title =
       title;
 
-
     task.description =
       description;
-
 
     task.date =
       taskFormDate;
 
-
     task.time =
       taskFormTime;
-
 
     task.repeat =
       taskFormRepeat;
 
-
     task.important =
       taskFormImportant;
-
 
     task.subtasks =
       subtasks;
 
-
-    /*
-     * Если у старой задачи
-     * не было completedDates,
-     * создаём его.
-     */
 
     if (
       !task.completedDates ||
@@ -1554,27 +1436,9 @@ function saveTask() {
 
       task.completedDates = {};
 
-      if (
-        task.completed &&
-        task.date
-      ) {
-
-        task.completedDates[
-          task.date
-        ] = true;
-
-      }
-
     }
 
-  }
-
-
-  /*
-   * NEW
-   */
-
-  else {
+  } else {
 
     tasks.push({
 
@@ -1616,10 +1480,10 @@ function saveTask() {
 
   renderTasks();
 
+  renderCalendar();
+
 }
 
-
-/* ================= DELETE ================= */
 
 function deleteCurrentTask() {
 
@@ -1632,13 +1496,11 @@ function deleteCurrentTask() {
   }
 
 
-  const confirmed =
-    window.confirm(
+  if (
+    !confirm(
       "Удалить эту задачу?"
-    );
-
-
-  if (!confirmed) {
+    )
+  ) {
 
     return;
 
@@ -1659,10 +1521,12 @@ function deleteCurrentTask() {
 
   renderTasks();
 
+  renderCalendar();
+
 }
 
 
-/* ================= SUBTASK ================= */
+/* ================= SUBTASKS ================= */
 
 function createSubtask(
   value = ""
@@ -1700,10 +1564,6 @@ function createSubtask(
     value;
 
 
-  input.maxLength =
-    200;
-
-
   const remove =
     document.createElement(
       "button"
@@ -1736,7 +1596,6 @@ function createSubtask(
     input
   );
 
-
   row.appendChild(
     remove
   );
@@ -1755,7 +1614,6 @@ function openDatePicker() {
 
   dateInput.value =
     taskFormDate;
-
 
   datePicker.classList.remove(
     "hidden"
@@ -1792,13 +1650,12 @@ function confirmSelectedDate() {
 }
 
 
-/* ================= TIME PICKER ================= */
+/* ================= TIME ================= */
 
 function openTimePicker() {
 
   timeInput.value =
     taskFormTime;
-
 
   timePicker.classList.remove(
     "hidden"
@@ -1834,7 +1691,6 @@ function clearTime() {
   taskFormTime =
     "";
 
-
   updateFormUI();
 
   closeTimePickerWindow();
@@ -1842,12 +1698,11 @@ function clearTime() {
 }
 
 
-/* ================= REPEAT PICKER ================= */
+/* ================= REPEAT ================= */
 
 function openRepeatPicker() {
 
   updateFormUI();
-
 
   repeatPicker.classList.remove(
     "hidden"
@@ -1869,13 +1724,14 @@ function closeRepeatPickerWindow() {
 
 function openCalendar() {
 
-  calendarInput.value =
-    getDateKey(
+  calendarDate =
+    new Date(
       selectedDate
     );
 
+  renderCalendar();
 
-  calendarPicker.classList.remove(
+  calendarOverlay.classList.remove(
     "hidden"
   );
 
@@ -1884,35 +1740,373 @@ function openCalendar() {
 
 function closeCalendarWindow() {
 
-  calendarPicker.classList.add(
+  calendarOverlay.classList.add(
     "hidden"
   );
 
 }
 
 
-function goToSelectedDate() {
+/*
+ * Создаёт сетку месяца.
+ */
 
-  if (
-    !calendarInput.value
-  ) {
+function renderCalendar() {
+
+  if (!calendarGrid) {
 
     return;
 
   }
 
 
-  selectedDate =
-    dateFromKey(
-      calendarInput.value
+  const year =
+    calendarDate.getFullYear();
+
+  const month =
+    calendarDate.getMonth();
+
+
+  const monthName =
+    calendarDate.toLocaleDateString(
+      "ru-RU",
+      {
+        month: "long",
+        year: "numeric"
+      }
     );
 
 
-  renderDate();
+  calendarMonthLabel.textContent =
+    monthName
+      .charAt(0)
+      .toUpperCase() +
+    monthName.slice(1);
 
-  renderTasks();
 
-  closeCalendarWindow();
+  calendarTitle.textContent =
+    "Календарь";
+
+
+  calendarGrid.innerHTML =
+    "";
+
+
+  /*
+   * Первый день месяца.
+   *
+   * JS:
+   * воскресенье = 0
+   *
+   * Нам нужно:
+   * понедельник = 0
+   */
+
+  const firstDay =
+    new Date(
+      year,
+      month,
+      1
+    );
+
+
+  let startDay =
+    firstDay.getDay();
+
+
+  if (
+    startDay === 0
+  ) {
+
+    startDay = 6;
+
+  } else {
+
+    startDay--;
+
+  }
+
+
+  const daysInMonth =
+    new Date(
+      year,
+      month + 1,
+      0
+    ).getDate();
+
+
+  /*
+   * Дни предыдущего месяца.
+   */
+
+  const previousMonthDays =
+    new Date(
+      year,
+      month,
+      0
+    ).getDate();
+
+
+  for (
+    let i = startDay - 1;
+    i >= 0;
+    i--
+  ) {
+
+    const day =
+      previousMonthDays -
+      i;
+
+
+    const date =
+      new Date(
+        year,
+        month - 1,
+        day
+      );
+
+
+    createCalendarDay(
+      date,
+      true
+    );
+
+  }
+
+
+  /*
+   * Дни текущего месяца.
+   */
+
+  for (
+    let day = 1;
+    day <= daysInMonth;
+    day++
+  ) {
+
+    const date =
+      new Date(
+        year,
+        month,
+        day
+      );
+
+
+    createCalendarDay(
+      date,
+      false
+    );
+
+  }
+
+
+  /*
+   * Следующий месяц.
+   */
+
+  const cells =
+    calendarGrid.children.length;
+
+
+  const remaining =
+    cells % 7 === 0
+      ? 0
+      : 7 -
+        (
+          cells % 7
+        );
+
+
+  for (
+    let day = 1;
+    day <= remaining;
+    day++
+  ) {
+
+    const date =
+      new Date(
+        year,
+        month + 1,
+        day
+      );
+
+
+    createCalendarDay(
+      date,
+      true
+    );
+
+  }
+
+}
+
+
+/*
+ * Создаёт один день календаря.
+ */
+
+function createCalendarDay(
+  date,
+  outsideMonth
+) {
+
+  const key =
+    getDateKey(
+      date
+    );
+
+
+  const button =
+    document.createElement(
+      "button"
+    );
+
+
+  button.type =
+    "button";
+
+
+  button.className =
+    "calendar-day";
+
+
+  if (outsideMonth) {
+
+    button.classList.add(
+      "outside"
+    );
+
+  }
+
+
+  if (
+    isToday(date)
+  ) {
+
+    button.classList.add(
+      "today"
+    );
+
+  }
+
+
+  if (
+    isSameDate(
+      date,
+      selectedDate
+    )
+  ) {
+
+    button.classList.add(
+      "selected"
+    );
+
+  }
+
+
+  const dayTasks =
+    getTasksForDate(
+      key
+    );
+
+
+  const hasTasks =
+    dayTasks.length > 0;
+
+
+  const hasCompleted =
+    dayTasks.some(
+      task =>
+        isTaskCompletedOnDate(
+          task,
+          key
+        )
+    );
+
+
+  if (hasTasks) {
+
+    button.classList.add(
+      "has-tasks"
+    );
+
+  }
+
+
+  if (hasCompleted) {
+
+    button.classList.add(
+      "has-completed"
+    );
+
+  }
+
+
+  const number =
+    document.createElement(
+      "span"
+    );
+
+
+  number.className =
+    "calendar-day-number";
+
+
+  number.textContent =
+    date.getDate();
+
+
+  button.appendChild(
+    number
+  );
+
+
+  if (
+    hasTasks
+  ) {
+
+    const dot =
+      document.createElement(
+        "span"
+      );
+
+
+    dot.className =
+      "calendar-day-dot";
+
+
+    button.appendChild(
+      dot
+    );
+
+  }
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      selectedDate =
+        new Date(
+          date
+        );
+
+
+      renderDate();
+
+      renderTasks();
+
+      renderCalendar();
+
+      closeCalendarWindow();
+
+    }
+  );
+
+
+  calendarGrid.appendChild(
+    button
+  );
 
 }
 
@@ -1936,8 +2130,6 @@ function changeDay(
 }
 
 
-/* ================= TODAY ================= */
-
 function goToToday() {
 
   selectedDate =
@@ -1953,16 +2145,11 @@ function goToToday() {
 
 /* ================= EVENTS ================= */
 
-
-/* ADD */
-
 addTaskButton.addEventListener(
   "click",
   openNewTask
 );
 
-
-/* CLOSE */
 
 closeModal.addEventListener(
   "click",
@@ -1976,15 +2163,11 @@ modalBackdrop.addEventListener(
 );
 
 
-/* SAVE */
-
 saveTaskButton.addEventListener(
   "click",
   saveTask
 );
 
-
-/* DELETE */
 
 deleteTaskButton.addEventListener(
   "click",
@@ -2084,7 +2267,6 @@ document
           taskFormRepeat =
             button.dataset.repeat;
 
-
           updateFormUI();
 
           closeRepeatPickerWindow();
@@ -2104,7 +2286,6 @@ importantButton.addEventListener(
 
     taskFormImportant =
       !taskFormImportant;
-
 
     updateFormUI();
 
@@ -2162,62 +2343,67 @@ calendarButton.addEventListener(
 );
 
 
-closeCalendarPicker.addEventListener(
+closeCalendar.addEventListener(
   "click",
   closeCalendarWindow
 );
 
 
-calendarPickerBackdrop.addEventListener(
+calendarBackdrop.addEventListener(
   "click",
   closeCalendarWindow
 );
 
 
-goToDate.addEventListener(
+calendarToday.addEventListener(
   "click",
-  goToSelectedDate
-);
+  () => {
 
+    selectedDate =
+      new Date();
 
-/* ================= KEYBOARD ================= */
+    calendarDate =
+      new Date();
 
-document.addEventListener(
-  "keydown",
-  event => {
+    renderDate();
 
-    if (
-      event.key ===
-      "Escape"
-    ) {
+    renderTasks();
 
-      taskModal.classList.add(
-        "hidden"
-      );
-
-      datePicker.classList.add(
-        "hidden"
-      );
-
-      timePicker.classList.add(
-        "hidden"
-      );
-
-      repeatPicker.classList.add(
-        "hidden"
-      );
-
-      calendarPicker.classList.add(
-        "hidden"
-      );
-
-    }
+    renderCalendar();
 
   }
 );
 
 
-/* ================= BOTTOM NAV ================= */
+calendarPrevMonth.addEventListener(
+  "click",
+  () => {
+
+    calendarDate.setMonth(
+      calendarDate.getMonth() - 1
+    );
+
+    renderCalendar();
+
+  }
+);
+
+
+calendarNextMonth.addEventListener(
+  "click",
+  () => {
+
+    calendarDate.setMonth(
+      calendarDate.getMonth() + 1
+    );
+
+    renderCalendar();
+
+  }
+);
+
+
+/* ================= NAVIGATION ================= */
 
 document
   .querySelectorAll(
@@ -2250,12 +2436,9 @@ document
           );
 
 
-          const page =
-            item.dataset.page;
-
-
           if (
-            page !== "tasks"
+            item.dataset.page !==
+            "tasks"
           ) {
 
             alert(
@@ -2263,34 +2446,18 @@ document
             );
 
 
+            item.classList.remove(
+              "active"
+            );
+
+
             document
-              .querySelectorAll(
-                ".nav-item"
-              )
-              .forEach(
-                nav => {
-
-                  nav.classList.remove(
-                    "active"
-                  );
-
-                }
-              );
-
-
-            const tasksNav =
-              document.querySelector(
+              .querySelector(
                 '[data-page="tasks"]'
-              );
-
-
-            if (tasksNav) {
-
-              tasksNav.classList.add(
+              )
+              .classList.add(
                 "active"
               );
-
-            }
 
           }
 
@@ -2301,7 +2468,34 @@ document
   );
 
 
-/* ================= INITIALIZE ================= */
+/* ================= KEYBOARD ================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key ===
+      "Escape"
+    ) {
+
+      closeTaskModal();
+
+      closeDatePickerWindow();
+
+      closeTimePickerWindow();
+
+      closeRepeatPickerWindow();
+
+      closeCalendarWindow();
+
+    }
+
+  }
+);
+
+
+/* ================= INIT ================= */
 
 loadTasks();
 
