@@ -59,16 +59,10 @@
       cursor: pointer;
     }
 
-    /* =========================
-       APP
-    ========================= */
-
     .app {
       width: 100%;
       max-width: 600px;
-
       margin: 0 auto;
-
       padding: 24px 18px 30px;
     }
 
@@ -87,33 +81,26 @@
     .greeting {
       font-size: 14px;
       color: var(--secondary);
-
       margin-bottom: 5px;
     }
 
     .title {
       font-size: 30px;
       font-weight: 750;
-
       letter-spacing: -0.8px;
     }
 
     .date {
       margin-top: 5px;
-
       font-size: 14px;
-
       color: var(--secondary);
     }
 
     .profile-button {
       width: 46px;
       height: 46px;
-
       border-radius: 50%;
-
       background: var(--card);
-
       box-shadow: var(--shadow);
 
       display: flex;
@@ -141,13 +128,9 @@
 
     .progress-card {
       background: var(--card);
-
       border-radius: 22px;
-
       padding: 20px;
-
       box-shadow: var(--shadow);
-
       margin-bottom: 26px;
     }
 
@@ -161,40 +144,31 @@
 
     .progress-label {
       font-size: 14px;
-
       color: var(--secondary);
     }
 
     .progress-value {
       font-size: 17px;
-
       font-weight: 700;
     }
 
     .progress-bar {
       height: 9px;
-
       background: #eceef0;
-
       border-radius: 20px;
-
       overflow: hidden;
     }
 
     .progress-fill {
       height: 100%;
-
       width: 0%;
-
       background: var(--accent);
-
       border-radius: 20px;
-
       transition: width 0.3s ease;
     }
 
     /* =========================
-       SECTION
+       SECTIONS
     ========================= */
 
     .section-header {
@@ -207,13 +181,11 @@
 
     .section-title {
       font-size: 19px;
-
       font-weight: 720;
     }
 
     .section-count {
       font-size: 13px;
-
       color: var(--secondary);
     }
 
@@ -223,22 +195,17 @@
 
     .tasks {
       display: flex;
-
       flex-direction: column;
-
       gap: 10px;
     }
 
     .task {
       background: var(--card);
-
       border-radius: 18px;
-
       padding: 15px 16px;
 
       display: flex;
       align-items: center;
-
       gap: 13px;
 
       box-shadow: var(--shadow);
@@ -259,11 +226,9 @@
     .task-check {
       width: 24px;
       height: 24px;
-
       min-width: 24px;
 
       border: 2px solid #cdd1d5;
-
       border-radius: 50%;
 
       display: flex;
@@ -277,17 +242,13 @@
 
     .task.completed .task-check {
       background: var(--accent);
-
       border-color: var(--accent);
-
       color: white;
     }
 
     .check-icon {
       display: none;
-
       font-size: 13px;
-
       font-weight: 800;
     }
 
@@ -297,17 +258,13 @@
 
     .task-content {
       flex: 1;
-
       min-width: 0;
     }
 
     .task-name {
       font-size: 15px;
-
       font-weight: 620;
-
       line-height: 1.3;
-
       word-break: break-word;
     }
 
@@ -317,9 +274,7 @@
 
     .task-meta {
       margin-top: 4px;
-
       font-size: 12px;
-
       color: var(--secondary);
     }
 
@@ -330,7 +285,6 @@
       border-radius: 10px;
 
       background: transparent;
-
       color: #a1a6ac;
 
       font-size: 17px;
@@ -342,7 +296,6 @@
 
     .delete-task:active {
       background: #f1f2f3;
-
       color: var(--danger);
     }
 
@@ -352,9 +305,7 @@
 
     .empty {
       background: var(--card);
-
       border-radius: 20px;
-
       padding: 34px 20px;
 
       text-align: center;
@@ -364,23 +315,18 @@
 
     .empty-icon {
       font-size: 35px;
-
       margin-bottom: 10px;
     }
 
     .empty-title {
       font-size: 16px;
-
       font-weight: 700;
-
       margin-bottom: 5px;
     }
 
     .empty-text {
       font-size: 13px;
-
       color: var(--secondary);
-
       line-height: 1.5;
     }
 
@@ -400,11 +346,9 @@
       border-radius: 18px;
 
       background: var(--accent);
-
       color: white;
 
       font-size: 30px;
-
       font-weight: 300;
 
       box-shadow:
@@ -419,7 +363,6 @@
 
     .add-button:active {
       transform: scale(0.94);
-
       box-shadow: none;
     }
 
@@ -429,7 +372,6 @@
 
     .calendar-card {
       background: var(--card);
-
       border-radius: 22px;
 
       padding: 18px;
@@ -441,9 +383,7 @@
 
     .calendar-header {
       display: flex;
-
       align-items: center;
-
       justify-content: space-between;
 
       margin-bottom: 18px;
@@ -451,13 +391,11 @@
 
     .calendar-month {
       font-size: 20px;
-
       font-weight: 750;
     }
 
     .calendar-actions {
       display: flex;
-
       gap: 7px;
     }
 
@@ -480,9 +418,7 @@
 
     .calendar-weekdays {
       display: grid;
-
-      grid-template-columns:
-        repeat(7, 1fr);
+      grid-template-columns: repeat(7, 1fr);
 
       margin-bottom: 8px;
     }
@@ -491,18 +427,13 @@
       text-align: center;
 
       font-size: 11px;
-
       color: var(--secondary);
-
       font-weight: 600;
     }
 
     .calendar-grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(7, 1fr);
-
+      grid-template-columns: repeat(7, 1fr);
       gap: 5px;
     }
 
@@ -516,11 +447,8 @@
       position: relative;
 
       display: flex;
-
       flex-direction: column;
-
       align-items: center;
-
       justify-content: flex-start;
 
       padding-top: 7px;
@@ -542,21 +470,17 @@
 
     .calendar-day.selected {
       background: var(--accent);
-
       color: white;
     }
 
     .calendar-number {
       font-size: 13px;
-
       font-weight: 650;
     }
 
     .calendar-stats {
       display: flex;
-
       align-items: center;
-
       gap: 3px;
 
       margin-top: 6px;
@@ -577,7 +501,6 @@
 
     .calendar-count {
       font-size: 9px;
-
       color: var(--secondary);
     }
 
@@ -587,7 +510,6 @@
 
     .calendar-complete {
       font-size: 9px;
-
       color: var(--success);
     }
 
@@ -601,7 +523,6 @@
 
     .selected-day-card {
       background: var(--card);
-
       border-radius: 22px;
 
       padding: 20px;
@@ -611,9 +532,7 @@
 
     .selected-day-header {
       display: flex;
-
       justify-content: space-between;
-
       align-items: flex-start;
 
       margin-bottom: 17px;
@@ -621,15 +540,12 @@
 
     .selected-day-title {
       font-size: 20px;
-
       font-weight: 750;
     }
 
     .selected-day-subtitle {
       font-size: 13px;
-
       color: var(--secondary);
-
       margin-top: 4px;
     }
 
@@ -639,16 +555,239 @@
 
     .day-progress-value {
       font-size: 20px;
-
       font-weight: 750;
-
       color: var(--accent);
     }
 
     .day-progress-label {
       font-size: 10px;
+      color: var(--secondary);
+    }
+
+    /* =========================
+       ANALYTICS
+    ========================= */
+
+    .analytics-summary {
+      background: var(--card);
+      border-radius: 22px;
+
+      padding: 20px;
+
+      box-shadow: var(--shadow);
+
+      margin-bottom: 18px;
+    }
+
+    .analytics-summary-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 16px;
+    }
+
+    .analytics-summary-title {
+      font-size: 18px;
+      font-weight: 720;
+    }
+
+    .analytics-summary-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .analytics-summary-subtitle {
+      font-size: 13px;
+      color: var(--secondary);
+
+      margin-bottom: 13px;
+    }
+
+    .week-progress {
+      height: 9px;
+
+      background: #eceef0;
+
+      border-radius: 20px;
+
+      overflow: hidden;
+    }
+
+    .week-progress-fill {
+      height: 100%;
+
+      width: 0%;
+
+      background: var(--accent);
+
+      border-radius: 20px;
+
+      transition: width 0.3s ease;
+    }
+
+    .week-navigation {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 14px;
+    }
+
+    .week-nav-button {
+      width: 38px;
+      height: 38px;
+
+      border-radius: 12px;
+
+      background: var(--card);
+
+      box-shadow: var(--shadow);
+
+      font-size: 18px;
+    }
+
+    .week-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .week-days {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .week-day {
+      background: var(--card);
+
+      border-radius: 18px;
+
+      padding: 15px;
+
+      box-shadow: var(--shadow);
+
+      cursor: pointer;
+
+      transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+    }
+
+    .week-day:active {
+      transform: scale(0.985);
+    }
+
+    .week-day.today {
+      border: 1px solid var(--accent);
+    }
+
+    .week-day.selected {
+      background: var(--accent-soft);
+    }
+
+    .week-day-top {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      margin-bottom: 11px;
+    }
+
+    .week-day-name {
+      display: flex;
+
+      align-items: center;
+
+      gap: 9px;
+    }
+
+    .week-day-label {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .week-day-date {
+      font-size: 12px;
+      color: var(--secondary);
+    }
+
+    .week-day-percent {
+      font-size: 15px;
+      font-weight: 750;
+      color: var(--accent);
+    }
+
+    .week-day-progress {
+      height: 7px;
+
+      background: #eceef0;
+
+      border-radius: 20px;
+
+      overflow: hidden;
+
+      margin-bottom: 9px;
+    }
+
+    .week-day-fill {
+      height: 100%;
+
+      background: var(--accent);
+
+      border-radius: 20px;
+
+      transition: width 0.3s ease;
+    }
+
+    .week-day-bottom {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+    }
+
+    .week-day-stat {
+      font-size: 12px;
+      color: var(--secondary);
+    }
+
+    .week-day-stat strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .week-day-badge {
+      font-size: 10px;
+
+      padding: 4px 8px;
+
+      border-radius: 8px;
+
+      background: #f1f2f3;
 
       color: var(--secondary);
+    }
+
+    .week-day-badge.complete {
+      background: #e9f7ee;
+      color: var(--success);
+    }
+
+    .analytics-day-details {
+      margin-top: 18px;
+    }
+
+    .analytics-details-title {
+      font-size: 18px;
+      font-weight: 750;
+
+      margin-bottom: 12px;
     }
 
     /* =========================
@@ -667,7 +806,6 @@
       background: rgba(255, 255, 255, 0.94);
 
       backdrop-filter: blur(18px);
-
       -webkit-backdrop-filter: blur(18px);
 
       border-top: 1px solid var(--border);
@@ -681,24 +819,19 @@
 
     .nav-inner {
       width: 100%;
-
       max-width: 600px;
 
       display: grid;
-
-      grid-template-columns:
-        repeat(4, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
 
     .nav-button {
       background: transparent;
 
       display: flex;
-
       flex-direction: column;
 
       align-items: center;
-
       justify-content: center;
 
       gap: 4px;
@@ -710,7 +843,6 @@
 
     .nav-icon {
       font-size: 20px;
-
       line-height: 1;
     }
 
@@ -724,7 +856,6 @@
 
     .modal-overlay {
       position: fixed;
-
       inset: 0;
 
       background: rgba(20, 23, 27, 0.42);
@@ -732,12 +863,9 @@
       display: none;
 
       align-items: flex-end;
-
       justify-content: center;
 
       z-index: 100;
-
-      padding: 0;
     }
 
     .modal-overlay.show {
@@ -746,7 +874,6 @@
 
     .modal {
       width: 100%;
-
       max-width: 600px;
 
       background: var(--card);
@@ -785,7 +912,6 @@
 
     .modal-title {
       font-size: 22px;
-
       font-weight: 750;
 
       margin-bottom: 20px;
@@ -795,7 +921,6 @@
       display: block;
 
       font-size: 13px;
-
       color: var(--secondary);
 
       margin-bottom: 8px;
@@ -825,7 +950,6 @@
 
     .repeat-title {
       font-size: 14px;
-
       font-weight: 650;
 
       margin-bottom: 10px;
@@ -845,7 +969,6 @@
       position: relative;
 
       display: flex;
-
       align-items: center;
 
       gap: 12px;
@@ -859,13 +982,10 @@
       border-radius: 14px;
 
       cursor: pointer;
-
-      transition: all 0.15s ease;
     }
 
     .repeat-option:has(input:checked) {
       background: var(--accent-soft);
-
       border-color: var(--accent);
     }
 
@@ -878,7 +998,6 @@
 
     .repeat-label {
       display: flex;
-
       flex-direction: column;
 
       gap: 2px;
@@ -886,19 +1005,16 @@
 
     .repeat-name {
       font-size: 14px;
-
       font-weight: 600;
     }
 
     .repeat-description {
       font-size: 11px;
-
       color: var(--secondary);
     }
 
     .modal-actions {
       display: flex;
-
       gap: 10px;
     }
 
@@ -910,19 +1026,16 @@
       border-radius: 15px;
 
       font-size: 15px;
-
       font-weight: 650;
     }
 
     .cancel-button {
       background: #f0f1f2;
-
       color: var(--text);
     }
 
     .save-button {
       background: var(--accent);
-
       color: white;
     }
 
@@ -936,11 +1049,9 @@
       left: 50%;
       bottom: 82px;
 
-      transform:
-        translate(-50%, 20px);
+      transform: translate(-50%, 20px);
 
       background: #202326;
-
       color: white;
 
       padding: 11px 17px;
@@ -963,13 +1074,8 @@
     .toast.show {
       opacity: 1;
 
-      transform:
-        translate(-50%, 0);
+      transform: translate(-50%, 0);
     }
-
-    /* =========================
-       DESKTOP
-    ========================= */
 
     @media (min-width: 700px) {
 
@@ -978,1478 +1084,1393 @@
       }
 
       .add-button {
-        right:
-          calc(50% - 280px);
+        right: calc(50% - 280px);
       }
 
       .modal-overlay {
         align-items: center;
-
         padding: 20px;
       }
 
       .modal {
         border-radius: 26px;
-
         max-width: 500px;
       }
-
     }
   </style>
 </head>
 
-
 <body>
 
-  <main class="app">
-
-    <!-- =========================
-         HOME PAGE
-    ========================= -->
-
-    <section
-      class="page active"
-      id="homePage"
-    >
-
-      <header class="header">
-
-        <div>
-
-          <div class="greeting">
-            Добрый день 👋
-          </div>
-
-          <h1 class="title">
-            Мой день
-          </h1>
-
-          <div
-            class="date"
-            id="currentDate"
-          ></div>
-
-        </div>
-
-        <button
-          class="profile-button"
-          id="profileButton"
-        >
-          👤
-        </button>
-
-      </header>
-
-
-      <section class="progress-card">
-
-        <div class="progress-top">
-
-          <span class="progress-label">
-            Прогресс сегодня
-          </span>
-
-          <span
-            class="progress-value"
-            id="progressValue"
-          >
-            0%
-          </span>
-
-        </div>
-
-        <div class="progress-bar">
-
-          <div
-            class="progress-fill"
-            id="progressFill"
-          ></div>
-
-        </div>
-
-      </section>
-
-
-      <section>
-
-        <div class="section-header">
-
-          <h2 class="section-title">
-            Сегодня
-          </h2>
-
-          <span
-            class="section-count"
-            id="taskCount"
-          >
-            0 задач
-          </span>
-
-        </div>
-
-
-        <div
-          class="tasks"
-          id="tasksContainer"
-        ></div>
-
-      </section>
-
-    </section>
-
-
-    <!-- =========================
-         CALENDAR PAGE
-    ========================= -->
-
-    <section
-      class="page"
-      id="calendarPage"
-    >
-
-      <header class="header">
-
-        <div>
-
-          <div class="greeting">
-            Планирование
-          </div>
-
-          <h1 class="title">
-            Календарь
-          </h1>
-
-        </div>
-
-        <button
-          class="profile-button"
-          id="calendarTodayButton"
-        >
-          ●
-        </button>
-
-      </header>
-
-
-      <section class="calendar-card">
-
-        <div class="calendar-header">
-
-          <div
-            class="calendar-month"
-            id="calendarMonth"
-          ></div>
-
-
-          <div class="calendar-actions">
-
-            <button
-              class="calendar-arrow"
-              id="prevMonth"
-            >
-              ‹
-            </button>
-
-            <button
-              class="calendar-arrow"
-              id="nextMonth"
-            >
-              ›
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="calendar-weekdays">
-
-          <div class="weekday">
-            Пн
-          </div>
-
-          <div class="weekday">
-            Вт
-          </div>
-
-          <div class="weekday">
-            Ср
-          </div>
-
-          <div class="weekday">
-            Чт
-          </div>
-
-          <div class="weekday">
-            Пт
-          </div>
-
-          <div class="weekday">
-            Сб
-          </div>
-
-          <div class="weekday">
-            Вс
-          </div>
-
-        </div>
-
-
-        <div
-          class="calendar-grid"
-          id="calendarGrid"
-        ></div>
-
-      </section>
-
-
-      <section
-        class="selected-day-card"
-        id="selectedDayCard"
-      ></section>
-
-    </section>
-
-
-    <!-- =========================
-         ANALYTICS
-    ========================= -->
-
-    <section
-      class="page"
-      id="analyticsPage"
-    >
-
-      <header class="header">
-
-        <div>
-
-          <div class="greeting">
-            Ваш результат
-          </div>
-
-          <h1 class="title">
-            Аналитика
-          </h1>
-
-        </div>
-
-      </header>
-
-
-      <div class="empty">
-
-        <div class="empty-icon">
-          📊
-        </div>
-
-        <div class="empty-title">
-          Аналитика уже рядом
-        </div>
-
-        <div class="empty-text">
-          Здесь появится статистика
-          по дням, неделям и месяцам.
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         SETTINGS
-    ========================= -->
-
-    <section
-      class="page"
-      id="settingsPage"
-    >
-
-      <header class="header">
-
-        <div>
-
-          <div class="greeting">
-            Персонализация
-          </div>
-
-          <h1 class="title">
-            Настройки
-          </h1>
-
-        </div>
-
-      </header>
-
-
-      <div class="empty">
-
-        <div class="empty-icon">
-          ⚙️
-        </div>
-
-        <div class="empty-title">
-          Настройки
-        </div>
-
-        <div class="empty-text">
-          Уведомления, тема,
-          утренняя и вечерняя сводка
-          появятся здесь.
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
+<main class="app">
 
   <!-- =========================
-       ADD BUTTON
+       HOME
   ========================= -->
 
-  <button
-    class="add-button"
-    id="addButton"
+  <section
+    class="page active"
+    id="homePage"
   >
-    +
-  </button>
+
+    <header class="header">
+
+      <div>
+
+        <div class="greeting">
+          Добрый день 👋
+        </div>
+
+        <h1 class="title">
+          Мой день
+        </h1>
+
+        <div
+          class="date"
+          id="currentDate"
+        ></div>
+
+      </div>
+
+      <button
+        class="profile-button"
+        id="profileButton"
+      >
+        👤
+      </button>
+
+    </header>
+
+
+    <section class="progress-card">
+
+      <div class="progress-top">
+
+        <span class="progress-label">
+          Прогресс сегодня
+        </span>
+
+        <span
+          class="progress-value"
+          id="progressValue"
+        >
+          0%
+        </span>
+
+      </div>
+
+      <div class="progress-bar">
+
+        <div
+          class="progress-fill"
+          id="progressFill"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <section>
+
+      <div class="section-header">
+
+        <h2 class="section-title">
+          Сегодня
+        </h2>
+
+        <span
+          class="section-count"
+          id="taskCount"
+        >
+          0 задач
+        </span>
+
+      </div>
+
+
+      <div
+        class="tasks"
+        id="tasksContainer"
+      ></div>
+
+    </section>
+
+  </section>
 
 
   <!-- =========================
-       NAVIGATION
+       CALENDAR
   ========================= -->
 
-  <nav class="bottom-nav">
+  <section
+    class="page"
+    id="calendarPage"
+  >
 
-    <div class="nav-inner">
+    <header class="header">
 
-      <button
-        class="nav-button active"
-        data-page="home"
-      >
+      <div>
 
-        <span class="nav-icon">
-          ⌂
-        </span>
+        <div class="greeting">
+          Планирование
+        </div>
 
-        <span>
-          Сегодня
-        </span>
-
-      </button>
-
-
-      <button
-        class="nav-button"
-        data-page="calendar"
-      >
-
-        <span class="nav-icon">
-          ▣
-        </span>
-
-        <span>
+        <h1 class="title">
           Календарь
-        </span>
+        </h1>
 
-      </button>
-
+      </div>
 
       <button
-        class="nav-button"
-        data-page="analytics"
+        class="profile-button"
+        id="calendarTodayButton"
       >
+        ●
+      </button>
 
-        <span class="nav-icon">
-          ◒
-        </span>
+    </header>
 
-        <span>
+
+    <section class="calendar-card">
+
+      <div class="calendar-header">
+
+        <div
+          class="calendar-month"
+          id="calendarMonth"
+        ></div>
+
+        <div class="calendar-actions">
+
+          <button
+            class="calendar-arrow"
+            id="prevMonth"
+          >
+            ‹
+          </button>
+
+          <button
+            class="calendar-arrow"
+            id="nextMonth"
+          >
+            ›
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="calendar-weekdays">
+
+        <div class="weekday">Пн</div>
+        <div class="weekday">Вт</div>
+        <div class="weekday">Ср</div>
+        <div class="weekday">Чт</div>
+        <div class="weekday">Пт</div>
+        <div class="weekday">Сб</div>
+        <div class="weekday">Вс</div>
+
+      </div>
+
+
+      <div
+        class="calendar-grid"
+        id="calendarGrid"
+      ></div>
+
+    </section>
+
+
+    <section
+      class="selected-day-card"
+      id="selectedDayCard"
+    ></section>
+
+  </section>
+
+
+  <!-- =========================
+       ANALYTICS
+  ========================= -->
+
+  <section
+    class="page"
+    id="analyticsPage"
+  >
+
+    <header class="header">
+
+      <div>
+
+        <div class="greeting">
+          Ваш результат
+        </div>
+
+        <h1 class="title">
           Аналитика
-        </span>
+        </h1>
 
+      </div>
+
+    </header>
+
+
+    <section class="analytics-summary">
+
+      <div class="analytics-summary-top">
+
+        <div class="analytics-summary-title">
+          Эта неделя
+        </div>
+
+        <div
+          class="analytics-summary-value"
+          id="weekPercent"
+        >
+          0%
+        </div>
+
+      </div>
+
+
+      <div
+        class="analytics-summary-subtitle"
+        id="weekSummary"
+      >
+        0 выполнено из 0 задач
+      </div>
+
+
+      <div class="week-progress">
+
+        <div
+          class="week-progress-fill"
+          id="weekProgressFill"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <div class="week-navigation">
+
+      <button
+        class="week-nav-button"
+        id="prevWeek"
+      >
+        ‹
       </button>
 
 
-      <button
-        class="nav-button"
-        data-page="settings"
+      <div
+        class="week-title"
+        id="weekTitle"
       >
+        Эта неделя
+      </div>
 
-        <span class="nav-icon">
-          ⚙
-        </span>
 
-        <span>
-          Настройки
-        </span>
-
+      <button
+        class="week-nav-button"
+        id="nextWeek"
+      >
+        ›
       </button>
 
     </div>
 
-  </nav>
+
+    <div
+      class="week-days"
+      id="weekDays"
+    ></div>
+
+
+    <section
+      class="analytics-day-details"
+      id="analyticsDayDetails"
+    ></section>
+
+  </section>
 
 
   <!-- =========================
-       MODAL
+       SETTINGS
   ========================= -->
 
-  <div
-    class="modal-overlay"
-    id="modalOverlay"
+  <section
+    class="page"
+    id="settingsPage"
   >
 
-    <div class="modal">
+    <header class="header">
 
-      <div class="modal-handle"></div>
+      <div>
+
+        <div class="greeting">
+          Персонализация
+        </div>
+
+        <h1 class="title">
+          Настройки
+        </h1>
+
+      </div>
+
+    </header>
 
 
-      <h2 class="modal-title">
-        Новая задача
-      </h2>
+    <div class="empty">
+
+      <div class="empty-icon">
+        ⚙️
+      </div>
+
+      <div class="empty-title">
+        Настройки
+      </div>
+
+      <div class="empty-text">
+        Уведомления, тема,
+        утренняя и вечерняя сводка
+        появятся здесь.
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
 
 
-      <label class="input-label">
-        Что нужно сделать?
+<!-- =========================
+     ADD BUTTON
+========================= -->
+
+<button
+  class="add-button"
+  id="addButton"
+>
+  +
+</button>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav class="bottom-nav">
+
+  <div class="nav-inner">
+
+    <button
+      class="nav-button active"
+      data-page="home"
+    >
+      <span class="nav-icon">⌂</span>
+      <span>Сегодня</span>
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-page="calendar"
+    >
+      <span class="nav-icon">▣</span>
+      <span>Календарь</span>
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-page="analytics"
+    >
+      <span class="nav-icon">◒</span>
+      <span>Аналитика</span>
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-page="settings"
+    >
+      <span class="nav-icon">⚙</span>
+      <span>Настройки</span>
+    </button>
+
+  </div>
+
+</nav>
+
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div
+  class="modal-overlay"
+  id="modalOverlay"
+>
+
+  <div class="modal">
+
+    <div class="modal-handle"></div>
+
+
+    <h2 class="modal-title">
+      Новая задача
+    </h2>
+
+
+    <label class="input-label">
+      Что нужно сделать?
+    </label>
+
+
+    <input
+      class="task-input"
+      id="taskInput"
+      type="text"
+      placeholder="Например: Прочитать 20 страниц"
+      maxlength="100"
+      autocomplete="off"
+    />
+
+
+    <div class="repeat-title">
+      Периодичность
+    </div>
+
+
+    <div class="repeat-options">
+
+      <label class="repeat-option">
+
+        <input
+          type="radio"
+          name="repeat"
+          value="none"
+          checked
+        />
+
+        <div class="repeat-label">
+
+          <span class="repeat-name">
+            Не повторять
+          </span>
+
+          <span class="repeat-description">
+            Только сегодня
+          </span>
+
+        </div>
+
       </label>
 
 
-      <input
-        class="task-input"
-        id="taskInput"
-        type="text"
-        placeholder="Например: Прочитать 20 страниц"
-        maxlength="100"
-        autocomplete="off"
-      />
+      <label class="repeat-option">
+
+        <input
+          type="radio"
+          name="repeat"
+          value="daily"
+        />
+
+        <div class="repeat-label">
+
+          <span class="repeat-name">
+            Каждый день
+          </span>
+
+          <span class="repeat-description">
+            Задача появляется ежедневно
+          </span>
+
+        </div>
+
+      </label>
 
 
-      <div class="repeat-title">
-        Периодичность
-      </div>
+      <label class="repeat-option">
+
+        <input
+          type="radio"
+          name="repeat"
+          value="weekdays"
+        />
+
+        <div class="repeat-label">
+
+          <span class="repeat-name">
+            По будням
+          </span>
+
+          <span class="repeat-description">
+            Понедельник — пятница
+          </span>
+
+        </div>
+
+      </label>
 
 
-      <div class="repeat-options">
+      <label class="repeat-option">
 
-        <label class="repeat-option">
+        <input
+          type="radio"
+          name="repeat"
+          value="weekly"
+        />
 
-          <input
-            type="radio"
-            name="repeat"
-            value="none"
-            checked
-          />
+        <div class="repeat-label">
 
-          <div class="repeat-label">
+          <span class="repeat-name">
+            Каждую неделю
+          </span>
 
-            <span class="repeat-name">
-              Не повторять
-            </span>
+          <span class="repeat-description">
+            В этот же день каждую неделю
+          </span>
 
-            <span class="repeat-description">
-              Только сегодня
-            </span>
+        </div>
 
-          </div>
+      </label>
 
-        </label>
-
-
-        <label class="repeat-option">
-
-          <input
-            type="radio"
-            name="repeat"
-            value="daily"
-          />
-
-          <div class="repeat-label">
-
-            <span class="repeat-name">
-              Каждый день
-            </span>
-
-            <span class="repeat-description">
-              Задача появляется ежедневно
-            </span>
-
-          </div>
-
-        </label>
+    </div>
 
 
-        <label class="repeat-option">
+    <div class="modal-actions">
 
-          <input
-            type="radio"
-            name="repeat"
-            value="weekdays"
-          />
-
-          <div class="repeat-label">
-
-            <span class="repeat-name">
-              По будням
-            </span>
-
-            <span class="repeat-description">
-              Понедельник — пятница
-            </span>
-
-          </div>
-
-        </label>
+      <button
+        class="modal-button cancel-button"
+        id="cancelButton"
+      >
+        Отмена
+      </button>
 
 
-        <label class="repeat-option">
-
-          <input
-            type="radio"
-            name="repeat"
-            value="weekly"
-          />
-
-          <div class="repeat-label">
-
-            <span class="repeat-name">
-              Каждую неделю
-            </span>
-
-            <span class="repeat-description">
-              В этот же день каждую неделю
-            </span>
-
-          </div>
-
-        </label>
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        <button
-          class="modal-button cancel-button"
-          id="cancelButton"
-        >
-          Отмена
-        </button>
-
-
-        <button
-          class="modal-button save-button"
-          id="saveButton"
-        >
-          Добавить
-        </button>
-
-      </div>
+      <button
+        class="modal-button save-button"
+        id="saveButton"
+      >
+        Добавить
+      </button>
 
     </div>
 
   </div>
 
-
-  <div
-    class="toast"
-    id="toast"
-  ></div>
+</div>
 
 
-  <script>
-
-    /* =========================
-       STORAGE
-    ========================= */
-
-    const STORAGE_KEY =
-      "tracker_tasks";
+<div
+  class="toast"
+  id="toast"
+></div>
 
 
-    let tasks = JSON.parse(
-      localStorage.getItem(
-        STORAGE_KEY
-      ) || "[]"
+<script>
+
+  /* =========================
+     STORAGE
+  ========================= */
+
+  const STORAGE_KEY =
+    "tracker_tasks";
+
+
+  let tasks = JSON.parse(
+    localStorage.getItem(
+      STORAGE_KEY
+    ) || "[]"
+  );
+
+
+  /* =========================
+     ELEMENTS
+  ========================= */
+
+  const tasksContainer =
+    document.getElementById(
+      "tasksContainer"
+    );
+
+  const taskCount =
+    document.getElementById(
+      "taskCount"
+    );
+
+  const progressValue =
+    document.getElementById(
+      "progressValue"
+    );
+
+  const progressFill =
+    document.getElementById(
+      "progressFill"
+    );
+
+  const currentDate =
+    document.getElementById(
+      "currentDate"
+    );
+
+  const addButton =
+    document.getElementById(
+      "addButton"
+    );
+
+  const modalOverlay =
+    document.getElementById(
+      "modalOverlay"
+    );
+
+  const taskInput =
+    document.getElementById(
+      "taskInput"
+    );
+
+  const cancelButton =
+    document.getElementById(
+      "cancelButton"
+    );
+
+  const saveButton =
+    document.getElementById(
+      "saveButton"
+    );
+
+  const toast =
+    document.getElementById(
+      "toast"
     );
 
 
-    /* =========================
-       ELEMENTS
-    ========================= */
+  /* =========================
+     CALENDAR
+  ========================= */
 
-    const tasksContainer =
-      document.getElementById(
-        "tasksContainer"
-      );
-
-    const taskCount =
-      document.getElementById(
-        "taskCount"
-      );
-
-    const progressValue =
-      document.getElementById(
-        "progressValue"
-      );
-
-    const progressFill =
-      document.getElementById(
-        "progressFill"
-      );
-
-    const currentDate =
-      document.getElementById(
-        "currentDate"
-      );
-
-    const addButton =
-      document.getElementById(
-        "addButton"
-      );
-
-    const modalOverlay =
-      document.getElementById(
-        "modalOverlay"
-      );
-
-    const taskInput =
-      document.getElementById(
-        "taskInput"
-      );
-
-    const cancelButton =
-      document.getElementById(
-        "cancelButton"
-      );
-
-    const saveButton =
-      document.getElementById(
-        "saveButton"
-      );
-
-    const toast =
-      document.getElementById(
-        "toast"
-      );
+  const today =
+    new Date();
 
 
-    /* =========================
-       CALENDAR STATE
-    ========================= */
+  let calendarDate =
+    new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      1
+    );
 
-    const today =
+
+  let selectedDate =
+    getDateKey(today);
+
+
+  /* =========================
+     ANALYTICS
+  ========================= */
+
+  let analyticsWeekStart =
+    getMonday(today);
+
+
+  let analyticsSelectedDate =
+    getDateKey(today);
+
+
+  /* =========================
+     DATE
+  ========================= */
+
+  function getDateKey(
+    date
+  ) {
+
+    const year =
+      date.getFullYear();
+
+    const month =
+      String(
+        date.getMonth() + 1
+      ).padStart(2, "0");
+
+    const day =
+      String(
+        date.getDate()
+      ).padStart(2, "0");
+
+
+    return `${year}-${month}-${day}`;
+
+  }
+
+
+  function parseDate(
+    key
+  ) {
+
+    const [
+      year,
+      month,
+      day
+    ] =
+      key.split("-").map(Number);
+
+
+    return new Date(
+      year,
+      month - 1,
+      day
+    );
+
+  }
+
+
+  function getTodayKey() {
+
+    return getDateKey(
+      new Date()
+    );
+
+  }
+
+
+  function getMonday(
+    date
+  ) {
+
+    const result =
+      new Date(date);
+
+
+    const day =
+      result.getDay();
+
+
+    const diff =
+      day === 0
+        ? -6
+        : 1 - day;
+
+
+    result.setDate(
+      result.getDate() + diff
+    );
+
+
+    result.setHours(
+      0,
+      0,
+      0,
+      0
+    );
+
+
+    return result;
+
+  }
+
+
+  function addDays(
+    date,
+    amount
+  ) {
+
+    const result =
+      new Date(date);
+
+
+    result.setDate(
+      result.getDate() + amount
+    );
+
+
+    return result;
+
+  }
+
+
+  function formatDate() {
+
+    const date =
       new Date();
 
 
-    let calendarDate =
-      new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        1
+    const text =
+      date.toLocaleDateString(
+        "ru-RU",
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        }
       );
 
 
-    let selectedDate =
-      getDateKey(today);
+    currentDate.textContent =
+      text.charAt(0).toUpperCase() +
+      text.slice(1);
+
+  }
 
 
-    /* =========================
-       DATE HELPERS
-    ========================= */
+  /* =========================
+     RECURRING
+  ========================= */
 
-    function getDateKey(
-      date
-    ) {
+  function taskAppearsOnDate(
+    task,
+    dateKey
+  ) {
 
-      const year =
-        date.getFullYear();
-
-      const month =
-        String(
-          date.getMonth() + 1
-        ).padStart(2, "0");
-
-      const day =
-        String(
-          date.getDate()
-        ).padStart(2, "0");
-
-
-      return `${year}-${month}-${day}`;
-
-    }
-
-
-    function parseDate(
-      key
-    ) {
-
-      const [
-        year,
-        month,
-        day
-      ] =
-        key.split("-").map(Number);
-
-
-      return new Date(
-        year,
-        month - 1,
-        day
+    const date =
+      parseDate(
+        dateKey
       );
 
-    }
 
-
-    function getTodayKey() {
-
-      return getDateKey(
-        new Date()
-      );
-
-    }
-
-
-    function formatDate() {
-
-      const date =
-        new Date();
-
-
-      const text =
-        date.toLocaleDateString(
-          "ru-RU",
-          {
-            weekday: "long",
-            day: "numeric",
-            month: "long"
-          }
-        );
-
-
-      currentDate.textContent =
-        text.charAt(0).toUpperCase() +
-        text.slice(1);
-
-    }
-
-
-    /* =========================
-       RECURRING TASK
-    ========================= */
-
-    function taskAppearsOnDate(
-      task,
-      dateKey
+    if (
+      task.startDate &&
+      dateKey < task.startDate
     ) {
-
-      const date =
-        parseDate(
-          dateKey
-        );
-
-
-      if (
-        task.startDate &&
-        dateKey < task.startDate
-      ) {
-
-        return false;
-
-      }
-
-
-      if (
-        !task.recurring ||
-        task.recurring === "none"
-      ) {
-
-        return (
-          task.date ===
-          dateKey
-        );
-
-      }
-
-
-      if (
-        task.recurring ===
-        "daily"
-      ) {
-
-        return true;
-
-      }
-
-
-      if (
-        task.recurring ===
-        "weekdays"
-      ) {
-
-        const day =
-          date.getDay();
-
-
-        return (
-          day >= 1 &&
-          day <= 5
-        );
-
-      }
-
-
-      if (
-        task.recurring ===
-        "weekly"
-      ) {
-
-        const start =
-          parseDate(
-            task.startDate
-          );
-
-
-        return (
-          start.getDay() ===
-          date.getDay()
-        );
-
-      }
-
 
       return false;
 
     }
 
 
-    /* =========================
-       COMPLETION
-       =========================
-
-       Для обычных задач
-       completed = boolean.
-
-       Для регулярных задач
-       сохраняем выполненные даты
-       в completedDates.
-    */
-
-    function isTaskCompleted(
-      task,
-      dateKey
+    if (
+      !task.recurring ||
+      task.recurring === "none"
     ) {
 
-      if (
-        task.recurring &&
-        task.recurring !== "none"
-      ) {
-
-        return (
-          Array.isArray(
-            task.completedDates
-          ) &&
-          task.completedDates.includes(
-            dateKey
-          )
-        );
-
-      }
-
-
-      return Boolean(
-        task.completed
-      );
-
-    }
-
-
-    function setTaskCompleted(
-      task,
-      dateKey,
-      value
-    ) {
-
-      if (
-        task.recurring &&
-        task.recurring !== "none"
-      ) {
-
-        if (
-          !Array.isArray(
-            task.completedDates
-          )
-        ) {
-
-          task.completedDates = [];
-
-        }
-
-
-        if (value) {
-
-          if (
-            !task.completedDates.includes(
-              dateKey
-            )
-          ) {
-
-            task.completedDates.push(
-              dateKey
-            );
-
-          }
-
-        } else {
-
-          task.completedDates =
-            task.completedDates.filter(
-              date =>
-                date !== dateKey
-            );
-
-        }
-
-
-        return;
-
-      }
-
-
-      task.completed =
-        value;
-
-    }
-
-
-    /* =========================
-       TASKS FOR DATE
-    ========================= */
-
-    function getTasksForDate(
-      dateKey
-    ) {
-
-      return tasks.filter(
-        task =>
-          taskAppearsOnDate(
-            task,
-            dateKey
-          )
-      );
-
-    }
-
-
-    /* =========================
-       HOME
-    ========================= */
-
-    function renderHome() {
-
-      const dateKey =
-        getTodayKey();
-
-
-      const todayTasks =
-        getTasksForDate(
-          dateKey
-        );
-
-
-      tasksContainer.innerHTML =
-        "";
-
-
-      if (
-        todayTasks.length === 0
-      ) {
-
-        tasksContainer.innerHTML = `
-
-          <div class="empty">
-
-            <div class="empty-icon">
-              ✨
-            </div>
-
-            <div class="empty-title">
-              День свободен
-            </div>
-
-            <div class="empty-text">
-              Добавьте первую задачу<br>
-              и начните свой день продуктивно.
-            </div>
-
-          </div>
-
-        `;
-
-      } else {
-
-        todayTasks.forEach(
-          task => {
-
-            tasksContainer.appendChild(
-              createTaskElement(
-                task,
-                dateKey
-              )
-            );
-
-          }
-        );
-
-      }
-
-
-      updateHomeStats(
-        todayTasks,
+      return (
+        task.date ===
         dateKey
       );
 
     }
 
 
-    function updateHomeStats(
-      todayTasks,
-      dateKey
+    if (
+      task.recurring ===
+      "daily"
     ) {
 
-      const total =
-        todayTasks.length;
-
-
-      const completed =
-        todayTasks.filter(
-          task =>
-            isTaskCompleted(
-              task,
-              dateKey
-            )
-        ).length;
-
-
-      const percentage =
-        total === 0
-          ? 0
-          : Math.round(
-              (
-                completed /
-                total
-              ) * 100
-            );
-
-
-      progressValue.textContent =
-        `${percentage}%`;
-
-
-      progressFill.style.width =
-        `${percentage}%`;
-
-
-      taskCount.textContent =
-        `${total} ${
-          getTaskWord(total)
-        }`;
+      return true;
 
     }
 
 
-    /* =========================
-       TASK ELEMENT
-    ========================= */
-
-    function createTaskElement(
-      task,
-      dateKey
+    if (
+      task.recurring ===
+      "weekdays"
     ) {
 
-      const completed =
-        isTaskCompleted(
-          task,
-          dateKey
+      const day =
+        date.getDay();
+
+
+      return (
+        day >= 1 &&
+        day <= 5
+      );
+
+    }
+
+
+    if (
+      task.recurring ===
+      "weekly"
+    ) {
+
+      const start =
+        parseDate(
+          task.startDate
         );
 
 
-      const element =
+      return (
+        start.getDay() ===
+        date.getDay()
+      );
+
+    }
+
+
+    return false;
+
+  }
+
+
+  function isTaskCompleted(
+    task,
+    dateKey
+  ) {
+
+    if (
+      task.recurring &&
+      task.recurring !== "none"
+    ) {
+
+      return (
+        Array.isArray(
+          task.completedDates
+        ) &&
+        task.completedDates.includes(
+          dateKey
+        )
+      );
+
+    }
+
+
+    return Boolean(
+      task.completed
+    );
+
+  }
+
+
+  function setTaskCompleted(
+    task,
+    dateKey,
+    value
+  ) {
+
+    if (
+      task.recurring &&
+      task.recurring !== "none"
+    ) {
+
+      if (
+        !Array.isArray(
+          task.completedDates
+        )
+      ) {
+
+        task.completedDates = [];
+
+      }
+
+
+      if (value) {
+
+        if (
+          !task.completedDates.includes(
+            dateKey
+          )
+        ) {
+
+          task.completedDates.push(
+            dateKey
+          );
+
+        }
+
+      } else {
+
+        task.completedDates =
+          task.completedDates.filter(
+            date =>
+              date !== dateKey
+          );
+
+      }
+
+
+      return;
+
+    }
+
+
+    task.completed =
+      value;
+
+  }
+
+
+  function getTasksForDate(
+    dateKey
+  ) {
+
+    return tasks.filter(
+      task =>
+        taskAppearsOnDate(
+          task,
+          dateKey
+        )
+    );
+
+  }
+
+
+  /* =========================
+     HOME
+  ========================= */
+
+  function renderHome() {
+
+    const dateKey =
+      getTodayKey();
+
+
+    const todayTasks =
+      getTasksForDate(
+        dateKey
+      );
+
+
+    tasksContainer.innerHTML =
+      "";
+
+
+    if (
+      todayTasks.length === 0
+    ) {
+
+      tasksContainer.innerHTML = `
+
+        <div class="empty">
+
+          <div class="empty-icon">
+            ✨
+          </div>
+
+          <div class="empty-title">
+            День свободен
+          </div>
+
+          <div class="empty-text">
+            Добавьте первую задачу<br>
+            и начните свой день продуктивно.
+          </div>
+
+        </div>
+
+      `;
+
+    } else {
+
+      todayTasks.forEach(
+        task => {
+
+          tasksContainer.appendChild(
+            createTaskElement(
+              task,
+              dateKey
+            )
+          );
+
+        }
+      );
+
+    }
+
+
+    updateHomeStats(
+      todayTasks,
+      dateKey
+    );
+
+  }
+
+
+  function updateHomeStats(
+    todayTasks,
+    dateKey
+  ) {
+
+    const total =
+      todayTasks.length;
+
+
+    const completed =
+      todayTasks.filter(
+        task =>
+          isTaskCompleted(
+            task,
+            dateKey
+          )
+      ).length;
+
+
+    const percentage =
+      total === 0
+        ? 0
+        : Math.round(
+            completed /
+            total *
+            100
+          );
+
+
+    progressValue.textContent =
+      `${percentage}%`;
+
+
+    progressFill.style.width =
+      `${percentage}%`;
+
+
+    taskCount.textContent =
+      `${total} ${getTaskWord(total)}`;
+
+  }
+
+
+  /* =========================
+     TASK
+  ========================= */
+
+  function createTaskElement(
+    task,
+    dateKey
+  ) {
+
+    const completed =
+      isTaskCompleted(
+        task,
+        dateKey
+      );
+
+
+    const element =
+      document.createElement(
+        "div"
+      );
+
+
+    element.className =
+      "task" +
+      (
+        completed
+          ? " completed"
+          : ""
+      );
+
+
+    element.innerHTML = `
+
+      <button
+        class="task-check"
+        data-task-id="${task.id}"
+        data-date="${dateKey}"
+      >
+
+        <span class="check-icon">
+          ✓
+        </span>
+
+      </button>
+
+
+      <div class="task-content">
+
+        <div class="task-name">
+          ${escapeHtml(task.title)}
+        </div>
+
+        <div class="task-meta">
+          ${getRepeatLabel(task.recurring)}
+        </div>
+
+      </div>
+
+
+      <button
+        class="delete-task"
+        data-delete-id="${task.id}"
+      >
+        ×
+      </button>
+
+    `;
+
+
+    return element;
+
+  }
+
+
+  function getRepeatLabel(
+    repeat
+  ) {
+
+    switch (repeat) {
+
+      case "daily":
+        return "🔁 Каждый день";
+
+      case "weekdays":
+        return "🔁 По будням";
+
+      case "weekly":
+        return "🔁 Каждую неделю";
+
+      default:
+        return "Сегодня";
+
+    }
+
+  }
+
+
+  function getTaskWord(
+    number
+  ) {
+
+    const mod10 =
+      number % 10;
+
+    const mod100 =
+      number % 100;
+
+
+    if (
+      mod10 === 1 &&
+      mod100 !== 11
+    ) {
+
+      return "задача";
+
+    }
+
+
+    if (
+      mod10 >= 2 &&
+      mod10 <= 4 &&
+      (
+        mod100 < 10 ||
+        mod100 >= 20
+      )
+    ) {
+
+      return "задачи";
+
+    }
+
+
+    return "задач";
+
+  }
+
+
+  /* =========================
+     CALENDAR
+  ========================= */
+
+  function renderCalendar() {
+
+    const year =
+      calendarDate.getFullYear();
+
+    const month =
+      calendarDate.getMonth();
+
+
+    const monthName =
+      calendarDate.toLocaleDateString(
+        "ru-RU",
+        {
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+
+    document.getElementById(
+      "calendarMonth"
+    ).textContent =
+      monthName.charAt(0).toUpperCase() +
+      monthName.slice(1);
+
+
+    const grid =
+      document.getElementById(
+        "calendarGrid"
+      );
+
+
+    grid.innerHTML =
+      "";
+
+
+    const firstDay =
+      new Date(
+        year,
+        month,
+        1
+      );
+
+
+    const daysInMonth =
+      new Date(
+        year,
+        month + 1,
+        0
+      ).getDate();
+
+
+    let startDay =
+      firstDay.getDay();
+
+
+    startDay =
+      startDay === 0
+        ? 6
+        : startDay - 1;
+
+
+    for (
+      let i = 0;
+      i < startDay;
+      i++
+    ) {
+
+      const empty =
         document.createElement(
           "div"
         );
 
 
-      element.className =
-        "task" +
-        (
-          completed
-            ? " completed"
-            : ""
-        );
+      empty.className =
+        "calendar-day empty-day";
 
 
-      element.innerHTML = `
-
-        <button
-          class="task-check"
-          data-task-id="${task.id}"
-          data-date="${dateKey}"
-        >
-
-          <span class="check-icon">
-            ✓
-          </span>
-
-        </button>
-
-
-        <div class="task-content">
-
-          <div class="task-name">
-            ${escapeHtml(
-              task.title
-            )}
-          </div>
-
-
-          <div class="task-meta">
-
-            ${
-              getRepeatLabel(
-                task.recurring
-              )
-            }
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="delete-task"
-          data-delete-id="${task.id}"
-        >
-          ×
-        </button>
-
-      `;
-
-
-      return element;
+      grid.appendChild(
+        empty
+      );
 
     }
 
 
-    function getRepeatLabel(
-      repeat
+    for (
+      let day = 1;
+      day <= daysInMonth;
+      day++
     ) {
 
-      switch (repeat) {
-
-        case "daily":
-          return "🔁 Каждый день";
-
-        case "weekdays":
-          return "🔁 По будням";
-
-        case "weekly":
-          return "🔁 Каждую неделю";
-
-        default:
-          return "Сегодня";
-
-      }
-
-    }
-
-
-    function getTaskWord(
-      number
-    ) {
-
-      const mod10 =
-        number % 10;
-
-      const mod100 =
-        number % 100;
-
-
-      if (
-        mod10 === 1 &&
-        mod100 !== 11
-      ) {
-
-        return "задача";
-
-      }
-
-
-      if (
-        mod10 >= 2 &&
-        mod10 <= 4 &&
-        (
-          mod100 < 10 ||
-          mod100 >= 20
-        )
-      ) {
-
-        return "задачи";
-
-      }
-
-
-      return "задач";
-
-    }
-
-
-    /* =========================
-       CALENDAR RENDER
-    ========================= */
-
-    function renderCalendar() {
-
-      const year =
-        calendarDate.getFullYear();
-
-
-      const month =
-        calendarDate.getMonth();
-
-
-      const monthName =
-        calendarDate.toLocaleDateString(
-          "ru-RU",
-          {
-            month: "long",
-            year: "numeric"
-          }
-        );
-
-
-      document.getElementById(
-        "calendarMonth"
-      ).textContent =
-        monthName.charAt(0).toUpperCase() +
-        monthName.slice(1);
-
-
-      const grid =
-        document.getElementById(
-          "calendarGrid"
-        );
-
-
-      grid.innerHTML =
-        "";
-
-
-      const firstDay =
+      const date =
         new Date(
           year,
           month,
-          1
+          day
         );
 
 
-      const daysInMonth =
-        new Date(
-          year,
-          month + 1,
-          0
-        ).getDate();
-
-
-      let startDay =
-        firstDay.getDay();
-
-
-      /*
-        JS:
-        воскресенье = 0
-
-        Нам нужно:
-        понедельник = 0
-      */
-
-      startDay =
-        startDay === 0
-          ? 6
-          : startDay - 1;
-
-
-      /* пустые клетки */
-
-      for (
-        let i = 0;
-        i < startDay;
-        i++
-      ) {
-
-        const empty =
-          document.createElement(
-            "div"
-          );
-
-
-        empty.className =
-          "calendar-day empty-day";
-
-
-        grid.appendChild(
-          empty
-        );
-
-      }
-
-
-      /* дни */
-
-      for (
-        let day = 1;
-        day <= daysInMonth;
-        day++
-      ) {
-
-        const date =
-          new Date(
-            year,
-            month,
-            day
-          );
-
-
-        const dateKey =
-          getDateKey(
-            date
-          );
-
-
-        const dayTasks =
-          getTasksForDate(
-            dateKey
-          );
-
-
-        const completed =
-          dayTasks.filter(
-            task =>
-              isTaskCompleted(
-                task,
-                dateKey
-              )
-          ).length;
-
-
-        const total =
-          dayTasks.length;
-
-
-        const dayElement =
-          document.createElement(
-            "button"
-          );
-
-
-        dayElement.className =
-          "calendar-day";
-
-
-        if (
-          dateKey ===
-          getTodayKey()
-        ) {
-
-          dayElement.classList.add(
-            "today"
-          );
-
-        }
-
-
-        if (
-          dateKey ===
-          selectedDate
-        ) {
-
-          dayElement.classList.add(
-            "selected"
-          );
-
-        }
-
-
-        dayElement.dataset.date =
-          dateKey;
-
-
-        dayElement.innerHTML = `
-
-          <span class="calendar-number">
-            ${day}
-          </span>
-
-          ${
-            total > 0
-              ? `
-                <div class="calendar-stats">
-
-                  <span class="calendar-dot"></span>
-
-                  <span class="calendar-count">
-                    ${total}
-                  </span>
-
-                  <span class="calendar-complete">
-                    ${completed}
-                  </span>
-
-                </div>
-              `
-              : ""
-          }
-
-        `;
-
-
-        grid.appendChild(
-          dayElement
-        );
-
-      }
-
-
-      renderSelectedDay();
-
-    }
-
-
-    /* =========================
-       SELECTED DAY
-    ========================= */
-
-    function renderSelectedDay() {
-
-      const card =
-        document.getElementById(
-          "selectedDayCard"
-        );
-
-
-      const date =
-        parseDate(
-          selectedDate
+      const dateKey =
+        getDateKey(
+          date
         );
 
 
       const dayTasks =
         getTasksForDate(
-          selectedDate
+          dateKey
         );
 
 
@@ -2458,7 +2479,397 @@
           task =>
             isTaskCompleted(
               task,
-              selectedDate
+              dateKey
+            )
+        ).length;
+
+
+      const total =
+        dayTasks.length;
+
+
+      const dayElement =
+        document.createElement(
+          "button"
+        );
+
+
+      dayElement.className =
+        "calendar-day";
+
+
+      if (
+        dateKey ===
+        getTodayKey()
+      ) {
+
+        dayElement.classList.add(
+          "today"
+        );
+
+      }
+
+
+      if (
+        dateKey ===
+        selectedDate
+      ) {
+
+        dayElement.classList.add(
+          "selected"
+        );
+
+      }
+
+
+      dayElement.dataset.date =
+        dateKey;
+
+
+      dayElement.innerHTML = `
+
+        <span class="calendar-number">
+          ${day}
+        </span>
+
+        ${
+          total > 0
+            ? `
+              <div class="calendar-stats">
+
+                <span class="calendar-dot"></span>
+
+                <span class="calendar-count">
+                  ${total}
+                </span>
+
+                <span class="calendar-complete">
+                  ${completed}
+                </span>
+
+              </div>
+            `
+            : ""
+        }
+
+      `;
+
+
+      grid.appendChild(
+        dayElement
+      );
+
+    }
+
+
+    renderSelectedDay();
+
+  }
+
+
+  function renderSelectedDay() {
+
+    const card =
+      document.getElementById(
+        "selectedDayCard"
+      );
+
+
+    const date =
+      parseDate(
+        selectedDate
+      );
+
+
+    const dayTasks =
+      getTasksForDate(
+        selectedDate
+      );
+
+
+    const completed =
+      dayTasks.filter(
+        task =>
+          isTaskCompleted(
+            task,
+            selectedDate
+          )
+      ).length;
+
+
+    const total =
+      dayTasks.length;
+
+
+    const percentage =
+      total === 0
+        ? 0
+        : Math.round(
+            completed /
+            total *
+            100
+          );
+
+
+    const formatted =
+      date.toLocaleDateString(
+        "ru-RU",
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        }
+      );
+
+
+    const title =
+      formatted.charAt(0).toUpperCase() +
+      formatted.slice(1);
+
+
+    card.innerHTML = `
+
+      <div class="selected-day-header">
+
+        <div>
+
+          <div class="selected-day-title">
+            ${title}
+          </div>
+
+          <div class="selected-day-subtitle">
+
+            ${total}
+            ${getTaskWord(total)}
+
+            ·
+
+            ${completed}
+            выполнено
+
+          </div>
+
+        </div>
+
+
+        <div class="day-progress">
+
+          <div class="day-progress-value">
+            ${percentage}%
+          </div>
+
+          <div class="day-progress-label">
+            выполнено
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="tasks"
+        id="selectedDayTasks"
+      ></div>
+
+    `;
+
+
+    const container =
+      document.getElementById(
+        "selectedDayTasks"
+      );
+
+
+    if (
+      dayTasks.length === 0
+    ) {
+
+      container.innerHTML = `
+
+        <div class="empty">
+
+          <div class="empty-icon">
+            🌿
+          </div>
+
+          <div class="empty-title">
+            Нет задач
+          </div>
+
+          <div class="empty-text">
+            На этот день ничего
+            не запланировано.
+          </div>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    dayTasks.forEach(
+      task => {
+
+        container.appendChild(
+          createTaskElement(
+            task,
+            selectedDate
+          )
+        );
+
+      }
+    );
+
+  }
+
+
+  document
+    .getElementById(
+      "prevMonth"
+    )
+    .addEventListener(
+      "click",
+      () => {
+
+        calendarDate =
+          new Date(
+            calendarDate.getFullYear(),
+            calendarDate.getMonth() - 1,
+            1
+          );
+
+
+        renderCalendar();
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      "nextMonth"
+    )
+    .addEventListener(
+      "click",
+      () => {
+
+        calendarDate =
+          new Date(
+            calendarDate.getFullYear(),
+            calendarDate.getMonth() + 1,
+            1
+          );
+
+
+        renderCalendar();
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      "calendarTodayButton"
+    )
+    .addEventListener(
+      "click",
+      () => {
+
+        const now =
+          new Date();
+
+
+        calendarDate =
+          new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            1
+          );
+
+
+        selectedDate =
+          getTodayKey();
+
+
+        renderCalendar();
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      "calendarGrid"
+    )
+    .addEventListener(
+      "click",
+      event => {
+
+        const day =
+          event.target.closest(
+            ".calendar-day[data-date]"
+          );
+
+
+        if (!day) return;
+
+
+        selectedDate =
+          day.dataset.date;
+
+
+        renderCalendar();
+
+      }
+    );
+
+
+  /* =========================
+     ANALYTICS
+  ========================= */
+
+  function getWeekStats(
+    weekStart
+  ) {
+
+    const days = [];
+
+
+    for (
+      let i = 0;
+      i < 7;
+      i++
+    ) {
+
+      const date =
+        addDays(
+          weekStart,
+          i
+        );
+
+
+      const dateKey =
+        getDateKey(
+          date
+        );
+
+
+      const dayTasks =
+        getTasksForDate(
+          dateKey
+        );
+
+
+      const completed =
+        dayTasks.filter(
+          task =>
+            isTaskCompleted(
+              task,
+              dateKey
             )
         ).length;
 
@@ -2471,57 +2882,424 @@
         total === 0
           ? 0
           : Math.round(
-              (
-                completed /
-                total
-              ) * 100
+              completed /
+              total *
+              100
             );
 
 
-      const formatted =
-        date.toLocaleDateString(
-          "ru-RU",
-          {
-            weekday: "long",
-            day: "numeric",
-            month: "long"
+      days.push({
+
+        date,
+
+        dateKey,
+
+        total,
+
+        completed,
+
+        percentage
+
+      });
+
+    }
+
+
+    return days;
+
+  }
+
+
+  function renderAnalytics() {
+
+    const weekDays =
+      getWeekStats(
+        analyticsWeekStart
+      );
+
+
+    const total =
+      weekDays.reduce(
+        (
+          sum,
+          day
+        ) =>
+          sum + day.total,
+        0
+      );
+
+
+    const completed =
+      weekDays.reduce(
+        (
+          sum,
+          day
+        ) =>
+          sum + day.completed,
+        0
+      );
+
+
+    const percentage =
+      total === 0
+        ? 0
+        : Math.round(
+            completed /
+            total *
+            100
+          );
+
+
+    document.getElementById(
+      "weekPercent"
+    ).textContent =
+      `${percentage}%`;
+
+
+    document.getElementById(
+      "weekSummary"
+    ).textContent =
+      `${completed} выполнено из ${total} ${getTaskWord(total)}`;
+
+
+    document.getElementById(
+      "weekProgressFill"
+    ).style.width =
+      `${percentage}%`;
+
+
+    renderWeekTitle();
+
+    renderWeekDays();
+
+    renderAnalyticsDetails();
+
+  }
+
+
+  function renderWeekTitle() {
+
+    const start =
+      analyticsWeekStart;
+
+
+    const end =
+      addDays(
+        start,
+        6
+      );
+
+
+    const startText =
+      start.toLocaleDateString(
+        "ru-RU",
+        {
+          day: "numeric",
+          month: "short"
+        }
+      );
+
+
+    const endText =
+      end.toLocaleDateString(
+        "ru-RU",
+        {
+          day: "numeric",
+          month: "short"
+        }
+      );
+
+
+    const currentMonday =
+      getMonday(
+        new Date()
+      );
+
+
+    const currentKey =
+      getDateKey(
+        currentMonday
+      );
+
+
+    const selectedKey =
+      getDateKey(
+        start
+      );
+
+
+    let title =
+      `${startText} — ${endText}`;
+
+
+    if (
+      currentKey ===
+      selectedKey
+    ) {
+
+      title =
+        "Эта неделя";
+
+    }
+
+
+    document.getElementById(
+      "weekTitle"
+    ).textContent =
+      title;
+
+  }
+
+
+  function renderWeekDays() {
+
+    const container =
+      document.getElementById(
+        "weekDays"
+      );
+
+
+    container.innerHTML =
+      "";
+
+
+    const stats =
+      getWeekStats(
+        analyticsWeekStart
+      );
+
+
+    const names = [
+      "Понедельник",
+      "Вторник",
+      "Среда",
+      "Четверг",
+      "Пятница",
+      "Суббота",
+      "Воскресенье"
+    ];
+
+
+    stats.forEach(
+      (
+        day,
+        index
+      ) => {
+
+        const element =
+          document.createElement(
+            "div"
+          );
+
+
+        element.className =
+          "week-day";
+
+
+        if (
+          day.dateKey ===
+          getTodayKey()
+        ) {
+
+          element.classList.add(
+            "today"
+          );
+
+        }
+
+
+        if (
+          day.dateKey ===
+          analyticsSelectedDate
+        ) {
+
+          element.classList.add(
+            "selected"
+          );
+
+        }
+
+
+        const badge =
+          day.total > 0 &&
+          day.completed ===
+            day.total
+            ? `
+              <span class="week-day-badge complete">
+                ✓ Всё выполнено
+              </span>
+            `
+            : `
+              <span class="week-day-badge">
+                ${day.total} ${getTaskWord(day.total)}
+              </span>
+            `;
+
+
+        element.innerHTML = `
+
+          <div class="week-day-top">
+
+            <div class="week-day-name">
+
+              <span class="week-day-label">
+                ${names[index]}
+              </span>
+
+              <span class="week-day-date">
+                ${day.date.toLocaleDateString(
+                  "ru-RU",
+                  {
+                    day: "numeric",
+                    month: "short"
+                  }
+                )}
+              </span>
+
+            </div>
+
+
+            <div class="week-day-percent">
+              ${day.percentage}%
+            </div>
+
+          </div>
+
+
+          <div class="week-day-progress">
+
+            <div
+              class="week-day-fill"
+              style="width: ${day.percentage}%"
+            ></div>
+
+          </div>
+
+
+          <div class="week-day-bottom">
+
+            <span class="week-day-stat">
+              <strong>
+                ${day.completed}
+              </strong>
+              выполнено из
+              <strong>
+                ${day.total}
+              </strong>
+            </span>
+
+            ${badge}
+
+          </div>
+
+        `;
+
+
+        element.addEventListener(
+          "click",
+          () => {
+
+            analyticsSelectedDate =
+              day.dateKey;
+
+
+            renderAnalytics();
+
           }
         );
 
 
-      const title =
-        formatted.charAt(0).toUpperCase() +
-        formatted.slice(1);
+        container.appendChild(
+          element
+        );
+
+      }
+    );
+
+  }
 
 
-      card.innerHTML = `
+  function renderAnalyticsDetails() {
+
+    const container =
+      document.getElementById(
+        "analyticsDayDetails"
+      );
+
+
+    const dateKey =
+      analyticsSelectedDate;
+
+
+    const date =
+      parseDate(
+        dateKey
+      );
+
+
+    const dayTasks =
+      getTasksForDate(
+        dateKey
+      );
+
+
+    const completed =
+      dayTasks.filter(
+        task =>
+          isTaskCompleted(
+            task,
+            dateKey
+          )
+      ).length;
+
+
+    const percentage =
+      dayTasks.length === 0
+        ? 0
+        : Math.round(
+            completed /
+            dayTasks.length *
+            100
+          );
+
+
+    const formatted =
+      date.toLocaleDateString(
+        "ru-RU",
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "long"
+        }
+      );
+
+
+    const title =
+      formatted.charAt(0).toUpperCase() +
+      formatted.slice(1);
+
+
+    container.innerHTML = `
+
+      <div class="analytics-details-title">
+        ${title}
+      </div>
+
+      <div class="selected-day-card">
 
         <div class="selected-day-header">
 
           <div>
 
             <div class="selected-day-title">
-              ${title}
+              ${completed} из ${dayTasks.length}
             </div>
 
             <div class="selected-day-subtitle">
-
-              ${total}
-              ${
-                getTaskWord(
-                  total
-                )
-              }
-
-              ·
-
-              ${completed}
-              выполнено
-
+              выполнено · ${percentage}%
             </div>
 
           </div>
-
 
           <div class="day-progress">
 
@@ -2530,7 +3308,7 @@
             </div>
 
             <div class="day-progress-label">
-              выполнено
+              результат
             </div>
 
           </div>
@@ -2540,685 +3318,661 @@
 
         <div
           class="tasks"
-          id="selectedDayTasks"
+          id="analyticsTasks"
         ></div>
+
+      </div>
+
+    `;
+
+
+    const tasksElement =
+      document.getElementById(
+        "analyticsTasks"
+      );
+
+
+    if (
+      dayTasks.length === 0
+    ) {
+
+      tasksElement.innerHTML = `
+
+        <div class="empty">
+
+          <div class="empty-icon">
+            🌿
+          </div>
+
+          <div class="empty-title">
+            Нет задач
+          </div>
+
+          <div class="empty-text">
+            На этот день ничего
+            не запланировано.
+          </div>
+
+        </div>
 
       `;
 
+      return;
 
-      const container =
-        document.getElementById(
-          "selectedDayTasks"
+    }
+
+
+    dayTasks.forEach(
+      task => {
+
+        tasksElement.appendChild(
+          createTaskElement(
+            task,
+            dateKey
+          )
         );
-
-
-      if (
-        dayTasks.length === 0
-      ) {
-
-        container.innerHTML = `
-
-          <div class="empty">
-
-            <div class="empty-icon">
-              🌿
-            </div>
-
-            <div class="empty-title">
-              Нет задач
-            </div>
-
-            <div class="empty-text">
-              На этот день ничего
-              не запланировано.
-            </div>
-
-          </div>
-
-        `;
-
-        return;
 
       }
+    );
+
+  }
 
 
-      dayTasks.forEach(
-        task => {
+  document
+    .getElementById(
+      "prevWeek"
+    )
+    .addEventListener(
+      "click",
+      () => {
 
-          container.appendChild(
-            createTaskElement(
-              task,
-              selectedDate
-            )
+        analyticsWeekStart =
+          addDays(
+            analyticsWeekStart,
+            -7
           );
 
-        }
-      );
 
-    }
-
-
-    /* =========================
-       CALENDAR NAVIGATION
-    ========================= */
-
-    document
-      .getElementById(
-        "prevMonth"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          calendarDate =
-            new Date(
-              calendarDate.getFullYear(),
-              calendarDate.getMonth() - 1,
-              1
-            );
+        analyticsSelectedDate =
+          getDateKey(
+            analyticsWeekStart
+          );
 
 
-          renderCalendar();
+        renderAnalytics();
 
-        }
-      );
-
-
-    document
-      .getElementById(
-        "nextMonth"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          calendarDate =
-            new Date(
-              calendarDate.getFullYear(),
-              calendarDate.getMonth() + 1,
-              1
-            );
+      }
+    );
 
 
-          renderCalendar();
+  document
+    .getElementById(
+      "nextWeek"
+    )
+    .addEventListener(
+      "click",
+      () => {
 
-        }
-      );
-
-
-    document
-      .getElementById(
-        "calendarTodayButton"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          const now =
-            new Date();
+        analyticsWeekStart =
+          addDays(
+            analyticsWeekStart,
+            7
+          );
 
 
-          calendarDate =
-            new Date(
-              now.getFullYear(),
-              now.getMonth(),
-              1
-            );
+        analyticsSelectedDate =
+          getDateKey(
+            analyticsWeekStart
+          );
 
 
-          selectedDate =
-            getTodayKey();
+        renderAnalytics();
+
+      }
+    );
 
 
-          renderCalendar();
+  /* =========================
+     MODAL
+  ========================= */
 
-        }
-      );
+  function openModal() {
 
-
-    document
-      .getElementById(
-        "calendarGrid"
-      )
-      .addEventListener(
-        "click",
-        event => {
-
-          const day =
-            event.target.closest(
-              ".calendar-day[data-date]"
-            );
+    modalOverlay.classList.add(
+      "show"
+    );
 
 
-          if (!day) return;
-
-
-          selectedDate =
-            day.dataset.date;
-
-
-          renderCalendar();
-
-        }
-      );
-
-
-    /* =========================
-       MODAL
-    ========================= */
-
-    function openModal() {
-
-      modalOverlay.classList.add(
-        "show"
-      );
-
-
-      setTimeout(
-        () => {
-
-          taskInput.focus();
-
-        },
-        150
-      );
-
-    }
-
-
-    function closeModal() {
-
-      modalOverlay.classList.remove(
-        "show"
-      );
-
-
-      taskInput.value =
-        "";
-
-
-      document.querySelector(
-        'input[name="repeat"][value="none"]'
-      ).checked = true;
-
-    }
-
-
-    /* =========================
-       ADD TASK
-    ========================= */
-
-    function addTask() {
-
-      const title =
-        taskInput.value.trim();
-
-
-      if (!title) {
-
-        showToast(
-          "Введите название задачи"
-        );
+    setTimeout(
+      () => {
 
         taskInput.focus();
 
-        return;
+      },
+      150
+    );
 
-      }
-
-
-      const repeat =
-        document.querySelector(
-          'input[name="repeat"]:checked'
-        ).value;
+  }
 
 
-      const todayKey =
-        getTodayKey();
+  function closeModal() {
+
+    modalOverlay.classList.remove(
+      "show"
+    );
 
 
-      const newTask = {
-
-        id:
-          Date.now().toString(),
-
-        title,
-
-        date:
-          todayKey,
-
-        startDate:
-          todayKey,
-
-        recurring:
-          repeat,
-
-        completed:
-          false,
-
-        completedDates: [],
-
-        createdAt:
-          new Date().toISOString()
-
-      };
+    taskInput.value =
+      "";
 
 
-      tasks.push(
-        newTask
-      );
+    document.querySelector(
+      'input[name="repeat"][value="none"]'
+    ).checked = true;
+
+  }
 
 
-      saveTasks();
+  function addTask() {
 
-      renderHome();
+    const title =
+      taskInput.value.trim();
 
-      renderCalendar();
 
-      closeModal();
-
+    if (!title) {
 
       showToast(
-        repeat === "none"
-          ? "Задача добавлена ✓"
-          : "Регулярная задача создана 🔁"
+        "Введите название задачи"
       );
+
+      taskInput.focus();
+
+      return;
 
     }
 
 
-    /* =========================
-       TOGGLE TASK
-    ========================= */
-
-    function toggleTask(
-      id,
-      dateKey
-    ) {
-
-      const task =
-        tasks.find(
-          item =>
-            item.id === id
-        );
+    const repeat =
+      document.querySelector(
+        'input[name="repeat"]:checked'
+      ).value;
 
 
-      if (!task) return;
+    const todayKey =
+      getTodayKey();
 
 
-      const completed =
-        isTaskCompleted(
-          task,
-          dateKey
-        );
+    const newTask = {
+
+      id:
+        Date.now().toString(),
+
+      title,
+
+      date:
+        todayKey,
+
+      startDate:
+        todayKey,
+
+      recurring:
+        repeat,
+
+      completed:
+        false,
+
+      completedDates: [],
+
+      createdAt:
+        new Date().toISOString()
+
+    };
 
 
-      setTaskCompleted(
-        task,
-        dateKey,
-        !completed
-      );
-
-
-      saveTasks();
-
-
-      renderHome();
-
-      renderCalendar();
-
-
-      if (!completed) {
-
-        showToast(
-          "Задача выполнена ✓"
-        );
-
-      }
-
-    }
-
-
-    /* =========================
-       DELETE TASK
-    ========================= */
-
-    function deleteTask(
-      id
-    ) {
-
-      tasks =
-        tasks.filter(
-          task =>
-            task.id !== id
-        );
-
-
-      saveTasks();
-
-      renderHome();
-
-      renderCalendar();
-
-
-      showToast(
-        "Задача удалена"
-      );
-
-    }
-
-
-    /* =========================
-       TASK EVENTS
-    ========================= */
-
-    document
-      .addEventListener(
-        "click",
-        event => {
-
-          const check =
-            event.target.closest(
-              "[data-task-id]"
-            );
-
-
-          if (check) {
-
-            toggleTask(
-              check.dataset.taskId,
-              check.dataset.date
-            );
-
-            return;
-
-          }
-
-
-          const deleteButton =
-            event.target.closest(
-              "[data-delete-id]"
-            );
-
-
-          if (
-            deleteButton
-          ) {
-
-            deleteTask(
-              deleteButton.dataset.deleteId
-            );
-
-          }
-
-        }
-      );
-
-
-    /* =========================
-       MODAL EVENTS
-    ========================= */
-
-    addButton.addEventListener(
-      "click",
-      openModal
+    tasks.push(
+      newTask
     );
 
 
-    cancelButton.addEventListener(
-      "click",
-      closeModal
-    );
+    saveTasks();
 
-
-    saveButton.addEventListener(
-      "click",
-      addTask
-    );
-
-
-    taskInput.addEventListener(
-      "keydown",
-      event => {
-
-        if (
-          event.key === "Enter"
-        ) {
-
-          addTask();
-
-        }
-
-      }
-    );
-
-
-    modalOverlay.addEventListener(
-      "click",
-      event => {
-
-        if (
-          event.target ===
-          modalOverlay
-        ) {
-
-          closeModal();
-
-        }
-
-      }
-    );
-
-
-    /* =========================
-       NAVIGATION
-    ========================= */
-
-    document
-      .querySelectorAll(
-        ".nav-button"
-      )
-      .forEach(
-        button => {
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              const page =
-                button.dataset.page;
-
-
-              document
-                .querySelectorAll(
-                  ".nav-button"
-                )
-                .forEach(
-                  item => {
-
-                    item.classList.remove(
-                      "active"
-                    );
-
-                  }
-                );
-
-
-              button.classList.add(
-                "active"
-              );
-
-
-              document
-                .querySelectorAll(
-                  ".page"
-                )
-                .forEach(
-                  item => {
-
-                    item.classList.remove(
-                      "active"
-                    );
-
-                  }
-                );
-
-
-              const pageElement =
-                document.getElementById(
-                  page + "Page"
-                );
-
-
-              if (
-                pageElement
-              ) {
-
-                pageElement.classList.add(
-                  "active"
-                );
-
-              }
-
-
-              if (
-                page === "calendar"
-              ) {
-
-                renderCalendar();
-
-              }
-
-
-              if (
-                page === "home"
-              ) {
-
-                renderHome();
-
-              }
-
-            }
-          );
-
-        }
-      );
-
-
-    /* =========================
-       PROFILE
-    ========================= */
-
-    document
-      .getElementById(
-        "profileButton"
-      )
-      .addEventListener(
-        "click",
-        () => {
-
-          showToast(
-            "Профиль добавим позже"
-          );
-
-        }
-      );
-
-
-    /* =========================
-       TOAST
-    ========================= */
-
-    let toastTimer;
-
-
-    function showToast(
-      message
-    ) {
-
-      clearTimeout(
-        toastTimer
-      );
-
-
-      toast.textContent =
-        message;
-
-
-      toast.classList.add(
-        "show"
-      );
-
-
-      toastTimer =
-        setTimeout(
-          () => {
-
-            toast.classList.remove(
-              "show"
-            );
-
-          },
-          1800
-        );
-
-    }
-
-
-    /* =========================
-       ESCAPE
-    ========================= */
-
-    function escapeHtml(
-      text
-    ) {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.textContent =
-        text;
-
-
-      return div.innerHTML;
-
-    }
-
-
-    /* =========================
-       TELEGRAM
-    ========================= */
-
-    if (
-      window.Telegram &&
-      window.Telegram.WebApp
-    ) {
-
-      const tg =
-        window.Telegram.WebApp;
-
-
-      tg.ready();
-
-      tg.expand();
-
-    }
-
-
-    /* =========================
-       INIT
-    ========================= */
-
-    formatDate();
 
     renderHome();
 
     renderCalendar();
 
-  </script>
+    renderAnalytics();
+
+
+    closeModal();
+
+
+    showToast(
+      repeat === "none"
+        ? "Задача добавлена ✓"
+        : "Регулярная задача создана 🔁"
+    );
+
+  }
+
+
+  /* =========================
+     TOGGLE
+  ========================= */
+
+  function toggleTask(
+    id,
+    dateKey
+  ) {
+
+    const task =
+      tasks.find(
+        item =>
+          item.id === id
+      );
+
+
+    if (!task) return;
+
+
+    const completed =
+      isTaskCompleted(
+        task,
+        dateKey
+      );
+
+
+    setTaskCompleted(
+      task,
+      dateKey,
+      !completed
+    );
+
+
+    saveTasks();
+
+
+    renderHome();
+
+    renderCalendar();
+
+    renderAnalytics();
+
+
+    if (!completed) {
+
+      showToast(
+        "Задача выполнена ✓"
+      );
+
+    }
+
+  }
+
+
+  /* =========================
+     DELETE
+  ========================= */
+
+  function deleteTask(
+    id
+  ) {
+
+    tasks =
+      tasks.filter(
+        task =>
+          task.id !== id
+      );
+
+
+    saveTasks();
+
+
+    renderHome();
+
+    renderCalendar();
+
+    renderAnalytics();
+
+
+    showToast(
+      "Задача удалена"
+    );
+
+  }
+
+
+  /* =========================
+     EVENTS
+  ========================= */
+
+  document.addEventListener(
+    "click",
+    event => {
+
+      const check =
+        event.target.closest(
+          "[data-task-id]"
+        );
+
+
+      if (check) {
+
+        toggleTask(
+          check.dataset.taskId,
+          check.dataset.date
+        );
+
+        return;
+
+      }
+
+
+      const deleteButton =
+        event.target.closest(
+          "[data-delete-id]"
+        );
+
+
+      if (
+        deleteButton
+      ) {
+
+        deleteTask(
+          deleteButton.dataset.deleteId
+        );
+
+      }
+
+    }
+  );
+
+
+  addButton.addEventListener(
+    "click",
+    openModal
+  );
+
+
+  cancelButton.addEventListener(
+    "click",
+    closeModal
+  );
+
+
+  saveButton.addEventListener(
+    "click",
+    addTask
+  );
+
+
+  taskInput.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        addTask();
+
+      }
+
+    }
+  );
+
+
+  modalOverlay.addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target ===
+        modalOverlay
+      ) {
+
+        closeModal();
+
+      }
+
+    }
+  );
+
+
+  /* =========================
+     NAVIGATION
+  ========================= */
+
+  document
+    .querySelectorAll(
+      ".nav-button"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const page =
+              button.dataset.page;
+
+
+            document
+              .querySelectorAll(
+                ".nav-button"
+              )
+              .forEach(
+                item => {
+
+                  item.classList.remove(
+                    "active"
+                  );
+
+                }
+              );
+
+
+            button.classList.add(
+              "active"
+            );
+
+
+            document
+              .querySelectorAll(
+                ".page"
+              )
+              .forEach(
+                item => {
+
+                  item.classList.remove(
+                    "active"
+                  );
+
+                }
+              );
+
+
+            const pageElement =
+              document.getElementById(
+                page + "Page"
+              );
+
+
+            if (
+              pageElement
+            ) {
+
+              pageElement.classList.add(
+                "active"
+              );
+
+            }
+
+
+            if (
+              page === "calendar"
+            ) {
+
+              renderCalendar();
+
+            }
+
+
+            if (
+              page === "analytics"
+            ) {
+
+              renderAnalytics();
+
+            }
+
+
+            if (
+              page === "home"
+            ) {
+
+              renderHome();
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+
+  /* =========================
+     PROFILE
+  ========================= */
+
+  document
+    .getElementById(
+      "profileButton"
+    )
+    .addEventListener(
+      "click",
+      () => {
+
+        showToast(
+          "Профиль добавим позже"
+        );
+
+      }
+    );
+
+
+  /* =========================
+     STORAGE
+  ========================= */
+
+  function saveTasks() {
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(tasks)
+    );
+
+  }
+
+
+  /* =========================
+     TOAST
+  ========================= */
+
+  let toastTimer;
+
+
+  function showToast(
+    message
+  ) {
+
+    clearTimeout(
+      toastTimer
+    );
+
+
+    toast.textContent =
+      message;
+
+
+    toast.classList.add(
+      "show"
+    );
+
+
+    toastTimer =
+      setTimeout(
+        () => {
+
+          toast.classList.remove(
+            "show"
+          );
+
+        },
+        1800
+      );
+
+  }
+
+
+  /* =========================
+     ESCAPE
+  ========================= */
+
+  function escapeHtml(
+    text
+  ) {
+
+    const div =
+      document.createElement(
+        "div"
+      );
+
+
+    div.textContent =
+      text;
+
+
+    return div.innerHTML;
+
+  }
+
+
+  /* =========================
+     TELEGRAM
+  ========================= */
+
+  if (
+    window.Telegram &&
+    window.Telegram.WebApp
+  ) {
+
+    const tg =
+      window.Telegram.WebApp;
+
+
+    tg.ready();
+
+    tg.expand();
+
+  }
+
+
+  /* =========================
+     INIT
+  ========================= */
+
+  formatDate();
+
+  renderHome();
+
+  renderCalendar();
+
+  renderAnalytics();
+
+</script>
 
 </body>
 </html>
