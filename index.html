@@ -19,7 +19,6 @@
   input,textarea{font:inherit}
   .hidden{display:none!important}
 
-  /* ===== Иконки ===== */
   .icn{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;display:inline-block;vertical-align:middle}
   .round .icn{width:16px;height:16px;stroke-width:2.4}
   .nav-btn .icn{width:17px;height:17px;stroke-width:2}
@@ -33,6 +32,7 @@
   .chk .icn{width:13px;height:13px;stroke-width:3.2}
   .sub .chk .icn{width:10px;height:10px}
   .mini-del .icn{width:16px;height:16px;stroke-width:1.7}
+  .pencil .icn{width:16px;height:16px;stroke-width:1.8}
   .t-ic{display:inline-flex;margin-right:4px;vertical-align:-2px}
   .t-ic .icn{width:13px;height:13px;stroke-width:2.2}
   .t-ic.imp{color:var(--warn)}
@@ -48,7 +48,7 @@
   .icon-btn:active{background:var(--card2)}
 
   .topbar{display:flex;align-items:center;gap:8px;padding:4px 14px 12px}
-  .avatar{width:38px;height:38px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;overflow:hidden}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;overflow:hidden;cursor:pointer}
   .round{background:var(--card2);width:34px;height:34px;flex:none;display:flex;align-items:center;justify-content:center}
   .pill{flex:1;max-width:190px;margin:0 auto;background:var(--card2);border-radius:14px;padding:7px 10px;text-align:center;line-height:1.25}
   .pill .t{display:block;color:var(--accent);font-size:13px;font-weight:600}
@@ -75,11 +75,15 @@
   .summary{display:flex;justify-content:flex-end;align-items:center;padding:14px 18px}
   .summary .v{font-size:22px;font-weight:800}
 
-  .task-row{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:14px;padding:12px;margin-bottom:8px}
+  .task-row{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:14px 14px 14px 14px;padding:12px;margin-bottom:8px}
+  .task-wrap .subs{background:var(--card2);border-radius:0 0 14px 14px;margin:-4px 0 8px;padding:4px 12px 10px}
+  .task-wrap .task-row{margin-bottom:0;border-radius:14px}
+  .task-wrap.has-subs .task-row{border-radius:14px 14px 0 0}
   .chk{width:24px;height:24px;border-radius:50%;flex:none;border:2px solid var(--muted);display:flex;align-items:center;justify-content:center;color:transparent}
   .task-row.done .chk{background:var(--accent);border-color:var(--accent);color:#0d1720}
   .task-row.done .t{opacity:.55;text-decoration:line-through}
   .task-row .t{flex:1;word-break:break-word;font-size:15px}
+  .task-row .t .desc{display:block;color:var(--muted);font-size:12.5px;margin-top:3px;text-decoration:none;opacity:1}
   .mini-del{color:var(--muted);padding:4px;display:flex}
   .empty{text-align:center;color:var(--muted);padding:22px 0;font-size:14px}
 
@@ -155,12 +159,14 @@
   .ov-title-big{text-align:center;font-size:18px;font-weight:700;margin:14px 0 18px}
   .sec-title{color:var(--accent);font-size:14px;font-weight:600;margin:16px 2px 8px}
   .list-card{background:var(--card);border-radius:16px;overflow:hidden}
+  .list-card.solo{margin-bottom:12px}
   .list-row{display:flex;align-items:center;gap:12px;width:100%;padding:14px;text-align:left;font-size:15px}
   .list-row + .list-row{border-top:1px solid var(--line)}
   .list-row .li{width:30px;height:30px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center}
   .list-row .lt{flex:1}
-  .list-row .val{color:var(--muted);font-size:13px}
+  .list-row .val{color:var(--muted);font-size:13.5px;text-align:right}
   .list-row .arr{color:var(--muted);display:flex}
+  .pencil{color:var(--accent);display:flex;padding:2px}
   .val-pill{background:var(--card2);border-radius:12px;padding:9px 14px;font-size:14px;font-weight:600;flex:none}
   .switch{position:relative;width:46px;height:27px;flex:none}
   .switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}
@@ -168,6 +174,11 @@
   .switch .sl::after{content:"";position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:.2s}
   .switch input:checked + .sl{background:var(--accent)}
   .switch input:checked + .sl::after{transform:translateX(19px)}
+
+  .time-row{display:flex;align-items:center;gap:10px;padding:0 14px 14px}
+  .time-row input{flex:1;background:var(--card2);border:none;outline:none;border-radius:12px;padding:14px;text-align:center;font-size:18px;font-weight:600;color:var(--text)}
+  .time-row .colon{color:var(--muted);font-size:18px;font-weight:700}
+  .notif-card.dimmed .time-row{opacity:.45;pointer-events:none}
 
   .form-card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px}
   .form-card textarea,.form-card input[type=text],.form-card input[type=number]{width:100%;background:var(--card2);border:none;outline:none;border-radius:12px;padding:12px;color:var(--text);font-size:15px;resize:vertical}
@@ -177,11 +188,6 @@
   .note .icn{width:15px;height:15px;margin-top:1px}
   input[type=date].hidden-date{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
 
-  .profile-head{display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 0}
-  .profile-head .pa{width:74px;height:74px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--accent)}
-  .profile-head .pa .icn{width:34px;height:34px;stroke-width:1.6}
-  .profile-head .pn{font-size:18px;font-weight:700}
-  .profile-head .pu{color:var(--muted);font-size:13px}
   .doc{color:var(--muted);font-size:14px;line-height:1.55}
   .doc p{margin-bottom:10px}
 
@@ -196,7 +202,6 @@
 
 <!-- ================= SVG-СПРАЙТ ================= -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
-  <!-- Меню / закрытие / стрелки -->
   <symbol id="i-menu" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.7" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5.5"/><path d="M11 6l-6 6 6 6"/></symbol>
@@ -206,31 +211,24 @@
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.8l4.3 4.4L19 7.2"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 6.5h15"/><path d="M9.2 6.5V5.2A1.7 1.7 0 0 1 10.9 3.5h2.2a1.7 1.7 0 0 1 1.7 1.7v1.3"/><path d="M6.7 6.5l.9 12a2 2 0 0 0 2 1.9h4.8a2 2 0 0 0 2-1.9l.9-12"/><path d="M10 10.5v6M14 10.5v6"/></symbol>
-
-  <!-- Календарь и периоды -->
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l4.6-.9L20 7.7a2 2 0 0 0 0-2.8l-.9-.9a2 2 0 0 0-2.8 0L4.9 15.4z"/><path d="M13.6 6.6l3.8 3.8"/></symbol>
   <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><circle cx="8.3" cy="14" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.7" cy="14" r="1.1" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-week" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M8 3v4M16 3v4"/><rect x="6.8" y="12.2" width="10.4" height="3.6" rx="1.8" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-month" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.2 13.7h.01M12 13.7h.01M15.8 13.7h.01M8.2 17h.01M12 17h.01M15.8 17h.01"/></symbol>
-
-  <!-- Навигация -->
   <symbol id="i-tasks" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="15.5" rx="3"/><path d="M9 5v-.8A1.7 1.7 0 0 1 10.7 2.5h2.6A1.7 1.7 0 0 1 15 4.2V5"/><path d="M9 13l2.3 2.3 4.2-4.6"/></symbol>
   <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 3l3 3-3 3"/><path d="M20 6H8.5A4.5 4.5 0 0 0 4 10.5"/><path d="M7 21l-3-3 3-3"/><path d="M4 18h11.5a4.5 4.5 0 0 0 4.5-4.5"/></symbol>
   <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20.5h16"/><path d="M7.5 17v-4.5"/><path d="M12 17V6.5"/><path d="M16.5 17v-7"/></symbol>
-
-  <!-- Журналы -->
   <symbol id="i-clip" viewBox="0 0 24 24"><path d="M20.5 11.1l-8.9 8.9a5.6 5.6 0 0 1-7.9-7.9l8.9-8.9a3.7 3.7 0 0 1 5.3 5.3l-8.9 8.8a1.9 1.9 0 0 1-2.6-2.6l8.2-8.2"/></symbol>
   <symbol id="i-grad" viewBox="0 0 24 24"><path d="M2.5 9.3L12 4.8l9.5 4.5L12 13.8 2.5 9.3z"/><path d="M6.5 11.6v4c0 1.6 2.5 3 5.5 3s5.5-1.4 5.5-3v-4"/><path d="M21.5 9.3v5.2"/></symbol>
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 1 3.7 10.7c-.6.5-.7 1.3-.7 2.3h-6c0-1-.1-1.8-.7-2.3A6 6 0 0 1 12 3z"/><path d="M9.5 19.5h5"/><path d="M10.5 22h3"/></symbol>
-
-  <!-- Настройки -->
   <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20a7 7 0 0 1 14 0"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.6l2.5 5.2 5.7.8-4.1 4 1 5.7-5.1-2.7-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8.4a6 6 0 0 0-12 0c0 6.6-2.5 8.1-2.5 8.1h17S18 15 18 8.4"/><path d="M10.3 20.5a2 2 0 0 0 3.4 0"/></symbol>
   <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7.5h9M19 7.5h1"/><circle cx="16" cy="7.5" r="2.3"/><path d="M4 16.5h1M11 16.5h9"/><circle cx="8" cy="16.5" r="2.3"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/></symbol>
-  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3h.0A8.5 8.5 0 0 1 21 11.5z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.5 3h0A8.5 8.5 0 0 1 21 11.5z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></symbol>
   <symbol id="i-doc" viewBox="0 0 24 24"><path d="M13.8 3.5H7a2.5 2.5 0 0 0-2.5 2.5v12A2.5 2.5 0 0 0 7 20.5h10a2.5 2.5 0 0 0 2.5-2.5V9.2z"/><path d="M13.8 3.5V9.2h5.7"/><path d="M9 13h6M9 16.5h6"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.7l7.5 2.9v6c0 4.9-3.2 8.3-7.5 9.9-4.3-1.6-7.5-5-7.5-9.9v-6z"/><path d="M9 11.6l2.2 2.2 4.3-4.6"/></symbol>
   <symbol id="i-gift" viewBox="0 0 24 24"><path d="M20 12v8.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20.5V12"/><rect x="2.5" y="7.5" width="19" height="4.5" rx="1"/><path d="M12 22V7.5"/><path d="M12 7.5H7.5a2.5 2.5 0 0 1 0-5C11 2.5 12 7.5 12 7.5z"/><path d="M12 7.5h4.5a2.5 2.5 0 0 0 0-5C13 2.5 12 7.5 12 7.5z"/></symbol>
@@ -238,8 +236,6 @@
   <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 21.5c4.1 0 6.8-2.7 6.8-6.4 0-2.7-1.5-4.8-2.9-6.5-.6 1-1.4 1.7-2.3 2.1.2-2.9-1.1-5.6-3.6-7.2.3 2.4-.7 3.8-2 5.3-1.3 1.5-2.8 3.4-2.8 6.3 0 3.7 2.7 6.4 6.8 6.4z"/></symbol>
   <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 4l1.9 5 5.1 1.5-5.1 1.5L12 17l-1.9-5L5 10.5 10.1 9z"/><path d="M19 16.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></symbol>
   <symbol id="i-sleep" viewBox="0 0 24 24"><path d="M20.2 14.7A8.7 8.7 0 0 1 9.3 3.8a8.7 8.7 0 1 0 10.9 10.9z"/><path d="M15.5 4.5h4l-4 4h4"/></symbol>
-
-  <!-- Утёнок для пустого списка задач -->
   <symbol id="i-duck" viewBox="0 0 64 64">
     <ellipse cx="35" cy="43" rx="20" ry="13.5" fill="#FFD34E"/>
     <circle cx="23" cy="22" r="12.5" fill="#FFD34E"/>
@@ -249,7 +245,6 @@
     <path d="M47 33c3 1.5 5 4 5 7" stroke="#F0B429" stroke-width="2.5" stroke-linecap="round" fill="none"/>
   </symbol>
 </svg>
-<!-- =============== /СПРАЙТ =============== -->
 
 <header class="app-header">
   <div class="h-title">Просто Трекер</div>
@@ -268,7 +263,6 @@
 </div>
 
 <main>
-  <!-- ЗАДАЧИ -->
   <section id="tabTasks" class="tab">
     <div class="card hidden" id="calCard">
       <div class="cal-head"><div class="m" id="calTitle"></div>
@@ -292,7 +286,6 @@
     </div>
   </section>
 
-  <!-- ПРИВЫЧКИ -->
   <section id="tabHabits" class="tab hidden">
     <div class="card hidden" id="yearCardHab">
       <div class="year-head"><button id="yearPrevHab"><svg class="icn"><use href="#i-chev-l"/></svg></button><div class="y" id="yearTitleHab"></div><button id="yearNextHab"><svg class="icn"><use href="#i-chev-r"/></svg></button></div>
@@ -306,13 +299,11 @@
     <button class="wide-btn" id="addHabitBtn"><svg class="icn"><use href="#i-plus"/></svg>Добавить привычку</button>
   </section>
 
-  <!-- ЦЕЛИ -->
   <section id="tabGoals" class="tab hidden">
     <div class="card" id="goalsBody"></div>
     <button class="wide-btn" id="addGoalBtn"><svg class="icn"><use href="#i-plus"/></svg>Добавить цель</button>
   </section>
 
-  <!-- АНАЛИТИКА -->
   <section id="tabAnalytics" class="tab hidden"><div id="anaBody"></div></section>
 
   <div class="foot" id="mainFooter">@ProstoTrackerBot</div>
@@ -340,18 +331,15 @@
 
 <script>
 /* ============ КОНФИГ ============ */
-const CONFIG = {
-  APP_NAME: "Просто Трекер",
-  FOOTER: "@ProstoTrackerBot",
-  SUPPORT_URL: ""
-};
+const CONFIG = { APP_NAME:"Просто Трекер", FOOTER:"@ProstoTrackerBot", SUPPORT_URL:"" };
 /* ================================ */
 
 const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
 const cloud = tg && tg.CloudStorage ? tg.CloudStorage : null;
+const tgUser = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
 const $ = s => document.querySelector(s);
-const STORE_KEY = "prosto_tracker_v4";
-const ic = (id, cls) => '<svg class="icn'+(cls?" "+cls:"")+'"><use href="#'+id+'"/></svg>';
+const STORE_KEY = "prosto_tracker_v5";
+const ic = (id) => '<svg class="icn"><use href="#'+id+'"/></svg>';
 
 const MONTHS_FULL=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
 const MONTHS_GRID=["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"];
@@ -360,10 +348,10 @@ const WD=["ПН","ВТ","СР","ЧТ","ПТ","СБ","ВС"];
 const REPEATS=["once","daily","weekly","monthly"];
 const REPEAT_LABEL={once:"Однократно",daily:"Ежедневно",weekly:"Еженедельно",monthly:"Ежемесячно"};
 const JOURNALS={
-  notes:{title:"Заметки",icon:"i-clip",ph:"Введите заметку..."},
-  lesson:{title:"Урок дня",icon:"i-grad",ph:"Что нового ты узнал(а) сегодня?"},
-  gratitude:{title:"Благодарность",icon:"i-heart",ph:"За что ты благодарен(на) сегодня?"},
-  thoughts:{title:"Мысли",icon:"i-bulb",ph:"Запиши свои мысли..."}
+  notes:{title:"Заметки",ph:"Введите заметку..."},
+  lesson:{title:"Урок дня",ph:"Что нового ты узнал(а) сегодня?"},
+  gratitude:{title:"Благодарность",ph:"За что ты благодарен(на) сегодня?"},
+  thoughts:{title:"Мысли",ph:"Запиши свои мысли..."}
 };
 
 const today=new Date();
@@ -378,16 +366,31 @@ function esc(t){const d=document.createElement("div");d.textContent=t;return d.i
 function fmtDayLong(key){return cap(new Intl.DateTimeFormat("ru-RU",{day:"numeric",month:"short",year:"numeric"}).format(fromISO(key)))+".";}
 
 let state={
-  settings:{habitsDesc:false,habitsConfetti:true,goalsDesc:false,goalsSmart:false,goalsSubgoals:false,goalsConfetti:true,showHabits:true,showGoals:true,showAnalytics:true,notifications:false},
+  settings:{
+    tasksDesc:false, tasksImportant:true, tasksSubtasks:false, tasksOverdue:false, showMore:true, tasksConfetti:true,
+    habitsDesc:false, habitsConfetti:true,
+    goalsDesc:false, goalsSmart:false, goalsSubgoals:false, goalsConfetti:true,
+    showHabits:true, showGoals:true, showAnalytics:true,
+    morningOn:false, morningTime:"08:00", eveningOn:false, eveningTime:"20:00"
+  },
+  profile:{name:"",email:"",tz:"",registeredAt:""},
   tasks:[],habits:[],goals:[],
   journals:{notes:[],lesson:[],gratitude:[],thoughts:[]},
   updatedAt:0
 };
 
+function initProfile(){
+  if(!state.profile)state.profile={name:"",email:"",tz:"",registeredAt:""};
+  if(!state.profile.name&&tgUser)state.profile.name=((tgUser.first_name||"")+(tgUser.last_name?" "+tgUser.last_name:"")).trim();
+  if(!state.profile.tz){try{state.profile.tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"Europe/Moscow";}catch(e){state.profile.tz="Europe/Moscow";}}
+  if(!state.profile.registeredAt)state.profile.registeredAt=iso(today);
+}
+
 function loadState(){
   try{const raw=localStorage.getItem(STORE_KEY);if(raw){const p=JSON.parse(raw);if(p&&p.settings)state=Object.assign(state,p);}}catch(e){}
   if(!state.journals)state.journals={notes:[],lesson:[],gratitude:[],thoughts:[]};
-  if(cloud&&cloud.getItem){try{cloud.getItem(STORE_KEY,(err,val)=>{if(!err&&val){try{const p=JSON.parse(val);if(p&&p.updatedAt&&p.updatedAt>state.updatedAt){state=Object.assign(state,p);if(!state.journals)state.journals={notes:[],lesson:[],gratitude:[],thoughts:[]};renderAll();}}catch(e){}}});}catch(e){}}
+  initProfile();
+  if(cloud&&cloud.getItem){try{cloud.getItem(STORE_KEY,(err,val)=>{if(!err&&val){try{const p=JSON.parse(val);if(p&&p.updatedAt&&p.updatedAt>state.updatedAt){state=Object.assign(state,p);if(!state.journals)state.journals={notes:[],lesson:[],gratitude:[],thoughts:[]};initProfile();renderAll();}}catch(e){}}});}catch(e){}}
 }
 function persist(){
   state.updatedAt=Date.now();
@@ -459,6 +462,12 @@ function renderTopbar(){
 
 function renderTasks(){
   $("#calCard").classList.toggle("hidden",!view.calOpen);
+  const showMore=state.settings.showMore;
+  $("#moreBtn").classList.toggle("hidden",!showMore);
+  if(!showMore)view.moreOpen=false;
+  $("#morePanel").classList.toggle("hidden",!view.moreOpen);
+  $("#moreBtn").classList.toggle("open",view.moreOpen);
+
   const y=view.calMonth.getFullYear(),m=view.calMonth.getMonth();
   $("#calTitle").textContent=MONTHS_FULL[m]+" "+y+"г.";
   $("#calWd").innerHTML=WD.map(w=>'<span class="cal-wd">'+w+"</span>").join("");
@@ -481,10 +490,17 @@ function renderTasks(){
   }else{
     list.innerHTML=s.list.map(x=>{
       const t=x.task;let mIc="";
-      if(t.important)mIc+='<span class="t-ic imp">'+ic("i-alert")+"</span>";
+      if(t.important&&state.settings.tasksImportant)mIc+='<span class="t-ic imp">'+ic("i-alert")+"</span>";
       if(t.notify)mIc+='<span class="t-ic ntf">'+ic("i-bell")+"</span>";
       if(t.repeat&&t.repeat!=="once")mIc+='<span class="t-ic rpt">'+ic("i-repeat")+"</span>";
-      return '<div class="task-row'+(x.done?" done":"")+'" data-id="'+t.id+'"><button class="chk">'+ic("i-check")+'</button><div class="t">'+mIc+esc(t.text)+'</div><button class="mini-del" data-del="'+t.id+'">'+ic("i-trash")+"</button></div>";
+      const desc=(t.desc&&state.settings.tasksDesc)?'<span class="desc">'+esc(t.desc)+"</span>":"";
+      const showSubs=state.settings.tasksSubtasks&&t.subs&&t.subs.length;
+      let wrap='<div class="task-wrap'+(showSubs?" has-subs":"")+'">';
+      wrap+='<div class="task-row'+(x.done?" done":"")+'" data-id="'+t.id+'"><button class="chk">'+ic("i-check")+'</button><div class="t">'+mIc+esc(t.text)+desc+'</div><button class="mini-del" data-del="'+t.id+'">'+ic("i-trash")+"</button></div>";
+      if(showSubs){
+        wrap+='<div class="subs">'+t.subs.map(sb=>'<div class="sub'+(sb.done?" done":"")+'"><button class="chk" data-tsub="'+t.id+":"+sb.id+'">'+ic("i-check")+'</button><span class="t">'+esc(sb.text)+"</span></div>").join("")+"</div>";
+      }
+      return wrap+"</div>";
     }).join("");
   }
 }
@@ -523,7 +539,7 @@ function renderGoals(){
     const pct=Math.min(100,Math.round(g.progress/Math.max(1,g.target)*100));
     let html='<div class="goal"><div class="g-head"><span class="star">'+ic("i-star")+'</span><div class="tt">'+esc(g.title)+'</div><button class="mini-del" data-gdel="'+g.id+'">'+ic("i-trash")+"</button></div>";
     if(g.desc&&state.settings.goalsDesc)html+='<div class="g-desc">'+esc(g.desc)+"</div>";
-    if(g.smart&&state.settings.goalsSmart)html+='<div class="g-desc">'+ic("i-target")+" "+esc(g.smart)+"</div>";
+    if(g.smart&&state.settings.goalsSmart)html+='<div class="g-desc">'+esc(g.smart)+"</div>";
     html+='<div class="g-prog"><div class="bar"><i style="width:'+pct+'%"></i></div><span class="num">'+g.progress+"/"+g.target+"</span></div>";
     html+='<div class="g-ctrl"><button data-gminus="'+g.id+'">−</button><button data-gplus="'+g.id+'">+</button>';
     if(g.progress>=g.target)html+='<div class="done-tag">Выполнено 🎉</div>';
@@ -557,33 +573,76 @@ function renderAnalytics(){
 /* ================= ОВЕРЛЕЙ ================= */
 let ovStack=[];
 let taskDraft=null;
+let editDraft=null;
 function openScreen(name){ovStack.push(name);renderOverlay();$("#overlay").classList.remove("hidden");}
 function backScreen(){ovStack.pop();if(ovStack.length)renderOverlay();else $("#overlay").classList.add("hidden");}
 
 function row(iconId,bg,lt,val,kind,key){return '<button class="list-row" data-'+kind+'="'+key+'"><span class="li" style="background:'+bg+'">'+ic(iconId)+'</span><span class="lt">'+lt+'</span><span class="val">'+val+'</span><span class="arr">'+ic("i-chev-r")+"</span></button>";}
 function prow(key,label){return '<div class="list-row"><div class="lt">'+label+"</div>"+sw(key,state.settings[key])+"</div>";}
 function sw(key,on){return '<label class="switch"><input type="checkbox" data-sw="'+key+'"'+(on?" checked":"")+'><span class="sl"></span></label>';}
+function profileRow(label,value,editKey){
+  return '<div class="list-card solo"><div class="list-row"><div class="lt">'+label+'</div><div class="val">'+esc(value||"Не указан")+"</div>"+
+  (editKey?'<button class="pencil" data-edit="'+editKey+'">'+ic("i-pencil")+"</button>":"")+"</div></div>";
+}
 
 const SCREENS={
-  settings(){return{title:CONFIG.APP_NAME,html:
-    '<div class="sec-title">Основные настройки</div><div class="list-card">'+
-    row("i-user","#3f8ec7","Профиль","","open","profile")+
-    row("i-star","#8f6cf0","Подписка","Всё бесплатно","open","subs")+
-    row("i-bell","#e06c6c","Уведомления","","open","notif")+
-    row("i-sliders","#6fce8a","Предпочтения","","open","prefs")+"</div>"+
-    '<div class="sec-title">Задачи</div><div class="list-card">'+row("i-clock","#3f8ec7","Просроченные задачи","","open","overdue")+"</div>"+
-    '<div class="sec-title">Другое</div><div class="list-card">'+
-    row("i-chat","#f2994a","Связаться с поддержкой","","act","support")+
-    row("i-doc","#3f8ec7","Пользовательское соглашение","","open","terms")+
-    row("i-shield","#6fce8a","Политика конфиденциальности","","open","privacy")+"</div>"};},
+  settings(){
+    const overdueRow=state.settings.tasksOverdue?row("i-clock","#3f8ec7","Просроченные задачи","","open","overdue"):"";
+    return{title:CONFIG.APP_NAME,html:
+      '<div class="sec-title">Основные настройки</div><div class="list-card">'+
+      row("i-user","#3f8ec7","Профиль","","open","profile")+
+      row("i-star","#8f6cf0","Подписка","Всё бесплатно","open","subs")+
+      row("i-bell","#e06c6c","Уведомления","","open","notif")+
+      row("i-sliders","#6fce8a","Предпочтения","","open","prefs")+"</div>"+
+      (overdueRow?'<div class="sec-title">Задачи</div><div class="list-card">'+overdueRow+"</div>":"")+
+      '<div class="sec-title">Другое</div><div class="list-card">'+
+      row("i-chat","#f2994a","Связаться с поддержкой","","act","support")+
+      row("i-doc","#3f8ec7","Пользовательское соглашение","","open","terms")+
+      row("i-shield","#6fce8a","Политика конфиденциальности","","open","privacy")+"</div>"};},
   subs(){return{title:"Подписка",html:'<div class="card"><div class="empty">'+ic("i-gift")+"В этой сборке все функции открыты бесплатно.<br>Платная подписка отключена.</div></div>"};},
-  profile(){const u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
-    return{title:"Профиль",html:'<div class="card"><div class="profile-head"><div class="pa">'+(u&&u.first_name?esc(u.first_name.charAt(0).toUpperCase()):ic("i-user"))+'</div><div class="pn">'+(u?esc(((u.first_name||"")+" "+(u.last_name||"")).trim()):"Гость")+'</div><div class="pu">'+(u&&u.username?"@"+esc(u.username):"открой в Telegram")+"</div></div></div>"};},
-  notif(){return{title:"Уведомления",html:'<div class="list-card"><div class="list-row"><div class="lt">Напоминания</div>'+sw("notifications",state.settings.notifications)+'</div></div><div class="card" style="margin-top:12px"><div class="doc"><p>Напоминания будет присылать бот, когда появится серверная часть. Сейчас настройка сохраняется локально.</p></div></div>'};},
+
+  profile(){
+    const reg=new Intl.DateTimeFormat("ru-RU",{day:"numeric",month:"long",year:"numeric"}).format(fromISO(state.profile.registeredAt||iso(today)));
+    return{title:CONFIG.APP_NAME,html:
+      '<div class="ov-title-big">Профиль</div>'+
+      profileRow("Имя",state.profile.name||"Не указано","name")+
+      profileRow("Email",state.profile.email||"Не указан","email")+
+      profileRow("Часовой пояс",state.profile.tz,"tz")+
+      profileRow("Язык","Русский","")+
+      profileRow("Дата регистрации",reg,"")};},
+
+  edit(field){
+    const labels={name:"Имя",email:"Email",tz:"Часовой пояс"};
+    const vals={name:state.profile.name,email:state.profile.email,tz:state.profile.tz};
+    editDraft={field:field,value:vals[field]||""};
+    return{title:"Профиль",html:
+      '<div class="ov-title-big">'+labels[field]+'</div>'+
+      '<div class="form-card"><input type="text" id="editInput" value="'+esc(editDraft.value)+'" placeholder="Введите значение"></div>'+
+      '<button class="save-btn" id="editSave">Сохранить</button>'};},
+
+  notif(){
+    const mt=state.settings.morningTime.split(":"),et=state.settings.eveningTime.split(":");
+    return{title:CONFIG.APP_NAME,html:
+      '<div class="ov-title-big">Уведомления</div>'+
+      '<div class="list-card notif-card'+(state.settings.morningOn?"":" dimmed")+'">'+
+      '<div class="list-row"><div class="lt">Утренняя сводка</div>'+sw("morningOn",state.settings.morningOn)+"</div>"+
+      '<div class="time-row"><input id="mH" inputmode="numeric" maxlength="2" placeholder="00" value="'+mt[0]+'"><span class="colon">:</span><input id="mM" inputmode="numeric" maxlength="2" placeholder="00" value="'+mt[1]+'"></div></div>'+
+      '<div class="list-card notif-card'+(state.settings.eveningOn?"":" dimmed")+'">'+
+      '<div class="list-row"><div class="lt">Вечерняя сводка</div>'+sw("eveningOn",state.settings.eveningOn)+"</div>"+
+      '<div class="time-row"><input id="eH" inputmode="numeric" maxlength="2" placeholder="00" value="'+et[0]+'"><span class="colon">:</span><input id="eM" inputmode="numeric" maxlength="2" placeholder="00" value="'+et[1]+'"></div></div>'+
+      '<div class="note">'+ic("i-star")+"<span>Уведомления доступны бесплатно — подписка не нужна 🎉 Напоминания будет присылать бот, когда появится серверная часть.</span></div>"};},
+
   prefs(){return{title:"Предпочтения",html:
-    '<div class="sec-title">Привычки</div><div class="list-card">'+prow("habitsDesc","Описание")+prow("habitsConfetti","Конфетти при выполнении")+"</div>"+
-    '<div class="sec-title">Цели</div><div class="list-card">'+prow("goalsDesc","Описание")+prow("goalsSmart","Критерии SMART")+prow("goalsSubgoals","Подцели (бета)")+prow("goalsConfetti","Конфетти при выполнении")+"</div>"+
-    '<div class="sec-title">Разделы меню</div><div class="list-card">'+prow("showHabits","Раздел «Привычки»")+prow("showGoals","Раздел «Цели»")+prow("showAnalytics","Раздел «Аналитика»")+"</div>"};},
+    '<div class="ov-title-big">Предпочтения</div>'+
+    '<div class="sec-title">Задачи</div><div class="list-card">'+
+    prow("tasksDesc","Описание")+prow("tasksImportant","Пометка «Важная»")+prow("tasksSubtasks","Подзадачи (бета)")+prow("tasksOverdue","Просроченные задачи")+prow("showMore","Раздел «Ещё»")+prow("tasksConfetti","Конфетти при выполнении")+"</div>"+
+    '<div class="sec-title">Привычки</div><div class="list-card">'+
+    prow("habitsDesc","Описание")+prow("habitsConfetti","Конфетти при выполнении")+"</div>"+
+    '<div class="sec-title">Цели</div><div class="list-card">'+
+    prow("goalsDesc","Описание")+prow("goalsSmart","Критерии SMART")+prow("goalsSubgoals","Подцели (бета)")+prow("goalsConfetti","Конфетти при выполнении")+"</div>"+
+    '<div class="sec-title">Разделы меню</div><div class="list-card">'+
+    prow("showHabits","Раздел «Привычки»")+prow("showGoals","Раздел «Цели»")+prow("showAnalytics","Раздел «Аналитика»")+"</div>"};},
+
   overdue(){
     const list=state.tasks.filter(t=>!t.doneDates.includes(t.date)&&t.date<iso(today)&&t.repeat==="once").sort((a,b)=>a.date<b.date?-1:1);
     return{title:"Просроченные задачи",html:!list.length?'<div class="card"><div class="empty">'+ic("i-sparkle")+"Просроченных задач нет</div></div>":
@@ -599,19 +658,22 @@ const SCREENS={
       '<div class="list-card">'+
       '<button class="list-row" id="atDateRow"><div class="lt">Дата</div><div class="val-pill">'+fmtDayLong(d.date)+'</div></button>'+
       '<button class="list-row" id="atRepeatRow"><div class="lt">Периодичность</div><div class="val-pill">'+REPEAT_LABEL[d.repeat]+'</div></button>'+
-      '<div class="list-row"><div class="lt">Уведомление</div>'+sw("atNotify",d.notify)+'</div>'+
-      '<div class="list-row"><div class="lt">Важная</div>'+sw("atImportant",d.important)+"</div></div>"+
+      '<div class="list-row"><div class="lt">Уведомление</div>'+sw("atNotify",d.notify)+"</div>"+
+      (state.settings.tasksImportant?'<div class="list-row"><div class="lt">Важная</div>'+sw("atImportant",d.important)+"</div>":"")+
+      "</div>"+
+      (state.settings.tasksDesc?'<div class="form-card" style="margin-top:12px"><label style="margin-top:0">Описание</label><input type="text" id="atDesc" maxlength="120" value="'+esc(d.desc)+'" placeholder="Краткое описание"></div>':"")+
+      (state.settings.tasksSubtasks?'<div class="form-card"><label style="margin-top:0">Подзадачи (каждая с новой строки)</label><textarea id="atSubs" rows="3" placeholder="Шаг 1&#10;Шаг 2">'+esc(d.subsText)+"</textarea></div>":"")+
       '<div class="note">'+ic("i-star")+'<span>Периодичность, уведомления и пометка «Важная» доступны бесплатно — подписка не нужна 🎉</span></div>'+
       '<input type="date" class="hidden-date" id="atDateInput" value="'+d.date+'">'+
       '<button class="save-btn" id="atSave">Добавить задачу</button>'};},
 
   addHabit(){return{title:"Новая привычка",html:
-    '<form class="form-card" id="habitForm"><label>Название</label><input type="text" id="hfName" maxlength="60" required placeholder="Например: зарядка">'+
+    '<form class="form-card" id="habitForm"><label style="margin-top:0">Название</label><input type="text" id="hfName" maxlength="60" required placeholder="Например: зарядка">'+
     (state.settings.habitsDesc?'<label>Описание</label><input type="text" id="hfDesc" maxlength="80" placeholder="Краткое описание">':"")+
     '<button class="save-btn" type="submit">Сохранить</button></form>'};},
 
   addGoal(){return{title:"Новая цель на "+view.goalsYear,html:
-    '<form class="form-card" id="goalForm"><label>Название</label><input type="text" id="gfTitle" maxlength="80" required placeholder="Например: прочитать 12 книг">'+
+    '<form class="form-card" id="goalForm"><label style="margin-top:0">Название</label><input type="text" id="gfTitle" maxlength="80" required placeholder="Например: прочитать 12 книг">'+
     (state.settings.goalsDesc?'<label>Описание</label><textarea id="gfDesc" rows="2" maxlength="200"></textarea>':"")+
     (state.settings.goalsSmart?'<label>Критерий успеха (SMART)</label><input type="text" id="gfSmart" maxlength="120" placeholder="Как пойму, что цель достигнута">':"")+
     '<label>Сколько шагов (целевое число)</label><input type="number" id="gfTarget" min="1" max="999" value="1">'+
@@ -629,17 +691,31 @@ const SCREENS={
         '<div class="list-row"><div class="lt">'+esc(en.text)+'<div class="val">'+cap(new Intl.DateTimeFormat("ru-RU",{day:"numeric",month:"short",year:"numeric"}).format(fromISO(en.date)))+'</div></div><button class="mini-del" data-jdel="'+type+":"+en.id+'">'+ic("i-trash")+"</button></div>").join("")+"</div>":"")};}
 };
 
+function pad2(v,max){let n=parseInt(v||"0",10);if(isNaN(n))n=0;n=Math.max(0,Math.min(max,n));return String(n).padStart(2,"0");}
+
 function renderOverlay(){
   const cur=ovStack[ovStack.length-1];
   let name=cur,param=null;
   if(cur.indexOf("journal:")===0){name="journal";param=cur.split(":")[1];}
-  const s=name==="journal"?SCREENS.journal(param):SCREENS[name]();
+  if(cur.indexOf("edit:")===0){name="edit";param=cur.split(":")[1];}
+  const s=(name==="journal")?SCREENS.journal(param):(name==="edit")?SCREENS.edit(param):SCREENS[name]();
   $("#ovTitle").textContent=s.title;
   $("#ovBody").innerHTML=s.html;
+
+  if(name==="edit"){
+    const inp=$("#editInput");
+    inp.addEventListener("input",()=>{editDraft.value=inp.value;});
+    $("#editSave").addEventListener("click",()=>{
+      state.profile[editDraft.field]=editDraft.value.trim();
+      persist();backScreen();haptic("success");toast("Сохранено");
+    });
+  }
 
   if(name==="addTask"){
     const ta=$("#atText");
     ta.addEventListener("input",()=>{taskDraft.text=ta.value;});
+    const de=$("#atDesc");if(de)de.addEventListener("input",()=>{taskDraft.desc=de.value;});
+    const su=$("#atSubs");if(su)su.addEventListener("input",()=>{taskDraft.subsText=su.value;});
     $("#atDateRow").addEventListener("click",()=>{
       const inp=$("#atDateInput");
       try{if(inp.showPicker)inp.showPicker();else inp.classList.remove("hidden-date");}catch(e){inp.classList.remove("hidden-date");}
@@ -651,9 +727,22 @@ function renderOverlay(){
     });
     $("#atSave").addEventListener("click",()=>{
       const text=taskDraft.text.trim();if(!text){toast("Введите задачу");return;}
-      state.tasks.unshift({id:uid(),date:taskDraft.date,text:text,repeat:taskDraft.repeat,notify:taskDraft.notify,important:taskDraft.important,doneDates:[],createdAt:Date.now()});
+      const subs=taskDraft.subsText?taskDraft.subsText.split("\n").map(x=>x.trim()).filter(Boolean).map(x=>({id:uid(),text:x,done:false})) : [];
+      state.tasks.unshift({id:uid(),date:taskDraft.date,text:text,desc:taskDraft.desc||"",repeat:taskDraft.repeat,notify:taskDraft.notify,important:taskDraft.important,subs:subs,doneDates:[],createdAt:Date.now()});
       view.selectedDate=taskDraft.date;view.calMonth=monthStart(fromISO(taskDraft.date));
       persist();backScreen();renderAll();haptic("success");toast("Задача добавлена ✅");
+    });
+  }
+
+  if(name==="notif"){
+    const saveTimes=()=>{
+      state.settings.morningTime=pad2($("#mH").value,23)+":"+pad2($("#mM").value,59);
+      state.settings.eveningTime=pad2($("#eH").value,23)+":"+pad2($("#eM").value,59);
+      persist();
+    };
+    ["mH","mM","eH","eM"].forEach(id=>{
+      const el=$("#"+id);
+      if(el)el.addEventListener("input",()=>{el.value=el.value.replace(/\D/g,"").slice(0,2);saveTimes();});
     });
   }
 
@@ -689,6 +778,9 @@ $("#btnCloseX").addEventListener("click",()=>{if(tg&&tg.close)tg.close();else to
 $("#ovBack").addEventListener("click",backScreen);
 $("#ovClose").addEventListener("click",()=>{ovStack=[];$("#overlay").classList.add("hidden");});
 
+/* Аватарка открывает профиль */
+$("#avatarBtn").addEventListener("click",()=>openScreen("profile"));
+
 $("#ovBody").addEventListener("click",e=>{
   const swEl=e.target.closest("[data-sw]");
   if(swEl){
@@ -702,8 +794,12 @@ $("#ovBody").addEventListener("click",e=>{
       if(!state.settings.showAnalytics&&view.tab==="analytics")view.tab="tasks";
       renderAll();
     }
+    if(k==="morningOn"||k==="eveningOn")renderOverlay();
+    if(k==="showMore"||k==="tasksOverdue")renderAll();
     haptic("light");return;
   }
+  const ed=e.target.closest("[data-edit]");
+  if(ed){openScreen("edit:"+ed.dataset.edit);return;}
   const jdel=e.target.closest("[data-jdel]");
   if(jdel){const p=jdel.dataset.jdel.split(":");state.journals[p[0]]=state.journals[p[0]].filter(x=>x.id!==p[1]);persist();renderOverlay();haptic("medium");return;}
   const t=e.target.closest("[data-open],[data-act],[data-ovdone],[data-ovmove]");
@@ -737,6 +833,13 @@ $("#calNext").addEventListener("click",()=>{view.calMonth=monthStart(new Date(vi
 $("#calGrid").addEventListener("click",e=>{const d=e.target.closest(".cal-day");if(!d)return;view.selectedDate=d.dataset.date;renderTasks();renderTopbar();haptic("light");});
 
 $("#taskList").addEventListener("click",e=>{
+  const tsub=e.target.closest("[data-tsub]");
+  if(tsub){
+    const tid=tsub.dataset.tsub.split(":")[0],sid=tsub.dataset.tsub.split(":")[1];
+    const task=state.tasks.find(t=>t.id===tid);if(!task)return;
+    const sb=(task.subs||[]).find(x=>x.id===sid);if(!sb)return;
+    sb.done=!sb.done;persist();renderTasks();haptic("light");return;
+  }
   const del=e.target.closest("[data-del]");
   if(del){state.tasks=state.tasks.filter(t=>t.id!==del.dataset.del);persist();renderTasks();haptic("medium");return;}
   const rowEl=e.target.closest(".task-row");
@@ -744,12 +847,12 @@ $("#taskList").addEventListener("click",e=>{
     const task=state.tasks.find(t=>t.id===rowEl.dataset.id);if(!task)return;
     const k=view.selectedDate;
     if(task.doneDates.includes(k))task.doneDates=task.doneDates.filter(x=>x!==k);
-    else{task.doneDates.push(k);haptic("success");}
+    else{task.doneDates.push(k);if(state.settings.tasksConfetti)confetti();haptic("success");}
     persist();renderTasks();
   }
 });
 
-$("#addTaskBtn").addEventListener("click",()=>{taskDraft={date:view.selectedDate,text:"",repeat:"once",notify:false,important:false};openScreen("addTask");});
+$("#addTaskBtn").addEventListener("click",()=>{taskDraft={date:view.selectedDate,text:"",desc:"",subsText:"",repeat:"once",notify:false,important:false};openScreen("addTask");});
 
 $("#moreBtn").addEventListener("click",()=>{
   view.moreOpen=!view.moreOpen;
@@ -810,7 +913,6 @@ $("#addGoalBtn").addEventListener("click",()=>openScreen("addGoal"));
 /* Инициализация */
 document.querySelectorAll(".foot").forEach(f=>f.textContent=CONFIG.FOOTER);
 if(tg){try{tg.ready();tg.expand();if(tg.setHeaderColor)tg.setHeaderColor("#17212b");if(tg.setBackgroundColor)tg.setBackgroundColor("#17212b");}catch(e){}}
-const tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 if(tgUser&&tgUser.first_name)$("#avatarBtn").textContent=tgUser.first_name.charAt(0).toUpperCase();
 loadState();
 renderAll();
