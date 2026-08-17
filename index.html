@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Просто Трекер</title>
+<title>Трекер</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root{--bg:#17212b;--card:#1e2a36;--card2:#24313f;--line:#2c3a49;--navbg:#101820;--text:#eef4fa;--muted:#7f8e9c;--accent:#64a9dd;--ok:#6fce8a;--warn:#f2c94c;--danger:#e06c6c;color-scheme:dark}
@@ -38,7 +38,7 @@
   .li{color:#fff}
   .tagdot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:1px}
   .app-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px}
-  .h-title{font-size:20px;font-weight:700}
+  .h-title{font-size:19px;font-weight:700;letter-spacing:.2px}
   .h-actions{display:flex;gap:6px}
   .icon-btn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text)}
   .icon-btn:active{background:var(--card2)}
@@ -161,9 +161,10 @@
   .st-row .v{font-weight:700}
   .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:var(--navbg);border-top:1px solid var(--line);display:flex;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:20}
   .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--muted);font-size:11px}
-  .nav-btn .nb-ic{width:34px;height:30px;border-radius:9px;background:var(--card2);display:flex;align-items:center;justify-content:center;color:inherit}
+  .nav-btn .nb-ic{width:34px;height:30px;border-radius:9px;background:#b6bdc6;display:flex;align-items:center;justify-content:center;color:#17212b}
+  html[data-theme="light"] .nav-btn .nb-ic{background:#dfe6ec}
   .nav-btn.active{color:var(--accent)}
-  .nav-btn.active .nb-ic{background:var(--accent);color:#0d1720}
+  .nav-btn.active .nb-ic{background:var(--accent);color:#101820}
   .foot{text-align:center;color:var(--muted);font-size:13px;padding:6px 0 2px}
   .overlay{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column}
   .ov-header{display:flex;align-items:center;gap:8px;padding:14px 12px 10px}
@@ -216,11 +217,13 @@
   #undoToast.show{opacity:1;pointer-events:auto;transform:translateX(-50%)}
   #undoBtn{color:var(--accent);font-weight:700}
   #onb{z-index:200}
-  .onb-ic{width:150px;height:150px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;margin:26px auto 24px}
-  .onb-ic .icn{width:76px;height:76px;stroke-width:1.4}
-  .onb-title{text-align:center;font-size:22px;font-weight:800;margin-bottom:10px;padding:0 24px}
-  .onb-text{text-align:center;color:var(--muted);font-size:15px;line-height:1.55;padding:0 30px}
-  .onb-foot{padding:20px 16px calc(16px + env(safe-area-inset-bottom))}
+  .onb-head{display:flex;justify-content:flex-end;padding:14px 14px 0}
+  .onb-skip{color:var(--muted);font-size:13px;font-weight:600;padding:8px 6px}
+  .onb-ic{width:140px;height:140px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;margin:22px auto 20px}
+  .onb-ic .icn{width:70px;height:70px;stroke-width:1.4}
+  .onb-title{text-align:center;font-size:18px;font-weight:600;letter-spacing:.3px;margin-bottom:10px;padding:0 24px}
+  .onb-text{text-align:center;color:var(--muted);font-size:13.5px;line-height:1.6;padding:0 30px;font-weight:400}
+  .onb-foot{padding:18px 16px calc(16px + env(safe-area-inset-bottom))}
   .dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
   .dots i{width:8px;height:8px;border-radius:50%;background:var(--card2)}
   .dots i.on{background:var(--accent)}
@@ -234,9 +237,10 @@
 <body>
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
-  <symbol id="i-menu" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.7" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M10.3 3.6l-.4 2a6.5 6.5 0 0 0-1.6.9l-1.9-.7-1.7 3 1.6 1.3a6.6 6.6 0 0 0 0 1.8l-1.6 1.3 1.7 3 1.9-.7c.5.4 1 .7 1.6.9l.4 2h3.4l.4-2c.6-.2 1.1-.5 1.6-.9l1.9.7 1.7-3-1.6-1.3a6.6 6.6 0 0 0 0-1.8l1.6-1.3-1.7-3-1.9.7a6.5 6.5 0 0 0-1.6-.9l-.4-2z"/><circle cx="12" cy="12" r="2.6"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5.5"/><path d="M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
   <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"/></symbol>
   <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="M9.5 5.5L16 12l-6.5 6.5"/></symbol>
   <symbol id="i-chev-d" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></symbol>
@@ -244,14 +248,16 @@
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.8l4.3 4.4L19 7.2"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 6.5h15"/><path d="M9.2 6.5V5.2A1.7 1.7 0 0 1 10.9 3.5h2.2a1.7 1.7 0 0 1 1.7 1.7v1.3"/><path d="M6.7 6.5l.9 12a2 2 0 0 0 2 1.9h4.8a2 2 0 0 0 2-1.9l.9-12"/><path d="M10 10.5v6M14 10.5v6"/></symbol>
   <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l4.6-.9L20 7.7a2 2 0 0 0 0-2.8l-.9-.9a2 2 0 0 0-2.8 0L4.9 15.4z"/><path d="M13.6 6.6l3.8 3.8"/></symbol>
-  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></symbol>
   <symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r="1.3" fill="currentColor" stroke="none"/><circle cx="9" cy="15" r="1.3" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 5.5v-1a2 2 0 0 0-2-2h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1"/></symbol>
   <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 18.5a4.5 4.5 0 0 0 .4-9A6 6 0 0 0 6.2 11 3.8 3.8 0 0 0 7 18.5z"/><path d="M12 15.5v-4M9.8 13.5l2.2-2 2.2 2"/></symbol>
   <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><circle cx="8.3" cy="14" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.7" cy="14" r="1.1" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-week" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M8 3v4M16 3v4"/><rect x="6.8" y="12.2" width="10.4" height="3.6" rx="1.8" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-month" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.2 13.7h.01M12 13.7h.01M15.8 13.7h.01M8.2 17h.01M12 17h.01M15.8 17h.01"/></symbol>
-  <symbol id="i-tasks" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="15.5" rx="3"/><path d="M9 5v-.8A1.7 1.7 0 0 1 10.7 2.5h2.6A1.7 1.7 0 0 1 15 4.2V5"/><path d="M9 13l2.3 2.3 4.2-4.6"/></symbol>
+  <symbol id="i-nav-tasks" viewBox="0 0 24 24"><path d="M7.5 9.3l1.6 1.6 2.9-3.1"/><path d="M13.6 10h3"/><path d="M7.5 14.1l1.6 1.6 2.9-3.1"/><path d="M13.6 14.8h3"/></symbol>
+  <symbol id="i-nav-habits" viewBox="0 0 24 24"><path d="M7.2 10.6l2.1 2.1 3.9-4.4"/><path d="M10.8 14.6l2.1 2.1 3.9-4.4"/></symbol>
+  <symbol id="i-nav-goals" viewBox="0 0 24 24"><path d="M6.8 15.2l3.4-3.6 2.2 2.2 4.8-5.2"/><path d="M13.6 8.6h3.6v3.6"/></symbol>
+  <symbol id="i-nav-analytics" viewBox="0 0 24 24"><path d="M8.2 16.2v-3.4"/><path d="M12 16.2V8.6"/><path d="M15.8 16.2v-5"/></symbol>
   <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 3l3 3-3 3"/><path d="M20 6H8.5A4.5 4.5 0 0 0 4 10.5"/><path d="M7 21l-3-3 3-3"/><path d="M4 18h11.5a4.5 4.5 0 0 0 4.5-4.5"/></symbol>
   <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20.5h16"/><path d="M7.5 17v-4.5"/><path d="M12 17V6.5"/><path d="M16.5 17v-7"/></symbol>
@@ -281,11 +287,10 @@
 </svg>
 
 <header class="app-header">
-  <div class="h-title" data-t="appName">Просто Трекер</div>
+  <div class="h-title" id="appTitle">Трекер</div>
   <div class="h-actions">
     <button class="icon-btn" id="btnSearch"><svg class="icn"><use href="#i-search"/></svg></button>
-    <button class="icon-btn" id="btnMenu"><svg class="icn"><use href="#i-menu"/></svg></button>
-    <button class="icon-btn" id="btnCloseX"><svg class="icn"><use href="#i-close"/></svg></button>
+    <button class="icon-btn" id="btnMenu"><svg class="icn"><use href="#i-gear"/></svg></button>
   </div>
 </header>
 
@@ -346,14 +351,14 @@
 
   <section id="tabAnalytics" class="tab hidden"><div id="anaBody"></div></section>
 
-  <div class="foot" id="mainFooter">@ProstoTrackerBot</div>
+  <div class="foot" id="mainFooter">@BiBTrackerBot</div>
 </main>
 
 <nav class="bottom-nav" id="bottomNav">
-  <button class="nav-btn active" data-tab="tasks"><span class="nb-ic"><svg class="icn"><use href="#i-tasks"/></svg></span><span data-t="tasks">Задачи</span></button>
-  <button class="nav-btn" data-tab="habits" id="navHabits"><span class="nb-ic"><svg class="icn"><use href="#i-repeat"/></svg></span><span data-t="habits">Привычки</span></button>
-  <button class="nav-btn" data-tab="goals" id="navGoals"><span class="nb-ic"><svg class="icn"><use href="#i-target"/></svg></span><span data-t="goals">Цели на год</span></button>
-  <button class="nav-btn" data-tab="analytics" id="navAnalytics"><span class="nb-ic"><svg class="icn"><use href="#i-chart"/></svg></span><span data-t="analytics">Аналитика</span></button>
+  <button class="nav-btn active" data-tab="tasks"><span class="nb-ic"><svg class="icn"><use href="#i-nav-tasks"/></svg></span><span data-t="tasks">Задачи</span></button>
+  <button class="nav-btn" data-tab="habits" id="navHabits"><span class="nb-ic"><svg class="icn"><use href="#i-nav-habits"/></svg></span><span data-t="habits">Привычки</span></button>
+  <button class="nav-btn" data-tab="goals" id="navGoals"><span class="nb-ic"><svg class="icn"><use href="#i-nav-goals"/></svg></span><span data-t="goals">Цели на год</span></button>
+  <button class="nav-btn" data-tab="analytics" id="navAnalytics"><span class="nb-ic"><svg class="icn"><use href="#i-nav-analytics"/></svg></span><span data-t="analytics">Аналитика</span></button>
 </nav>
 
 <div class="overlay hidden" id="overlay">
@@ -363,7 +368,7 @@
     <button class="icon-btn" id="ovClose"><svg class="icn"><use href="#i-close"/></svg></button>
   </div>
   <div class="ov-body" id="ovBody"></div>
-  <div class="foot" id="ovFooter">@ProstoTrackerBot</div>
+  <div class="foot" id="ovFooter">@BiBTrackerBot</div>
 </div>
 
 <div id="confirmOverlay" class="hidden">
@@ -378,7 +383,7 @@
 <div id="undoToast"><span id="undoText"></span><button id="undoBtn"></button></div>
 
 <div class="overlay hidden" id="onb">
-  <div class="ov-header"><div class="t"></div><button class="icon-btn" id="onbSkip" style="margin-left:auto"></button></div>
+  <div class="onb-head"><button class="onb-skip" id="onbSkip"></button></div>
   <div style="flex:1">
     <div class="onb-ic" id="onbIc"></div>
     <div class="onb-title" id="onbTitle"></div>
@@ -395,20 +400,20 @@
 
 <script>
 "use strict";
-var CONFIG={APP_NAME:"Просто Трекер",FOOTER:"@ProstoTrackerBot",SUPPORT_URL:""};
+var CONFIG={APP_NAME:"Трекер",FOOTER:"@BiBTrackerBot",SUPPORT_URL:""};
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
 var cloud=tg&&tg.CloudStorage?tg.CloudStorage:null;
 var tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 function $(s){return document.querySelector(s);}
 function ic(id){return '<svg class="icn"><use href="#'+id+'"/></svg>';}
-var STORE_KEY="prosto_tracker_v11";
+var STORE_KEY="prosto_tracker_v12";
 var PALETTE=["#64a9dd","#8f6cf0","#6fce8a","#e06c6c","#f2c94c","#f2994a","#4dd0e1","#f06292"];
-var EMOJIS=["🙂","😎","🤓","🥳","","💪","","🎯","","⚡","","🌈","","🐶","","🦊","","🐥"];
+var EMOJIS=["🙂","😎","","🥳","","💪","","🎯","","⚡","","🌈","","🐶","","🦊","","🐥"];
 
 var STR={
-ru:{appName:"Просто Трекер",tasks:"Задачи",habits:"Привычки",goals:"Цели на год",analytics:"Аналитика",today:"Сегодня",week:"Неделя",month:"Месяц",year:"Год",addTask:"Добавить задачу",addHabit:"Добавить привычку",addGoal:"Добавить цель",more:"Ещё",notes:"Заметки",lesson:"Урок дня",gratitude:"Благодарность",thoughts:"Мысли",templates:"Шаблоны",random:"Случайная задача",searchPh:"Поиск...",fAll:"Все",fActive:"Активные",fDone:"Выполненные",noTasksToday:"На сегодня задач нет",noTasksDay:"На этот день задач нет",noHabits:"Привычек пока что нет",noGoals:"Целей на этот год пока нет",nothingFound:"Ничего не найдено",mainSec:"Основные настройки",otherSec:"Другое",dataSec:"Данные",profile:"Профиль",subscription:"Подписка",subFree:"Всё бесплатно",notif:"Уведомления",prefs:"Предпочтения",overdue:"Просроченные задачи",support:"Связаться с поддержкой",terms:"Пользовательское соглашение",privacy:"Политика конфиденциальности",theme:"Тема",thAuto:"Авто",thDark:"Тёмная",thLight:"Светлая",language:"Язык",name:"Имя",email:"Email",timezone:"Часовой пояс",regDate:"Дата регистрации",notSpecified:"Не указан",morning:"Утренняя сводка",evening:"Вечерняя сводка",morningRem:"🌅 Время утренней сводки!",eveningRem:"🌙 Время вечерней сводки!",pTasks:"Задачи",pHabits:"Привычки",pGoals:"Цели",pMenu:"Разделы меню",description:"Описание",important:"Пометка «Важная»",subtasks:"Подзадачи (бета)",overduePref:"Просроченные задачи",moreSec:"Раздел «Ещё»",confetti:"Конфетти при выполнении",smart:"Критерии SMART",goalSubs:"Подцели (бета)",secHabits:"Раздел «Привычки»",secGoals:"Раздел «Цели»",secAnalytics:"Раздел «Аналитика»",date:"Дата",repeat:"Периодичность",notify:"Уведомление",imp:"Важная",tag:"Тег",noTag:"Без тега",startDate:"Дата начала",endDate:"Дата окончания",enterTask:"Введите задачу",enterHabit:"Введите привычку",save:"Сохранить",repOnce:"Однократно",repDaily:"Ежедневно",repWeekly:"Еженедельно",repMonthly:"Ежемесячно",hRepDaily:"Ежедневная",hRepWeekly:"Еженедельная",hRepMonthly:"Ежемесячная",totalTasks:"Всего задач:",completed:"Выполнено:",notCompleted:"Не выполнено:",avgProgress:"Средний прогресс:",prodDay:"Продуктивный день:",totalHabits:"Всего привычек:",marks:"Отметок:",expected:"Ожидалось:",dynamics:"Динамика:",heatmap:"Активность за год",streak:"Серия",bestStreak:"Лучшая серия",days:"дн.",useFreeze:"Заморозить сегодня",water:"Вода",steps:"Шаги",sleep:"Сон",glasses:"стак.",stepsU:"шаг.",hours:"ч.",sync:"Синхронизация (Telegram Cloud)",toCloud:"В облако",fromCloud:"Из облака",lastSync:"Синхронизировано",never:"никогда",serverRem:"Серверные напоминания (код)",copy:"Копировать",copied:"Скопировано",tplTitle:"Шаблоны задач",tplAdded:"Шаблон добавлен ✅",mark:"Отметить",history:"История",entryFor:"Запись за",freeNote:"Все функции доступны бесплатно — подписка не нужна 🎉",vsPrev:"к прошлому периоду",
+ru:{appName:"Трекер",tasks:"Задачи",habits:"Привычки",goals:"Цели на год",analytics:"Аналитика",today:"Сегодня",week:"Неделя",month:"Месяц",year:"Год",addTask:"Добавить задачу",addHabit:"Добавить привычку",addGoal:"Добавить цель",more:"Ещё",notes:"Заметки",lesson:"Урок дня",gratitude:"Благодарность",thoughts:"Мысли",templates:"Шаблоны",random:"Случайная задача",searchPh:"Поиск...",fAll:"Все",fActive:"Активные",fDone:"Выполненные",noTasksToday:"На сегодня задач нет",noTasksDay:"На этот день задач нет",noHabits:"Привычек пока что нет",noGoals:"Целей на этот год пока нет",nothingFound:"Ничего не найдено",mainSec:"Основные настройки",otherSec:"Другое",dataSec:"Данные",profile:"Профиль",subscription:"Подписка",subFree:"Всё бесплатно",notif:"Уведомления",prefs:"Предпочтения",overdue:"Просроченные задачи",support:"Связаться с поддержкой",terms:"Пользовательское соглашение",privacy:"Политика конфиденциальности",theme:"Тема",thAuto:"Авто",thDark:"Тёмная",thLight:"Светлая",language:"Язык",name:"Имя",email:"Email",timezone:"Часовой пояс",regDate:"Дата регистрации",notSpecified:"Не указан",morning:"Утренняя сводка",evening:"Вечерняя сводка",morningRem:"🌅 Время утренней сводки!",eveningRem:"🌙 Время вечерней сводки!",pTasks:"Задачи",pHabits:"Привычки",pGoals:"Цели",pMenu:"Разделы меню",description:"Описание",important:"Пометка «Важная»",subtasks:"Подзадачи (бета)",overduePref:"Просроченные задачи",moreSec:"Раздел «Ещё»",confetti:"Конфетти при выполнении",smart:"Критерии SMART",goalSubs:"Подцели (бета)",secHabits:"Раздел «Привычки»",secGoals:"Раздел «Цели»",secAnalytics:"Раздел «Аналитика»",date:"Дата",repeat:"Периодичность",notify:"Уведомление",imp:"Важная",tag:"Тег",noTag:"Без тега",startDate:"Дата начала",endDate:"Дата окончания",enterTask:"Введите задачу",enterHabit:"Введите привычку",save:"Сохранить",repOnce:"Однократно",repDaily:"Ежедневно",repWeekly:"Еженедельно",repMonthly:"Ежемесячно",hRepDaily:"Ежедневная",hRepWeekly:"Еженедельная",hRepMonthly:"Ежемесячная",totalTasks:"Всего задач:",completed:"Выполнено:",notCompleted:"Не выполнено:",avgProgress:"Средний прогресс:",prodDay:"Продуктивный день:",totalHabits:"Всего привычек:",marks:"Отметок:",expected:"Ожидалось:",dynamics:"Динамика:",heatmap:"Активность за год",streak:"Серия",bestStreak:"Лучшая серия",days:"дн.",useFreeze:"Заморозить сегодня",water:"Вода",steps:"Шаги",sleep:"Сон",glasses:"стак.",stepsU:"шаг.",hours:"ч.",sync:"Синхронизация (Telegram Cloud)",toCloud:"В облако",fromCloud:"Из облака",lastSync:"Синхронизировано",never:"никогда",serverRem:"Серверные напоминания (код)",copy:"Копировать",copied:"Скопировано",tplTitle:"Шаблоны задач",tplAdded:"Шаблон добавлен ✅",mark:"Отметить",history:"История",entryFor:"Запись за",freeNote:"Все функции доступны бесплатно — подписка не нужна 🎉",vsPrev:"к прошлому периоду",
 editTask:"Редактировать задачу",editHabit:"Редактировать привычку",editGoal:"Редактировать цель",off:"Выкл",remind:"Напоминание",confirmDel:"Удалить?",cancel:"Отмена",delBtn:"Удалить",undo:"Отменить",deleted:"Удалено",planner:"Планер на 7 дней",report:"Отчёт недели",reportNote:"Зажми и удерживай картинку, чтобы сохранить или отправить.",tags:"Теги",addTag:"Добавить тег",tagName:"Название тега",avatar:"Аватар",showOnb:"Показать обучение",sortImp:"важные",sortAlpha:"А-Я",sortDone:"сделано",skip:"Пропустить",next:"Далее",start:"Начать 🚀",moved:"Задача перенесена",onb1t:"Привет!",onb1x:"Это Твой Трекер. Задачи, привычки, цели и дневник — всё в одном месте и полностью бесплатно.",onb2t:"Планируй легко",onb2x:"Добавляй задачи, ставь теги и пометку «важная». Календарь покажет прогресс каждого дня.",onb3t:"Держи серию",onb3x:"Отмечай привычки каждый день. Серия мотивирует, а «заморозка» спасёт, когда нужен отдых.",onb4t:"Смотри прогресс",onb4x:"Аналитика, тепловая карта и сравнение с прошлой неделей покажут твои продуктивные дни."},
-en:{appName:"Prosto Tracker",tasks:"Tasks",habits:"Habits",goals:"Year Goals",analytics:"Analytics",today:"Today",week:"Week",month:"Month",year:"Year",addTask:"Add task",addHabit:"Add habit",addGoal:"Add goal",more:"More",notes:"Notes",lesson:"Lesson of the day",gratitude:"Gratitude",thoughts:"Thoughts",templates:"Templates",random:"Random task",searchPh:"Search...",fAll:"All",fActive:"Active",fDone:"Done",noTasksToday:"No tasks for today",noTasksDay:"No tasks for this day",noHabits:"No habits yet",noGoals:"No goals for this year yet",nothingFound:"Nothing found",mainSec:"Main settings",otherSec:"Other",dataSec:"Data",profile:"Profile",subscription:"Subscription",subFree:"All free",notif:"Notifications",prefs:"Preferences",overdue:"Overdue tasks",support:"Contact support",terms:"Terms of use",privacy:"Privacy policy",theme:"Theme",thAuto:"Auto",thDark:"Dark",thLight:"Light",language:"Language",name:"Name",email:"Email",timezone:"Time zone",regDate:"Registration date",notSpecified:"Not specified",morning:"Morning summary",evening:"Evening summary",morningRem:"🌅 Morning summary time!",eveningRem:"🌙 Evening summary time!",pTasks:"Tasks",pHabits:"Habits",pGoals:"Goals",pMenu:"Menu sections",description:"Description",important:"Important mark",subtasks:"Subtasks (beta)",overduePref:"Overdue tasks",moreSec:"“More” section",confetti:"Confetti on completion",smart:"SMART criteria",goalSubs:"Subgoals (beta)",secHabits:"“Habits” section",secGoals:"“Goals” section",secAnalytics:"“Analytics” section",date:"Date",repeat:"Repeat",notify:"Notification",imp:"Important",tag:"Tag",noTag:"No tag",startDate:"Start date",endDate:"End date",enterTask:"Enter a task",enterHabit:"Enter a habit",save:"Save",repOnce:"Once",repDaily:"Daily",repWeekly:"Weekly",repMonthly:"Monthly",hRepDaily:"Daily",hRepWeekly:"Weekly",hRepMonthly:"Monthly",totalTasks:"Total tasks:",completed:"Completed:",notCompleted:"Not completed:",avgProgress:"Average progress:",prodDay:"Productive day:",totalHabits:"Total habits:",marks:"Check-ins:",expected:"Expected:",dynamics:"Dynamics:",heatmap:"Year activity",streak:"Streak",bestStreak:"Best streak",days:"d",useFreeze:"Freeze today",water:"Water",steps:"Steps",sleep:"Sleep",glasses:"gl.",stepsU:"steps",hours:"h",sync:"Sync (Telegram Cloud)",toCloud:"Upload",fromCloud:"Download",lastSync:"Synced",never:"never",serverRem:"Server reminders (code)",copy:"Copy",copied:"Copied",tplTitle:"Task templates",tplAdded:"Template added ✅",mark:"Mark",history:"History",entryFor:"Entry for",freeNote:"All features are free — no subscription needed 🎉",vsPrev:"vs previous period",
+en:{appName:"Tracker",tasks:"Tasks",habits:"Habits",goals:"Year Goals",analytics:"Analytics",today:"Today",week:"Week",month:"Month",year:"Year",addTask:"Add task",addHabit:"Add habit",addGoal:"Add goal",more:"More",notes:"Notes",lesson:"Lesson of the day",gratitude:"Gratitude",thoughts:"Thoughts",templates:"Templates",random:"Random task",searchPh:"Search...",fAll:"All",fActive:"Active",fDone:"Done",noTasksToday:"No tasks for today",noTasksDay:"No tasks for this day",noHabits:"No habits yet",noGoals:"No goals for this year yet",nothingFound:"Nothing found",mainSec:"Main settings",otherSec:"Other",dataSec:"Data",profile:"Profile",subscription:"Subscription",subFree:"All free",notif:"Notifications",prefs:"Preferences",overdue:"Overdue tasks",support:"Contact support",terms:"Terms of use",privacy:"Privacy policy",theme:"Theme",thAuto:"Auto",thDark:"Dark",thLight:"Light",language:"Language",name:"Name",email:"Email",timezone:"Time zone",regDate:"Registration date",notSpecified:"Not specified",morning:"Morning summary",evening:"Evening summary",morningRem:"🌅 Morning summary time!",eveningRem:"🌙 Evening summary time!",pTasks:"Tasks",pHabits:"Habits",pGoals:"Goals",pMenu:"Menu sections",description:"Description",important:"Important mark",subtasks:"Subtasks (beta)",overduePref:"Overdue tasks",moreSec:"“More” section",confetti:"Confetti on completion",smart:"SMART criteria",goalSubs:"Subgoals (beta)",secHabits:"“Habits” section",secGoals:"“Goals” section",secAnalytics:"“Analytics” section",date:"Date",repeat:"Repeat",notify:"Notification",imp:"Important",tag:"Tag",noTag:"No tag",startDate:"Start date",endDate:"End date",enterTask:"Enter a task",enterHabit:"Enter a habit",save:"Save",repOnce:"Once",repDaily:"Daily",repWeekly:"Weekly",repMonthly:"Monthly",hRepDaily:"Daily",hRepWeekly:"Weekly",hRepMonthly:"Monthly",totalTasks:"Total tasks:",completed:"Completed:",notCompleted:"Not completed:",avgProgress:"Average progress:",prodDay:"Productive day:",totalHabits:"Total habits:",marks:"Check-ins:",expected:"Expected:",dynamics:"Dynamics:",heatmap:"Year activity",streak:"Streak",bestStreak:"Best streak",days:"d",useFreeze:"Freeze today",water:"Water",steps:"Steps",sleep:"Sleep",glasses:"gl.",stepsU:"steps",hours:"h",sync:"Sync (Telegram Cloud)",toCloud:"Upload",fromCloud:"Download",lastSync:"Synced",never:"never",serverRem:"Server reminders (code)",copy:"Copy",copied:"Copied",tplTitle:"Task templates",tplAdded:"Template added ✅",mark:"Mark",history:"History",entryFor:"Entry for",freeNote:"All features are free — no subscription needed 🎉",vsPrev:"vs previous period",
 editTask:"Edit task",editHabit:"Edit habit",editGoal:"Edit goal",off:"Off",remind:"Reminder",confirmDel:"Delete?",cancel:"Cancel",delBtn:"Delete",undo:"Undo",deleted:"Deleted",planner:"7-day planner",report:"Week report",reportNote:"Long-press the image to save or share.",tags:"Tags",addTag:"Add tag",tagName:"Tag name",avatar:"Avatar",showOnb:"Show tutorial",sortImp:"important",sortAlpha:"A-Z",sortDone:"done",skip:"Skip",next:"Next",start:"Start 🚀",moved:"Task moved",onb1t:"Hi!",onb1x:"This is Your Tracker. Tasks, habits, goals and a journal — all in one place and completely free.",onb2t:"Plan with ease",onb2x:"Add tasks, set tags and the “important” mark. The calendar shows the progress of each day.",onb3t:"Keep the streak",onb3x:"Mark habits every day. The streak motivates, and “freeze” saves you when you need a break.",onb4t:"See your progress",onb4x:"Analytics, heatmap and week-over-week comparison show your most productive days."}
 };
 function lang(){return state.settings.lang==="en"?"en":"ru";}
@@ -767,7 +772,7 @@ function renderAnalytics(){
   var tk=iso(today);
   var freezeBtn=(!dayOk(tk)&&canFreeze(tk))?'<button class="wide-btn" id="freezeBtn" style="margin:10px 0 0">'+ic("i-snow")+t("useFreeze")+"</button>":"";
   $("#anaBody").innerHTML=calHtml+
-    '<div class="segment"><button data-anamode="tasks" class="'+(mode==="tasks"?"active":"")+'">'+ic("i-tasks")+t("tasks")+'</button><button data-anamode="habits" class="'+(mode==="habits"?"active":"")+'">'+ic("i-repeat")+t("habits")+"</button></div>"+
+    '<div class="segment"><button data-anamode="tasks" class="'+(mode==="tasks"?"active":"")+'">'+ic("i-nav-tasks")+t("tasks")+'</button><button data-anamode="habits" class="'+(mode==="habits"?"active":"")+'">'+ic("i-nav-habits")+t("habits")+"</button></div>"+
     '<div class="segment"><button data-anaperiod="week" class="'+(period==="week"?"active":"")+'">'+t("week")+'</button><button data-anaperiod="month" class="'+(period==="month"?"active":"")+'">'+t("month")+'</button><button data-anaperiod="year" class="'+(period==="year"?"active":"")+'">'+t("year")+"</button></div>"+
     '<div class="card"><div class="ana-stats">'+ring+'<div class="st-rows">'+rows.map(function(r){return '<div class="st-row"><span>'+r[0]+'</span><span class="v">'+r[1]+"</span></div>";}).join("")+
     '<div class="st-row"><span>'+t("dynamics")+'</span><span class="v"><span class="delta '+dCls+'">'+dArrow+" "+Math.abs(delta)+"%</span></span></div></div></div></div>"+
@@ -1037,7 +1042,6 @@ $("#calBtn").addEventListener("click",toggleCal);
 $("#btnSearch").addEventListener("click",function(){view.searchOpen=!view.searchOpen;renderAll();if(view.searchOpen){try{$("#searchInput").focus();}catch(e){}}haptic("light");});
 $("#searchInput").addEventListener("input",function(e){if(view.tab==="habits"){view.habitQuery=e.target.value;renderHabits();}else{view.taskQuery=e.target.value;renderTasks();}});
 $("#btnMenu").addEventListener("click",function(){ovStack=["settings"];renderOverlay();$("#overlay").classList.remove("hidden");});
-$("#btnCloseX").addEventListener("click",function(){if(tg&&tg.close)tg.close();});
 $("#ovBack").addEventListener("click",backScreen);
 $("#ovClose").addEventListener("click",function(){ovStack=[];$("#overlay").classList.add("hidden");});
 $("#avatarBtn").addEventListener("click",function(){openScreen("profile");});
@@ -1250,9 +1254,9 @@ function remind(msg){if(tg&&tg.showPopup){try{tg.showPopup({title:CONFIG.APP_NAM
 var onbIndex=0;
 var ONB=[
   {icon:"i-duck",t:"onb1t",x:"onb1x"},
-  {icon:"i-tasks",t:"onb2t",x:"onb2x"},
+  {icon:"i-nav-tasks",t:"onb2t",x:"onb2x"},
   {icon:"i-fire",t:"onb3t",x:"onb3x"},
-  {icon:"i-chart",t:"onb4t",x:"onb4x"}
+  {icon:"i-nav-analytics",t:"onb4t",x:"onb4x"}
 ];
 function showOnb(){onbIndex=0;renderOnb();$("#onb").classList.remove("hidden");}
 function renderOnb(){
@@ -1277,6 +1281,7 @@ $("#onb").addEventListener("touchend",function(e){
 });
 
 document.querySelectorAll(".foot").forEach(function(f){f.textContent=CONFIG.FOOTER;});
+$("#appTitle").textContent=CONFIG.APP_NAME;
 if(tg){try{tg.ready();tg.expand();if(tg.setHeaderColor)tg.setHeaderColor("#17212b");if(tg.setBackgroundColor)tg.setBackgroundColor("#17212b");}catch(e){}}
 loadState();
 applyTheme();
