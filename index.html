@@ -16,12 +16,12 @@
   .hidden{display:none!important}
   .icn{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;display:inline-block;vertical-align:middle}
   .round .icn{width:16px;height:16px;stroke-width:2.4}
-  .nav-btn .icn{width:17px;height:17px;stroke-width:2}
-  .segment .icn{width:15px;height:15px;stroke-width:2}
+  .nav-btn .icn{width:20px;height:20px;stroke-width:2}
+  .segment .icn{width:16px;height:16px;stroke-width:2}
   .li .icn{width:16px;height:16px;stroke-width:2}
   .arr .icn{width:16px;height:16px;stroke-width:2.2}
-  .wide-btn .icn{width:17px;height:17px;stroke-width:2.2}
-  .more-btn .icn{width:16px;height:16px;stroke-width:2.2;transition:transform .2s}
+  .wide-btn .icn{width:20px;height:20px;stroke-width:2}
+  .more-btn .icn{width:18px;height:18px;stroke-width:2.2;transition:transform .2s}
   .more-btn.open .icn{transform:rotate(180deg)}
   .empty .icn{width:76px;height:76px;stroke-width:1.2;display:block;margin:0 auto 12px}
   .chk{width:24px;height:24px;border-radius:50%;flex:none;border:2px solid var(--muted);display:flex;align-items:center;justify-content:center;color:transparent}
@@ -45,9 +45,12 @@
   .topbar{display:flex;align-items:center;gap:8px;padding:4px 14px 12px}
   .avatar{width:38px;height:38px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;overflow:hidden;cursor:pointer}
   .round{background:var(--card2);width:34px;height:34px;flex:none;display:flex;align-items:center;justify-content:center}
+  .round.calOn{background:var(--accent);color:#0d1720}
   .pill{flex:1;max-width:190px;margin:0 auto;background:var(--card2);border-radius:14px;padding:7px 10px;text-align:center;line-height:1.25}
   .pill .t{display:block;color:var(--accent);font-size:13px;font-weight:600}
   .pill .b{display:block;color:var(--muted);font-size:11px}
+  .pill.calOn{background:var(--accent)}
+  .pill.calOn .t,.pill.calOn .b{color:#0d1720}
   main{padding:0 14px 96px}
   .card{background:var(--card);border-radius:18px;padding:16px;margin-bottom:12px}
   .search-card{padding:10px 12px}
@@ -138,7 +141,7 @@
   .sub.done .chk{background:var(--accent);border-color:var(--accent);color:#0d1720}
   .sub.done .t{opacity:.55;text-decoration:line-through}
   .a-title{font-size:14px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:7px}
-  .a-title .icn{width:15px;height:15px;stroke-width:2}
+  .a-title .icn{width:16px;height:16px;stroke-width:2}
   .a-big{font-size:24px;font-weight:800;margin-bottom:10px}
   .a-bar{height:8px;border-radius:4px;background:var(--card2);overflow:hidden}
   .a-bar i{display:block;height:100%;background:var(--accent)}
@@ -238,7 +241,7 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></symbol>
-  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M10.3 3.6l-.4 2a6.5 6.5 0 0 0-1.6.9l-1.9-.7-1.7 3 1.6 1.3a6.6 6.6 0 0 0 0 1.8l-1.6 1.3 1.7 3 1.9-.7c.5.4 1 .7 1.6.9l.4 2h3.4l.4-2c.6-.2 1.1-.5 1.6-.9l1.9.7 1.7-3-1.6-1.3a6.6 6.6 0 0 0 0-1.8l1.6-1.3-1.7-3-1.9.7a6.5 6.5 0 0 0-1.6-.9l-.4-2z"/><circle cx="12" cy="12" r="2.6"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5.5"/><path d="M11 6l-6 6 6 6"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
   <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"/></symbol>
@@ -317,12 +320,12 @@
     <div class="card summary"><div class="v" id="daySummary">0 / 0</div></div>
     <div class="card" id="countersCard"></div>
     <div class="card" id="taskListCard"><div id="taskList"></div></div>
+    <button class="wide-btn" id="addTaskBtn"><svg class="icn"><use href="#i-plus"/></svg><span data-t="addTask">Добавить задачу</span></button>
     <button class="wide-btn" id="plannerBtn"><svg class="icn"><use href="#i-cal"/></svg><span data-t="planner">Планер на 7 дней</span></button>
     <div class="btn-row">
       <button class="wide-btn" id="randomBtn"><svg class="icn"><use href="#i-dice"/></svg><span data-t="random">Случайная задача</span></button>
       <button class="wide-btn" id="tplBtn"><svg class="icn"><use href="#i-tpl"/></svg><span data-t="templates">Шаблоны</span></button>
     </div>
-    <button class="wide-btn" id="addTaskBtn"><svg class="icn"><use href="#i-plus"/></svg><span data-t="addTask">Добавить задачу</span></button>
     <button class="more-btn" id="moreBtn"><svg class="icn"><use href="#i-chev-d"/></svg><span data-t="more">Ещё</span></button>
     <div id="morePanel" class="hidden">
       <button class="wide-btn" data-journal="notes"><svg class="icn"><use href="#i-clip"/></svg><span data-t="notes">Заметки</span></button>
@@ -406,15 +409,15 @@ var cloud=tg&&tg.CloudStorage?tg.CloudStorage:null;
 var tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 function $(s){return document.querySelector(s);}
 function ic(id){return '<svg class="icn"><use href="#'+id+'"/></svg>';}
-var STORE_KEY="prosto_tracker_v12";
+var STORE_KEY="prosto_tracker_v13";
 var PALETTE=["#64a9dd","#8f6cf0","#6fce8a","#e06c6c","#f2c94c","#f2994a","#4dd0e1","#f06292"];
-var EMOJIS=["🙂","😎","","🥳","","💪","","🎯","","⚡","","🌈","","🐶","","🦊","","🐥"];
+var EMOJIS=["🙂","😎","🤓","","🌸","💪","🎧","🎯","","⚡","🍀","","🐱","🐶","🐻","🐨","🦊","🐥"];
 
 var STR={
 ru:{appName:"Трекер",tasks:"Задачи",habits:"Привычки",goals:"Цели на год",analytics:"Аналитика",today:"Сегодня",week:"Неделя",month:"Месяц",year:"Год",addTask:"Добавить задачу",addHabit:"Добавить привычку",addGoal:"Добавить цель",more:"Ещё",notes:"Заметки",lesson:"Урок дня",gratitude:"Благодарность",thoughts:"Мысли",templates:"Шаблоны",random:"Случайная задача",searchPh:"Поиск...",fAll:"Все",fActive:"Активные",fDone:"Выполненные",noTasksToday:"На сегодня задач нет",noTasksDay:"На этот день задач нет",noHabits:"Привычек пока что нет",noGoals:"Целей на этот год пока нет",nothingFound:"Ничего не найдено",mainSec:"Основные настройки",otherSec:"Другое",dataSec:"Данные",profile:"Профиль",subscription:"Подписка",subFree:"Всё бесплатно",notif:"Уведомления",prefs:"Предпочтения",overdue:"Просроченные задачи",support:"Связаться с поддержкой",terms:"Пользовательское соглашение",privacy:"Политика конфиденциальности",theme:"Тема",thAuto:"Авто",thDark:"Тёмная",thLight:"Светлая",language:"Язык",name:"Имя",email:"Email",timezone:"Часовой пояс",regDate:"Дата регистрации",notSpecified:"Не указан",morning:"Утренняя сводка",evening:"Вечерняя сводка",morningRem:"🌅 Время утренней сводки!",eveningRem:"🌙 Время вечерней сводки!",pTasks:"Задачи",pHabits:"Привычки",pGoals:"Цели",pMenu:"Разделы меню",description:"Описание",important:"Пометка «Важная»",subtasks:"Подзадачи (бета)",overduePref:"Просроченные задачи",moreSec:"Раздел «Ещё»",confetti:"Конфетти при выполнении",smart:"Критерии SMART",goalSubs:"Подцели (бета)",secHabits:"Раздел «Привычки»",secGoals:"Раздел «Цели»",secAnalytics:"Раздел «Аналитика»",date:"Дата",repeat:"Периодичность",notify:"Уведомление",imp:"Важная",tag:"Тег",noTag:"Без тега",startDate:"Дата начала",endDate:"Дата окончания",enterTask:"Введите задачу",enterHabit:"Введите привычку",save:"Сохранить",repOnce:"Однократно",repDaily:"Ежедневно",repWeekly:"Еженедельно",repMonthly:"Ежемесячно",hRepDaily:"Ежедневная",hRepWeekly:"Еженедельная",hRepMonthly:"Ежемесячная",totalTasks:"Всего задач:",completed:"Выполнено:",notCompleted:"Не выполнено:",avgProgress:"Средний прогресс:",prodDay:"Продуктивный день:",totalHabits:"Всего привычек:",marks:"Отметок:",expected:"Ожидалось:",dynamics:"Динамика:",heatmap:"Активность за год",streak:"Серия",bestStreak:"Лучшая серия",days:"дн.",useFreeze:"Заморозить сегодня",water:"Вода",steps:"Шаги",sleep:"Сон",glasses:"стак.",stepsU:"шаг.",hours:"ч.",sync:"Синхронизация (Telegram Cloud)",toCloud:"В облако",fromCloud:"Из облака",lastSync:"Синхронизировано",never:"никогда",serverRem:"Серверные напоминания (код)",copy:"Копировать",copied:"Скопировано",tplTitle:"Шаблоны задач",tplAdded:"Шаблон добавлен ✅",mark:"Отметить",history:"История",entryFor:"Запись за",freeNote:"Все функции доступны бесплатно — подписка не нужна 🎉",vsPrev:"к прошлому периоду",
-editTask:"Редактировать задачу",editHabit:"Редактировать привычку",editGoal:"Редактировать цель",off:"Выкл",remind:"Напоминание",confirmDel:"Удалить?",cancel:"Отмена",delBtn:"Удалить",undo:"Отменить",deleted:"Удалено",planner:"Планер на 7 дней",report:"Отчёт недели",reportNote:"Зажми и удерживай картинку, чтобы сохранить или отправить.",tags:"Теги",addTag:"Добавить тег",tagName:"Название тега",avatar:"Аватар",showOnb:"Показать обучение",sortImp:"важные",sortAlpha:"А-Я",sortDone:"сделано",skip:"Пропустить",next:"Далее",start:"Начать 🚀",moved:"Задача перенесена",onb1t:"Привет!",onb1x:"Это Твой Трекер. Задачи, привычки, цели и дневник — всё в одном месте и полностью бесплатно.",onb2t:"Планируй легко",onb2x:"Добавляй задачи, ставь теги и пометку «важная». Календарь покажет прогресс каждого дня.",onb3t:"Держи серию",onb3x:"Отмечай привычки каждый день. Серия мотивирует, а «заморозка» спасёт, когда нужен отдых.",onb4t:"Смотри прогресс",onb4x:"Аналитика, тепловая карта и сравнение с прошлой неделей покажут твои продуктивные дни."},
+editTask:"Редактировать задачу",editHabit:"Редактировать привычку",editGoal:"Редактировать цель",off:"Выкл",remind:"Напоминание",confirmDel:"Удалить?",cancel:"Отмена",delBtn:"Удалить",undo:"Отменить",deleted:"Удалено",planner:"Планер на 7 дней",report:"Отчёт недели",reportNote:"Зажми и удерживай картинку, чтобы сохранить или отправить.",tags:"Теги",addTag:"Добавить тег",tagName:"Название тега",avatar:"Аватар",showOnb:"Показать обучение",sortImp:"Важные",sortAlpha:"А-Я",sortDone:"Сделано",skip:"Пропустить",next:"Далее",start:"Начать 🚀",moved:"Задача перенесена",onb1t:"Привет!",onb1x:"Это Твой Трекер. Задачи, привычки, цели и дневник — всё в одном месте и полностью бесплатно.",onb2t:"Планируй легко",onb2x:"Добавляй задачи, ставь теги и пометку «важная». Календарь покажет прогресс каждого дня.",onb3t:"Держи серию",onb3x:"Отмечай привычки каждый день. Серия мотивирует, а «заморозка» спасёт, когда нужен отдых.",onb4t:"Смотри прогресс",onb4x:"Аналитика, тепловая карта и сравнение с прошлой неделей покажут твои продуктивные дни."},
 en:{appName:"Tracker",tasks:"Tasks",habits:"Habits",goals:"Year Goals",analytics:"Analytics",today:"Today",week:"Week",month:"Month",year:"Year",addTask:"Add task",addHabit:"Add habit",addGoal:"Add goal",more:"More",notes:"Notes",lesson:"Lesson of the day",gratitude:"Gratitude",thoughts:"Thoughts",templates:"Templates",random:"Random task",searchPh:"Search...",fAll:"All",fActive:"Active",fDone:"Done",noTasksToday:"No tasks for today",noTasksDay:"No tasks for this day",noHabits:"No habits yet",noGoals:"No goals for this year yet",nothingFound:"Nothing found",mainSec:"Main settings",otherSec:"Other",dataSec:"Data",profile:"Profile",subscription:"Subscription",subFree:"All free",notif:"Notifications",prefs:"Preferences",overdue:"Overdue tasks",support:"Contact support",terms:"Terms of use",privacy:"Privacy policy",theme:"Theme",thAuto:"Auto",thDark:"Dark",thLight:"Light",language:"Language",name:"Name",email:"Email",timezone:"Time zone",regDate:"Registration date",notSpecified:"Not specified",morning:"Morning summary",evening:"Evening summary",morningRem:"🌅 Morning summary time!",eveningRem:"🌙 Evening summary time!",pTasks:"Tasks",pHabits:"Habits",pGoals:"Goals",pMenu:"Menu sections",description:"Description",important:"Important mark",subtasks:"Subtasks (beta)",overduePref:"Overdue tasks",moreSec:"“More” section",confetti:"Confetti on completion",smart:"SMART criteria",goalSubs:"Subgoals (beta)",secHabits:"“Habits” section",secGoals:"“Goals” section",secAnalytics:"“Analytics” section",date:"Date",repeat:"Repeat",notify:"Notification",imp:"Important",tag:"Tag",noTag:"No tag",startDate:"Start date",endDate:"End date",enterTask:"Enter a task",enterHabit:"Enter a habit",save:"Save",repOnce:"Once",repDaily:"Daily",repWeekly:"Weekly",repMonthly:"Monthly",hRepDaily:"Daily",hRepWeekly:"Weekly",hRepMonthly:"Monthly",totalTasks:"Total tasks:",completed:"Completed:",notCompleted:"Not completed:",avgProgress:"Average progress:",prodDay:"Productive day:",totalHabits:"Total habits:",marks:"Check-ins:",expected:"Expected:",dynamics:"Dynamics:",heatmap:"Year activity",streak:"Streak",bestStreak:"Best streak",days:"d",useFreeze:"Freeze today",water:"Water",steps:"Steps",sleep:"Sleep",glasses:"gl.",stepsU:"steps",hours:"h",sync:"Sync (Telegram Cloud)",toCloud:"Upload",fromCloud:"Download",lastSync:"Synced",never:"never",serverRem:"Server reminders (code)",copy:"Copy",copied:"Copied",tplTitle:"Task templates",tplAdded:"Template added ✅",mark:"Mark",history:"History",entryFor:"Entry for",freeNote:"All features are free — no subscription needed 🎉",vsPrev:"vs previous period",
-editTask:"Edit task",editHabit:"Edit habit",editGoal:"Edit goal",off:"Off",remind:"Reminder",confirmDel:"Delete?",cancel:"Cancel",delBtn:"Delete",undo:"Undo",deleted:"Deleted",planner:"7-day planner",report:"Week report",reportNote:"Long-press the image to save or share.",tags:"Tags",addTag:"Add tag",tagName:"Tag name",avatar:"Avatar",showOnb:"Show tutorial",sortImp:"important",sortAlpha:"A-Z",sortDone:"done",skip:"Skip",next:"Next",start:"Start 🚀",moved:"Task moved",onb1t:"Hi!",onb1x:"This is Your Tracker. Tasks, habits, goals and a journal — all in one place and completely free.",onb2t:"Plan with ease",onb2x:"Add tasks, set tags and the “important” mark. The calendar shows the progress of each day.",onb3t:"Keep the streak",onb3x:"Mark habits every day. The streak motivates, and “freeze” saves you when you need a break.",onb4t:"See your progress",onb4x:"Analytics, heatmap and week-over-week comparison show your most productive days."}
+editTask:"Edit task",editHabit:"Edit habit",editGoal:"Edit goal",off:"Off",remind:"Reminder",confirmDel:"Delete?",cancel:"Cancel",delBtn:"Delete",undo:"Undo",deleted:"Deleted",planner:"7-day planner",report:"Week report",reportNote:"Long-press the image to save or share.",tags:"Tags",addTag:"Add tag",tagName:"Tag name",avatar:"Avatar",showOnb:"Show tutorial",sortImp:"Important",sortAlpha:"A-Z",sortDone:"Done",skip:"Skip",next:"Next",start:"Start 🚀",moved:"Task moved",onb1t:"Hi!",onb1x:"This is Your Tracker. Tasks, habits, goals and a journal — all in one place and completely free.",onb2t:"Plan with ease",onb2x:"Add tasks, set tags and the “important” mark. The calendar shows the progress of each day.",onb3t:"Keep the streak",onb3x:"Mark habits every day. The streak motivates, and “freeze” saves you when you need a break.",onb4t:"See your progress",onb4x:"Analytics, heatmap and week-over-week comparison show your most productive days."}
 };
 function lang(){return state.settings.lang==="en"?"en":"ru";}
 function t(k){var L=lang();return (STR[L]&&STR[L][k])||STR.ru[k]||k;}
@@ -434,10 +437,10 @@ var H_REPEATS=["daily","weekly","monthly"];
 var H_REP_KEY={daily:"hRepDaily",weekly:"hRepWeekly",monthly:"hRepMonthly"};
 var COUNTERS=[{key:"water",icon:"💧",goal:8,step:1,unit:"glasses"},{key:"steps",icon:"👟",goal:10000,step:1000,unit:"stepsU"},{key:"sleep",icon:"😴",goal:8,step:1,unit:"hours"}];
 var TEMPLATES=[
- {icon:"💼",key:"tplWork",tasks:{ru:["Проверить почту","Спланировать день","Главная задача дня"],en:["Check email","Plan the day","Main task of the day"]}},
- {icon:"💪",key:"tplWorkout",tasks:{ru:["Разминка","Основная тренировка","Растяжка"],en:["Warm-up","Main workout","Stretching"]}},
- {icon:"🧹",key:"tplClean",tasks:{ru:["Помыть посуду","Пропылесосить","Вынести мусор"],en:["Do the dishes","Vacuum","Take out trash"]}},
- {icon:"📚",key:"tplStudy",tasks:{ru:["Повторить конспекты","Выполнить задание","Читать 20 минут"],en:["Review notes","Do the assignment","Read 20 minutes"]}}
+ {icon:"💼",name:{ru:"Работа",en:"Work"},tasks:{ru:["Проверить почту","Спланировать день","Главная задача дня"],en:["Check email","Plan the day","Main task of the day"]}},
+ {icon:"💪",name:{ru:"Тренировка",en:"Workout"},tasks:{ru:["Разминка","Основная тренировка","Растяжка"],en:["Warm-up","Main workout","Stretching"]}},
+ {icon:"🧹",name:{ru:"Уборка",en:"Cleaning"},tasks:{ru:["Помыть посуду","Пропылесосить","Вынести мусор"],en:["Do the dishes","Vacuum","Take out trash"]}},
+ {icon:"📚",name:{ru:"Учёба",en:"Study"},tasks:{ru:["Повторить конспекты","Выполнить задание","Читать 20 минут"],en:["Review notes","Do the assignment","Read 20 minutes"]}}
 ];
 var JOURNALS={notes:{title:"notes",ph:{ru:"Введите заметку...",en:"Enter a note..."}},lesson:{title:"lesson",ph:{ru:"Что нового ты узнал(а) сегодня?",en:"What did you learn today?"}},gratitude:{title:"gratitude",ph:{ru:"За что ты благодарен(на) сегодня?",en:"What are you grateful for today?"}},thoughts:{title:"thoughts",ph:{ru:"Запиши свои мысли...",en:"Write down your thoughts..."}}};
 var WORKER_CODE='// Cloudflare Worker + grammY: напоминания без Python\n// 1) npm i grammy; wrangler deploy\n// 2) secret: BOT_TOKEN; binding: KV; cron: "0 8 * * *" и "0 20 * * *"\nimport { Bot } from "grammy";\nexport default {\n  async fetch(request, env){\n    const bot = new Bot(env.BOT_TOKEN);\n    bot.command("start", async ctx => {\n      const set = new Set(((await env.KV.get("users"))||"").split(",").filter(Boolean));\n      set.add(String(ctx.from.id));\n      await env.KV.put("users", [...set].join(","));\n      await ctx.reply("✅ Подключено!");\n    });\n    await bot.handleUpdate(await request.json());\n    return new Response("ok");\n  },\n  async scheduled(event, env){\n    const bot = new Bot(env.BOT_TOKEN);\n    const users = ((await env.KV.get("users"))||"").split(",").filter(Boolean);\n    const h = new Date().getUTCHours();\n    const msg = h < 12 ? "🌅 Утренняя сводка!" : "🌙 Вечерняя сводка!";\n    for (const u of users) { try { await bot.api.sendMessage(u, msg); } catch(e){} }\n  }\n};';
@@ -587,6 +590,9 @@ function renderAll(){
   var showSearch=view.searchOpen&&(view.tab==="tasks"||view.tab==="habits");
   $("#searchCard").classList.toggle("hidden",!showSearch);
   if(showSearch)$("#searchInput").value=(view.tab==="habits")?view.habitQuery:view.taskQuery;
+  var calOn=!!view.calOpen[view.tab];
+  $("#calBtn").classList.toggle("calOn",calOn);
+  $("#pillBtn").classList.toggle("calOn",calOn);
   refreshAvatar();
   renderTopbar();
   if(view.tab==="tasks")renderTasks();
@@ -873,7 +879,7 @@ var SCREENS={
   privacy:function(){return{title:t("privacy"),html:'<div class="card doc"><p>'+t("privacy")+".</p><p>localStorage + Telegram CloudStorage.</p></div>"};},
   templates:function(){
     var L=lang();
-    return{title:t("tplTitle"),html:'<div class="list-card">'+TEMPLATES.map(function(tp,i){return '<button class="list-row" data-tpl="'+i+'"><span class="li" style="background:#3f8ec7">'+tp.icon+'</span><span class="lt">'+t(tp.key)+'<div class="val">'+tp.tasks[L].join(" · ")+"</div></span></button>";}).join("")+"</div>"};},
+    return{title:t("tplTitle"),html:'<div class="list-card">'+TEMPLATES.map(function(tp,i){return '<button class="list-row" data-tpl="'+i+'"><span class="li" style="background:#3f8ec7">'+tp.icon+'</span><span class="lt">'+esc(tp.name[L])+'<div class="val">'+tp.tasks[L].join(" · ")+"</div></span></button>";}).join("")+"</div>"};},
   addTask:function(){
     var d=taskDraft,tag=d.tag?tagById(d.tag):null;
     return{title:d.editingId?t("editTask"):t("addTask"),html:
