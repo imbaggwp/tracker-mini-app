@@ -1,17 +1,22 @@
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "Content-Type, X-Telegram-Init-Data",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
+  "Access-Control-Allow-Headers":
+    "Content-Type, X-Telegram-Init-Data",
+  "Access-Control-Allow-Methods":
+    "GET, POST, PUT, DELETE, OPTIONS"
 };
 
 function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      ...corsHeaders,
-      "Content-Type": "application/json"
+  return new Response(
+    JSON.stringify(data),
+    {
+      status,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json"
+      }
     }
-  });
+  );
 }
 
 function cors() {
@@ -22,16 +27,25 @@ function cors() {
 }
 
 
-// Получаем пользователя Telegram Mini App
+/* =====================================================
+   TELEGRAM
+   ===================================================== */
+
 async function getTelegramUser(request) {
-  const initData = request.headers.get("X-Telegram-Init-Data");
+  const initData =
+    request.headers.get(
+      "X-Telegram-Init-Data"
+    );
 
   if (!initData) {
     return null;
   }
 
-  const params = new URLSearchParams(initData);
-  const userData = params.get("user");
+  const params =
+    new URLSearchParams(initData);
+
+  const userData =
+    params.get("user");
 
   if (!userData) {
     return null;
@@ -45,11 +59,18 @@ async function getTelegramUser(request) {
 }
 
 
-// Создаём пользователя в D1,
-// если его ещё нет
-async function ensureUser(env, telegramUser) {
+/* =====================================================
+   DATABASE
+   ===================================================== */
+
+async function ensureUser(
+  env,
+  telegramUser
+) {
   if (!telegramUser?.id) {
-    throw new Error("Telegram user not found");
+    throw new Error(
+      "Telegram user not found"
+    );
   }
 
   await env.DB.prepare(`
@@ -65,8 +86,7 @@ async function ensureUser(env, telegramUser) {
     DO UPDATE SET
       username = excluded.username,
       first_name = excluded.first_name,
-      last_name = excluded.last_name,
-      updated_at = CURRENT_TIMESTAMP
+      last_name = excluded.last_name
   `)
     .bind(
       String(telegramUser.id),
@@ -81,50 +101,96 @@ async function ensureUser(env, telegramUser) {
     FROM users
     WHERE telegram_id = ?
   `)
-    .bind(String(telegramUser.id))
+    .bind(
+      String(telegramUser.id)
+    )
     .first();
 }
 
 
-// Проверка работы Worker
-async function handleRequest(request, env) {
+/* =====================================================
+   API
+   ===================================================== */
 
-  if (request.method === "OPTIONS") {
+async function handleRequest(
+  request,
+  env
+) {
+
+  if (
+    request.method === "OPTIONS"
+  ) {
     return cors();
   }
 
+  const url =
+    new URL(request.url);
 
-  const url = new URL(request.url);
 
+  /* ---------------------------------------------------
+     HEALTH
+     --------------------------------------------------- */
 
-  // Главная страница API
   if (
     request.method === "GET" &&
     url.pathname === "/"
   ) {
+
     return json({
       ok: true,
       service: "tracker-api",
-      version: "0.7"
+      version: "1.0.0"
     });
+
   }
 
 
-  // Проверка подключения Mini App
+  /* ---------------------------------------------------
+     DATABASE TEST
+     --------------------------------------------------- */
+
+  if (
+    request.method === "GET" &&
+    url.pathname === "/api/health"
+  ) {
+
+    const result =
+      await env.DB.prepare(`
+        SELECT 1 AS ok
+      `)
+        .first();
+
+    return json({
+      ok: result?.ok === 1,
+      database: true
+    });
+
+  }
+
+
+  /* ---------------------------------------------------
+     CURRENT USER
+     --------------------------------------------------- */
+
   if (
     request.method === "GET" &&
     url.pathname === "/api/me"
   ) {
 
     const telegramUser =
-      await getTelegramUser(request);
+      await getTelegramUser(
+        request
+      );
 
     if (!telegramUser) {
+
       return json({
         ok: false,
         authenticated: false,
-        message: "Telegram authentication required"
+        message:
+          "Telegram authentication required"
       }, 401);
+
     }
 
     const user =
@@ -138,23 +204,84 @@ async function handleRequest(request, env) {
       authenticated: true,
       user
     });
+
   }
 
 
-  // Сохранение настроек сводок
+  /* ---------------------------------------------------
+     GET TASKS
+     --------------------------------------------------- */
+
   if (
-    request.method === "POST" &&
-    url.pathname === "/api/settings"
+    request.method === "GET" &&
+    url.pathname === "/api/tasks"
   ) {
 
     const telegramUser =
-      await getTelegramUser(request);
+      await getTelegramUser(
+        request
+      );
 
     if (!telegramUser) {
+
       return json({
         ok: false,
-        message: "Telegram authentication required"
+        message:
+          "Telegram authentication required"
       }, 401);
+
+    }
+
+    const user =
+      await ensureUser(
+        env,
+        telegramUser
+      );
+
+    const result =
+      await env.DB.prepare(`
+        SELECT *
+        FROM tasks
+        WHERE user_id = ?
+        ORDER BY
+          date ASC,
+          time ASC,
+          created_at ASC
+      `)
+        .bind(user.id)
+        .all();
+
+    return json({
+      ok: true,
+      tasks:
+        result.results || []
+    });
+
+  }
+
+
+  /* ---------------------------------------------------
+     CREATE TASK
+     --------------------------------------------------- */
+
+  if (
+    request.method === "POST" &&
+    url.pathname === "/api/tasks"
+  ) {
+
+    const telegramUser =
+      await getTelegramUser(
+        request
+      );
+
+    if (!telegramUser) {
+
+      return json({
+        ok: false,
+        message:
+          "Telegram authentication required"
+      }, 401);
+
     }
 
     const user =
@@ -166,53 +293,214 @@ async function handleRequest(request, env) {
     const body =
       await request.json();
 
+    if (
+      !body.title ||
+      !body.date
+    ) {
+
+      return json({
+        ok: false,
+        message:
+          "Title and date are required"
+      }, 400);
+
+    }
+
+    const taskId =
+      crypto.randomUUID();
 
     await env.DB.prepare(`
-      UPDATE users
-
-      SET
-        timezone = ?,
-        morning_summary_enabled = ?,
-        morning_summary_time = ?,
-        evening_summary_enabled = ?,
-        evening_summary_time = ?,
-        show_tomorrow = ?,
-        updated_at = CURRENT_TIMESTAMP
-
-      WHERE id = ?
+      INSERT INTO tasks (
+        id,
+        user_id,
+        title,
+        description,
+        date,
+        time,
+        repeat_type,
+        important,
+        reminder,
+        completed
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
       .bind(
-        body.timezone || "Europe/Moscow",
-
-        body.morningEnabled ? 1 : 0,
-
-        body.morningTime || "08:00",
-
-        body.eveningEnabled ? 1 : 0,
-
-        body.eveningTime || "21:00",
-
-        body.showTomorrow ? 1 : 0,
-
-        user.id
+        taskId,
+        user.id,
+        body.title,
+        body.description || "",
+        body.date,
+        body.time || null,
+        body.repeat || "none",
+        body.important ? 1 : 0,
+        body.reminder || "none",
+        0
       )
       .run();
 
-
-    const updated =
-      await env.DB.prepare(`
-        SELECT *
-        FROM users
-        WHERE id = ?
-      `)
-        .bind(user.id)
-        .first();
-
-
     return json({
       ok: true,
-      user: updated
+      task: {
+        id: taskId
+      }
+    }, 201);
+
+  }
+
+
+  /* ---------------------------------------------------
+     UPDATE TASK
+     --------------------------------------------------- */
+
+  if (
+    request.method === "PUT" &&
+    url.pathname.startsWith(
+      "/api/tasks/"
+    )
+  ) {
+
+    const taskId =
+      url.pathname
+        .split("/")
+        .pop();
+
+    const telegramUser =
+      await getTelegramUser(
+        request
+      );
+
+    if (!telegramUser) {
+
+      return json({
+        ok: false,
+        message:
+          "Telegram authentication required"
+      }, 401);
+
+    }
+
+    const user =
+      await ensureUser(
+        env,
+        telegramUser
+      );
+
+    const body =
+      await request.json();
+
+    const result =
+      await env.DB.prepare(`
+        UPDATE tasks
+        SET
+          title = ?,
+          description = ?,
+          date = ?,
+          time = ?,
+          repeat_type = ?,
+          important = ?,
+          reminder = ?,
+          completed = ?
+        WHERE
+          id = ?
+          AND user_id = ?
+      `)
+        .bind(
+          body.title,
+          body.description || "",
+          body.date,
+          body.time || null,
+          body.repeat || "none",
+          body.important ? 1 : 0,
+          body.reminder || "none",
+          body.completed ? 1 : 0,
+          taskId,
+          user.id
+        )
+        .run();
+
+    if (
+      result.meta?.changes === 0
+    ) {
+
+      return json({
+        ok: false,
+        message: "Task not found"
+      }, 404);
+
+    }
+
+    return json({
+      ok: true
     });
+
+  }
+
+
+  /* ---------------------------------------------------
+     DELETE TASK
+     --------------------------------------------------- */
+
+  if (
+    request.method === "DELETE" &&
+    url.pathname.startsWith(
+      "/api/tasks/"
+    )
+  ) {
+
+    const taskId =
+      url.pathname
+        .split("/")
+        .pop();
+
+    const telegramUser =
+      await getTelegramUser(
+        request
+      );
+
+    if (!telegramUser) {
+
+      return json({
+        ok: false,
+        message:
+          "Telegram authentication required"
+      }, 401);
+
+    }
+
+    const user =
+      await ensureUser(
+        env,
+        telegramUser
+      );
+
+    const result =
+      await env.DB.prepare(`
+        DELETE FROM tasks
+        WHERE
+          id = ?
+          AND user_id = ?
+      `)
+        .bind(
+          taskId,
+          user.id
+        )
+        .run();
+
+    if (
+      result.meta?.changes === 0
+    ) {
+
+      return json({
+        ok: false,
+        message: "Task not found"
+      }, 404);
+
+    }
+
+    return json({
+      ok: true
+    });
+
   }
 
 
@@ -223,33 +511,43 @@ async function handleRequest(request, env) {
 }
 
 
-// Cron пока только проверяет,
-// что Worker умеет запускать
-// запланированные задачи.
-async function handleScheduled(env) {
+/* =====================================================
+   CRON
+   ===================================================== */
+
+async function handleScheduled(
+  env
+) {
 
   console.log(
-    "Tracker scheduled task:",
+    "Tracker cron:",
     new Date().toISOString()
   );
 
   const result =
     await env.DB.prepare(`
       SELECT COUNT(*) AS count
-      FROM users
+      FROM tasks
     `)
       .first();
 
   console.log(
-    "Users in database:",
+    "Tasks:",
     result?.count || 0
   );
 }
 
 
+/* =====================================================
+   WORKER
+   ===================================================== */
+
 export default {
 
-  async fetch(request, env) {
+  async fetch(
+    request,
+    env
+  ) {
 
     try {
 
@@ -260,15 +558,19 @@ export default {
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        error
+      );
 
       return json({
         ok: false,
-        error: error.message
+        error:
+          error.message
       }, 500);
-    }
-  },
 
+    }
+
+  },
 
   async scheduled(
     controller,
@@ -279,5 +581,7 @@ export default {
     ctx.waitUntil(
       handleScheduled(env)
     );
+
   }
+
 };
