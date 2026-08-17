@@ -83,7 +83,8 @@
   .cal-day.sel .n{background:var(--accent);color:#0d1720}
   .cal-day:active{background:var(--card2)}
 
-  .summary{display:flex;justify-content:flex-end;align-items:center;padding:14px 18px}
+  .summary{display:flex;justify-content:space-between;align-items:center;padding:14px 18px}
+  .summary .d{color:var(--muted);font-size:13px}
   .summary .v{font-size:22px;font-weight:800}
 
   /* ===== Задачи ===== */
@@ -290,9 +291,9 @@
 </div>
 
 <main>
-  <!-- ЗАДАЧИ -->
+  <!-- ЗАДАЧИ: по умолчанию открывается список задач, календарь скрыт -->
   <section id="tabTasks" class="tab">
-    <div class="card" id="calCard">
+    <div class="card hidden" id="calCard">
       <div class="cal-head">
         <div class="m" id="calTitle"></div>
         <div class="cal-nav">
@@ -302,7 +303,10 @@
       <div class="cal-grid" id="calWd"></div>
       <div class="cal-grid" id="calGrid"></div>
     </div>
-    <div class="card summary"><div class="v" id="daySummary">0 / 0</div></div>
+    <div class="card summary">
+      <div class="d" id="dayLabel"></div>
+      <div class="v" id="daySummary">0 / 0</div>
+    </div>
     <div class="card">
       <div id="taskList"></div>
       <div class="add-row">
@@ -330,12 +334,6 @@
 
   <!-- ЦЕЛИ -->
   <section id="tabGoals" class="tab hidden">
-    <div class="card hidden" id="yearCardGoal">
-      <div class="year-head">
-        <button id="yearPrevGoal">‹</button><div class="y" id="yearTitleGoal"></div><button id="yearNextGoal">›</button>
-      </div>
-      <div class="months-grid" id="yearGridGoal"></div>
-    </div>
     <div class="card" id="goalsBody"></div>
     <button class="wide-btn" id="addGoalBtn">+ Добавить цель</button>
   </section>
@@ -456,11 +454,10 @@ const view = {
   tab: "tasks",
   selectedDate: iso(today),
   calMonth: monthStart(today),
-  calOpen: true,
+  calOpen: false,               /* экран задач открывается БЕЗ календаря */
   habitsMode: "month",
   period: monthStart(today),
   yearOpenHab: false, yearPickHab: today.getFullYear(),
-  yearOpenGoal: false, yearPickGoal: today.getFullYear(),
   goalsYear: today.getFullYear(),
   anaMonth: monthStart(today)
 };
@@ -582,6 +579,12 @@ function renderTasks(){
   }
   $("#calGrid").innerHTML=html;
 
+  const sel=fromISO(view.selectedDate);
+  const isToday = view.selectedDate===iso(today);
+  $("#dayLabel").textContent = isToday
+    ? "Сегодня"
+    : cap(new Intl.DateTimeFormat("ru-RU",{weekday:"long",day:"numeric",month:"long"}).format(sel));
+
   const s=tasksOn(view.selectedDate);
   $("#daySummary").textContent = s.done+" / "+s.total;
 
@@ -650,13 +653,6 @@ function renderHabits(){
 
 /* ---------- Цели ---------- */
 function renderGoals(){
-  $("#yearCardGoal").classList.toggle("hidden", !view.yearOpenGoal);
-  if(view.yearOpenGoal){
-    $("#yearTitleGoal").textContent = view.yearPickGoal;
-    $("#yearGridGoal").innerHTML = MONTHS_GRID.map((mn,i)=>(
-      '<button data-yset="'+i+'" class="'+(view.goalsYear===view.yearPickGoal?"cur":"")+'" style="visibility:hidden">'+mn+"</button>"
-    )).join("");
-  }
   const body=$("#goalsBody");
   const list=state.goals.filter(g=>g.year===view.goalsYear);
   if(!list.length){
@@ -686,7 +682,6 @@ function renderGoals(){
 /* ---------- Аналитика ---------- */
 function renderAnalytics(){
   const y=view.anaMonth.getFullYear(), m=view.anaMonth.getMonth();
-  const dim=new Date(y,m+1,0).getDate();
   let tTotal=0,tDone=0,hMarks=0;
   state.tasks.forEach(t=>{ const d=fromISO(t.date); if(d.getFullYear()===y&&d.getMonth()===m){ tTotal++; if(t.done)tDone++; } });
   state.habits.forEach(h=>{ hMarks+=habitMarksInMonth(h,y,m); });
@@ -718,21 +713,31 @@ let ovStack=[];
 function openScreen(name){ ovStack.push(name); renderOverlay(); $("#overlay").classList.remove("hidden"); }
 function backScreen(){ ovStack.pop(); if(ovStack.length) renderOverlay(); else $("#overlay").classList.add("hidden"); }
 
+function row(ic,bg,lt,val,kind,key){
+  return '<button class="list-row" data-'+kind+'="'+key+'"><span class="li" style="background:'+bg+'">'+ic+'</span><span class="lt">'+lt+'</span><span class="val">'+val+'</span><span class="arr">›</span></button>';
+}
+function prow(key,label){
+  return '<div class="list-row"><div class="lt">'+label+"</div>"+sw(key,state.settings[key])+"</div>";
+}
+function sw(key,on){
+  return '<label class="switch"><input type="checkbox" data-sw="'+key+'"'+(on?" checked":"")+'><span class="sl"></span></label>';
+}
+
 const SCREENS={
   settings(){ return { title: CONFIG.APP_NAME, html:
     '<div class="sec-title">Основные настройки</div><div class="list-card">'+
-    row("👤","#3f8ec7","Профиль","","open:profile")+
-    row("⭐","#3f8ec7","Подписка","Всё бесплатно","open:subs")+
-    row("🔔","#e06c6c","Уведомления","","open:notif")+
-    row("⚙️","#6fce8a","Предпочтения","","open:prefs")+
+    row("👤","#3f8ec7","Профиль","","open","profile")+
+    row("⭐","#3f8ec7","Подписка","Всё бесплатно","open","subs")+
+    row("🔔","#e06c6c","Уведомления","","open","notif")+
+    row("⚙️","#6fce8a","Предпочтения","","open","prefs")+
     "</div>"+
     '<div class="sec-title">Задачи</div><div class="list-card">'+
-    row("📥","#3f8ec7","Просроченные задачи","","open:overdue")+
+    row("📥","#3f8ec7","Просроченные задачи","","open","overdue")+
     "</div>"+
     '<div class="sec-title">Другое</div><div class="list-card">'+
-    row("💬","#f2994a","Связаться с поддержкой","","act:support")+
-    row("📄","#3f8ec7","Пользовательское соглашение","","open:terms")+
-    row("🛡️","#6fce8a","Политика конфиденциальности","","open:privacy")+
+    row("💬","#f2994a","Связаться с поддержкой","","act","support")+
+    row("📄","#3f8ec7","Пользовательское соглашение","","open","terms")+
+    row("🛡️","#6fce8a","Политика конфиденциальности","","open","privacy")+
     "</div>"
   };},
   subs(){ return { title:"Подписка", html:
@@ -741,7 +746,7 @@ const SCREENS={
     const u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
     return { title:"Профиль", html:
       '<div class="card"><div class="profile-head"><div class="pa">'+(u&&u.first_name?esc(u.first_name.charAt(0).toUpperCase()):"🙂")+"</div>"+
-      '<div class="pn">'+(u?esc((u.first_name||"")+" "+(u.last_name||"")).trim():"Гость")+"</div>"+
+      '<div class="pn">'+(u?esc(((u.first_name||"")+" "+(u.last_name||"")).trim()):"Гость")+"</div>"+
       '<div class="pu">'+(u&&u.username?"@"+esc(u.username):"открой в Telegram")+"</div></div></div>" };},
   notif(){ return { title:"Уведомления", html:
     '<div class="list-card"><div class="list-row"><div class="lt">Напоминания</div>'+
@@ -751,9 +756,9 @@ const SCREENS={
     '<div class="sec-title">Привычки</div><div class="list-card">'+
     prow("habitsDesc","Описание")+prow("habitsConfetti","Конфетти при выполнении")+"</div>"+
     '<div class="sec-title">Цели</div><div class="list-card">'+
-    prow("goalsDesc","Описание")+prow("goalsSmart","Критерии SMART")+prow("goalsSubgoals","Подцели (бета)")+"<br>".repeat(0)+prow("goalsConfetti","Конфетти при выполнении")+"</div>"+
+    prow("goalsDesc","Описание")+prow("goalsSmart","Критерии SMART")+prow("goalsSubgoals","Подцели (бета)")+prow("goalsConfetti","Конфетти при выполнении")+"</div>"+
     '<div class="sec-title">Разделы меню</div><div class="list-card">'+
-    prow("showHabits","Раздел «Привычки»")+prow("showGoals","Раздел «Цели»»".replace("»»","»"))+prow("showAnalytics","Раздел «Аналитика»")+"</div>" };},
+    prow("showHabits","Раздел «Привычки»")+prow("showGoals","Раздел «Цели»")+prow("showAnalytics","Раздел «Аналитика»")+"</div>" };},
   overdue(){
     const list=state.tasks.filter(t=>!t.done && t.date<iso(today)).sort((a,b)=>a.date<b.date?-1:1);
     return { title:"Просроченные задачи", html: !list.length
@@ -774,15 +779,7 @@ const SCREENS={
     (state.settings.goalsSubgoals?'<label>Подцели (каждая с новой строки)</label><textarea id="gfSubs" rows="3" placeholder="Шаг 1&#10;Шаг 2"></textarea>':"")+
     '<button class="save-btn" type="submit">Сохранить</button></form>' };}
 };
-function row(ic,bg,lt,val,act){
-  return '<button class="list-row" data-'+act.split(":")[0]+'="'+act.split(":")[1]+'"><span class="li" style="background:'+bg+'">'+ic+'</span><span class="lt">'+lt+'</span><span class="val">'+val+'</span><span class="arr">›</span></button>';
-}
-function prow(key,label){
-  return '<div class="list-row"><div class="lt">'+label+"</div>"+sw(key,state.settings[key])+"</div>";
-}
-function sw(key,on){
-  return '<label class="switch"><input type="checkbox" data-sw="'+key+'"'+(on?" checked":"")+'><span class="sl"></span></label>';
-}
+
 function renderOverlay(){
   const cur=ovStack[ovStack.length-1];
   const s=SCREENS[cur]();
@@ -816,7 +813,6 @@ $("#ovBack").addEventListener("click",backScreen);
 $("#ovClose").addEventListener("click",()=>{ ovStack=[]; $("#overlay").classList.add("hidden"); });
 
 $("#ovBody").addEventListener("click",e=>{
-  const t=e.target.closest("[data-open],[data-act],[data-ovdone],[data-ovmove]");
   const swEl=e.target.closest("[data-sw]");
   if(swEl){
     const k=swEl.dataset.sw;
@@ -831,8 +827,9 @@ $("#ovBody").addEventListener("click",e=>{
     haptic("light");
     return;
   }
+  const t=e.target.closest("[data-open],[data-act],[data-ovdone],[data-ovmove]");
   if(!t) return;
-  if(t.dataset.open) { openScreen(t.dataset.open); return; }
+  if(t.dataset.open){ openScreen(t.dataset.open); return; }
   if(t.dataset.act==="support"){
     if(CONFIG.SUPPORT_URL && tg && tg.openLink) tg.openLink(CONFIG.SUPPORT_URL);
     else toast("Ссылка поддержки не настроена");
@@ -874,15 +871,11 @@ function shiftPeriod(dir){
   renderAll(); haptic("light");
 }
 $("#pillBtn").addEventListener("click",()=>{
-  if(view.tab==="habits"){ view.yearOpenHab=!view.yearOpenHab; view.yearPickHab=view.period.getFullYear(); }
-  else if(view.tab==="goals"){ view.yearOpenGoal=!view.yearOpenGoal; view.yearPickGoal=view.goalsYear; }
-  else return;
-  renderAll();
+  if(view.tab==="habits"){ view.yearOpenHab=!view.yearOpenHab; view.yearPickHab=view.period.getFullYear(); renderAll(); }
 });
 $("#calBtn").addEventListener("click",()=>{
-  if(view.tab==="tasks") view.calOpen=!view.calOpen;
+  if(view.tab==="tasks") view.calOpen=!view.calOpen;      /* открыть/скрыть календарь */
   else if(view.tab==="habits"){ view.yearOpenHab=!view.yearOpenHab; view.yearPickHab=view.period.getFullYear(); }
-  else if(view.tab==="goals"){ view.yearOpenGoal=!view.yearOpenGoal; view.yearPickGoal=view.goalsYear; }
   renderAll();
 });
 
@@ -897,7 +890,7 @@ $("#calGrid").addEventListener("click",e=>{
 /* Задачи: список и добавление */
 $("#taskList").addEventListener("click",e=>{
   const del=e.target.closest("[data-del]");
-  if(del){ state.tasks=state.tasks.filter(t=>t.id!==del.dataset.del); persist(); renderTasks(); renderTopbar(); haptic("medium"); return; }
+  if(del){ state.tasks=state.tasks.filter(t=>t.id!==del.dataset.del); persist(); renderTasks(); haptic("medium"); return; }
   const rowEl=e.target.closest(".task-row");
   if(rowEl){
     const task=state.tasks.find(t=>t.id===rowEl.dataset.id);
@@ -943,8 +936,6 @@ $("#habitsBody").addEventListener("click",e=>{
 $("#addHabitBtn").addEventListener("click",()=>openScreen("addHabit"));
 
 /* Цели */
-$("#yearPrevGoal").addEventListener("click",()=>{ view.yearPickGoal--; renderGoals(); });
-$("#yearNextGoal").addEventListener("click",()=>{ view.yearPickGoal++; renderGoals(); });
 $("#goalsBody").addEventListener("click",e=>{
   const gdel=e.target.closest("[data-gdel]");
   if(gdel){ state.goals=state.goals.filter(g=>g.id!==gdel.dataset.gdel); persist(); renderGoals(); haptic("medium"); return; }
@@ -969,7 +960,7 @@ $("#addGoalBtn").addEventListener("click",()=>openScreen("addGoal"));
 
 /* Инициализация */
 document.querySelectorAll(".foot").forEach(f=>f.textContent=CONFIG.FOOTER);
-if(tg){ try{ tg.ready(); tg.expand(); tg.setHeaderColor&&tg.setHeaderColor("#17212b"); tg.setBackgroundColor&&tg.setBackgroundColor("#17212b"); }catch(e){} }
+if(tg){ try{ tg.ready(); tg.expand(); if(tg.setHeaderColor) tg.setHeaderColor("#17212b"); if(tg.setBackgroundColor) tg.setBackgroundColor("#17212b"); }catch(e){} }
 const tgUser = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
 if(tgUser && tgUser.first_name) $("#avatarBtn").textContent = tgUser.first_name.charAt(0).toUpperCase();
 loadState();
