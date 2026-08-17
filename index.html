@@ -1,871 +1,979 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Просто Трекер</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root{
+    --bg:#17212b; --card:#1e2a36; --card2:#24313f; --line:#2c3a49;
+    --text:#eef4fa; --muted:#7f8e9c; --accent:#64a9dd; --accent-d:#3f8ec7;
+    --danger:#e06c6c; --ok:#6fce8a; --warn:#f2c94c;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg); color:var(--text);
+    padding-top:env(safe-area-inset-top);
+  }
+  button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+  input,textarea{font:inherit}
+  .hidden{display:none!important}
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-  >
+  /* ===== Шапка ===== */
+  .app-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 16px 10px;
+  }
+  .h-title{font-size:20px;font-weight:700}
+  .h-actions{display:flex;gap:6px}
+  .icon-btn{
+    width:38px;height:38px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text);
+  }
+  .icon-btn:active{background:var(--card2)}
+  .icon-btn svg{width:20px;height:20px}
 
-  <meta name="theme-color" content="#222f3f">
+  /* ===== Верхняя панель периода ===== */
+  .topbar{
+    display:flex;align-items:center;gap:8px;
+    padding:4px 14px 12px;
+  }
+  .avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--card2);display:flex;align-items:center;justify-content:center;
+    font-size:18px;flex:none;overflow:hidden;
+  }
+  .round{background:var(--card2);width:34px;height:34px;flex:none}
+  .round svg{width:16px;height:16px}
+  .pill{
+    flex:1;max-width:190px;margin:0 auto;
+    background:var(--card2);border-radius:14px;
+    padding:7px 10px;text-align:center;line-height:1.25;
+  }
+  .pill .t{display:block;color:var(--accent);font-size:13px;font-weight:600}
+  .pill .b{display:block;color:var(--muted);font-size:11px}
 
-  <title>Трекер</title>
+  main{padding:0 14px 96px}
 
-  <link rel="stylesheet" href="style.css">
+  .card{
+    background:var(--card);border-radius:18px;
+    padding:16px;margin-bottom:12px;
+  }
+
+  /* ===== Календарь ===== */
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .cal-head .m{font-size:17px;font-weight:700}
+  .cal-nav{display:flex;gap:4px}
+  .cal-nav button{color:var(--accent);width:30px;height:30px;font-size:18px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .cal-wd{color:var(--muted);font-size:11px;text-align:center;padding:6px 0}
+  .cal-day{
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding:7px 0;border-radius:12px;
+  }
+  .cal-day .n{font-size:15px;font-weight:600;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+  .cal-day .c{font-size:10px;color:var(--muted)}
+  .cal-day.past{opacity:.45}
+  .cal-day.today .n{background:var(--card2);color:var(--accent)}
+  .cal-day.sel .n{background:var(--accent);color:#0d1720}
+  .cal-day:active{background:var(--card2)}
+
+  .summary{display:flex;justify-content:flex-end;align-items:center;padding:14px 18px}
+  .summary .v{font-size:22px;font-weight:800}
+
+  /* ===== Задачи ===== */
+  .task-row{
+    display:flex;align-items:center;gap:10px;
+    background:var(--card2);border-radius:14px;padding:12px;margin-bottom:8px;
+  }
+  .chk{
+    width:24px;height:24px;border-radius:50%;flex:none;
+    border:2px solid var(--muted);display:flex;align-items:center;justify-content:center;
+    color:transparent;font-size:13px;
+  }
+  .task-row.done .chk{background:var(--accent);border-color:var(--accent);color:#0d1720}
+  .task-row.done .t{opacity:.55;text-decoration:line-through}
+  .task-row .t{flex:1;word-break:break-word;font-size:15px}
+  .mini-del{color:var(--muted);font-size:15px;padding:4px}
+  .add-row{display:flex;gap:8px;margin-top:4px}
+  .add-row input{
+    flex:1;background:var(--card2);border:none;outline:none;border-radius:12px;
+    padding:12px;color:var(--text);font-size:15px;
+  }
+  .add-row .plus{
+    width:44px;border-radius:12px;background:var(--accent);color:#0d1720;
+    font-size:22px;font-weight:700;flex:none;
+  }
+  .empty{text-align:center;color:var(--muted);padding:22px 0;font-size:14px}
+  .empty .e{font-size:44px;display:block;margin-bottom:10px}
+
+  .wide-btn{
+    width:100%;background:var(--card);border-radius:16px;
+    padding:15px;font-weight:600;font-size:15px;margin-bottom:12px;
+  }
+  .wide-btn:active{background:var(--card2)}
+
+  /* ===== Сегмент ===== */
+  .segment{
+    display:flex;background:var(--card);border-radius:14px;padding:4px;margin-bottom:12px;
+  }
+  .segment button{
+    flex:1;padding:10px;border-radius:11px;color:var(--muted);font-weight:600;font-size:14px;
+    display:flex;align-items:center;justify-content:center;gap:7px;
+  }
+  .segment button svg{width:15px;height:15px}
+  .segment button.active{background:var(--card2);color:var(--accent)}
+
+  /* ===== Привычки ===== */
+  .year-head{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px}
+  .year-head .y{font-size:17px;font-weight:700}
+  .year-head button{color:var(--accent);font-size:20px;width:30px}
+  .months-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .months-grid button{
+    background:var(--card2);border-radius:12px;padding:12px 0;
+    color:var(--muted);font-weight:600;font-size:14px;
+  }
+  .months-grid button.cur{background:#2b4a66;color:var(--accent)}
+  .wd-head{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+  .wd-head span{color:var(--muted);font-size:10px;text-align:center}
+  .h-row{background:var(--card2);border-radius:14px;padding:12px;margin-bottom:8px}
+  .h-name{font-size:15px;font-weight:600;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+  .h-name .cnt{color:var(--muted);font-weight:500;font-size:12px;flex:none}
+  .h-dots{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .dot{
+    height:34px;border-radius:10px;background:var(--card);
+    color:var(--muted);font-size:12px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .dot.on{background:var(--accent);color:#0d1720}
+  .dot.future{opacity:.35}
+  .h-month{display:flex;align-items:center;gap:10px}
+  .h-month .bar{flex:1;height:8px;border-radius:4px;background:var(--card);overflow:hidden}
+  .h-month .bar i{display:block;height:100%;background:var(--accent)}
+  .mark-btn{background:var(--accent);color:#0d1720;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;flex:none}
+  .mark-btn.off{background:var(--card);color:var(--muted)}
+
+  /* ===== Цели ===== */
+  .goal{background:var(--card2);border-radius:14px;padding:14px;margin-bottom:10px}
+  .g-head{display:flex;align-items:flex-start;gap:10px}
+  .g-head .star{font-size:20px}
+  .g-head .tt{flex:1;font-weight:700;font-size:15px}
+  .g-desc{color:var(--muted);font-size:13px;margin:6px 0 0 30px}
+  .g-prog{display:flex;align-items:center;gap:10px;margin:12px 0 8px}
+  .g-prog .bar{flex:1;height:8px;border-radius:4px;background:var(--card);overflow:hidden}
+  .g-prog .bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+  .g-prog .num{font-weight:700;font-size:13px;color:var(--accent);flex:none}
+  .g-ctrl{display:flex;gap:8px}
+  .g-ctrl button{background:var(--card);border-radius:10px;width:40px;height:34px;font-size:17px;font-weight:700}
+  .g-ctrl .done-tag{flex:1;text-align:center;color:var(--ok);font-weight:700;align-self:center}
+  .subs{margin-top:10px}
+  .sub{display:flex;align-items:center;gap:8px;font-size:14px;padding:5px 0;color:var(--text)}
+  .sub .chk{width:20px;height:20px;border-width:2px;font-size:11px}
+  .sub.done .chk{background:var(--accent);border-color:var(--accent);color:#0d1720}
+  .sub.done .t{opacity:.55;text-decoration:line-through}
+
+  /* ===== Аналитика ===== */
+  .a-title{font-size:14px;color:var(--muted);margin-bottom:8px}
+  .a-big{font-size:24px;font-weight:800;margin-bottom:10px}
+  .a-bar{height:8px;border-radius:4px;background:var(--card2);overflow:hidden}
+  .a-bar i{display:block;height:100%;background:var(--accent)}
+  .bars{display:flex;align-items:flex-end;gap:8px;height:110px;padding-top:6px}
+  .bars .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+  .bars .b{width:100%;border-radius:6px;background:var(--accent);min-height:4px}
+  .bars .l{font-size:10px;color:var(--muted)}
+
+  /* ===== Нижняя навигация ===== */
+  .bottom-nav{
+    position:fixed;left:0;right:0;bottom:0;
+    background:#101820;border-top:1px solid var(--line);
+    display:flex;padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    z-index:20;
+  }
+  .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--muted);font-size:11px}
+  .nav-btn .ic{
+    width:34px;height:30px;border-radius:9px;background:var(--card2);
+    display:flex;align-items:center;justify-content:center;color:#cfd9e2;
+  }
+  .nav-btn .ic svg{width:17px;height:17px}
+  .nav-btn.active{color:var(--accent)}
+  .nav-btn.active .ic{background:var(--accent);color:#0d1720}
+
+  .foot{text-align:center;color:var(--muted);font-size:13px;padding:6px 0 2px}
+
+  /* ===== Оверлей ===== */
+  .overlay{
+    position:fixed;inset:0;background:var(--bg);z-index:50;
+    display:flex;flex-direction:column;
+  }
+  .ov-header{display:flex;align-items:center;gap:8px;padding:14px 12px 10px}
+  .ov-header .t{flex:1;font-size:18px;font-weight:700;text-align:center;margin-right:76px}
+  .ov-body{flex:1;overflow-y:auto;padding:4px 14px 30px}
+  .sec-title{color:var(--accent);font-size:14px;font-weight:600;margin:16px 2px 8px}
+  .list-card{background:var(--card);border-radius:16px;overflow:hidden}
+  .list-row{
+    display:flex;align-items:center;gap:12px;width:100%;
+    padding:14px;text-align:left;font-size:15px;
+  }
+  .list-row + .list-row{border-top:1px solid var(--line)}
+  .list-row .li{
+    width:30px;height:30px;border-radius:9px;flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:15px;
+  }
+  .list-row .lt{flex:1}
+  .list-row .val{color:var(--muted);font-size:13px}
+  .list-row .arr{color:var(--muted)}
+  .switch{position:relative;width:46px;height:27px;flex:none}
+  .switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}
+  .switch .sl{
+    position:absolute;inset:0;border-radius:14px;background:#3a4753;transition:.2s;
+  }
+  .switch .sl::after{
+    content:"";position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;
+    background:#fff;transition:.2s;
+  }
+  .switch input:checked + .sl{background:var(--accent)}
+  .switch input:checked + .sl::after{transform:translateX(19px)}
+
+  .form-card{background:var(--card);border-radius:16px;padding:16px}
+  .form-card label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}
+  .form-card label:first-child{margin-top:0}
+  .form-card input,.form-card textarea{
+    width:100%;background:var(--card2);border:none;outline:none;border-radius:12px;
+    padding:12px;color:var(--text);font-size:15px;resize:vertical;
+  }
+  .save-btn{width:100%;margin-top:16px;background:var(--accent);color:#0d1720;border-radius:14px;padding:14px;font-weight:700;font-size:15px}
+
+  .profile-head{display:flex;flex-direction:column;align-items:center;gap:10px;padding:22px 0}
+  .profile-head .pa{width:74px;height:74px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:34px}
+  .profile-head .pn{font-size:18px;font-weight:700}
+  .profile-head .pu{color:var(--muted);font-size:13px}
+  .doc{color:var(--muted);font-size:14px;line-height:1.55}
+  .doc p{margin-bottom:10px}
+
+  /* ===== Конфетти / тост ===== */
+  #confettiRoot{position:fixed;inset:0;pointer-events:none;z-index:99;overflow:hidden}
+  #confettiRoot i{position:absolute;top:-14px;border-radius:2px;animation:fall 1.6s ease-in forwards}
+  @keyframes fall{to{transform:translateY(108vh) rotate(720deg)}}
+  #toast{
+    position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);
+    background:var(--card2);color:var(--text);padding:10px 18px;border-radius:12px;
+    font-size:13px;opacity:0;transition:.25s;z-index:120;pointer-events:none;white-space:nowrap;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
 </head>
-
 <body>
 
-  <div class="app">
-
-    <!-- HEADER -->
-
-    <header class="header">
-
-      <div class="header-title">
-        Трекер
-      </div>
-
-      <button
-        class="header-menu"
-        id="headerMenu"
-        type="button"
-      >
-        ⋮
-      </button>
-
-    </header>
-
-
-    <!-- MAIN -->
-
-    <main class="main">
-
-      <!-- DATE -->
-
-      <section class="date-navigation">
-
-        <button
-          class="date-arrow"
-          id="previousDay"
-          type="button"
-        >
-          ‹
-        </button>
-
-        <button
-          class="date-center"
-          id="todayButton"
-          type="button"
-        >
-
-          <span
-            class="date-main"
-            id="dateMain"
-          >
-            Сегодня
-          </span>
-
-          <span
-            class="date-small"
-            id="dateSmall"
-          >
-            воскресенье, 16 августа
-          </span>
-
-        </button>
-
-        <button
-          class="date-arrow"
-          id="nextDay"
-          type="button"
-        >
-          ›
-        </button>
-
-        <button
-          class="calendar-button"
-          id="calendarButton"
-          type="button"
-        >
-          ▣
-        </button>
-
-      </section>
-
-
-      <!-- PROGRESS -->
-
-      <section class="progress-card">
-
-        <div class="progress-left">
-
-          <div class="progress-title">
-            Прогресс дня
-          </div>
-
-          <div class="progress-bar">
-
-            <div
-              class="progress-fill"
-              id="progressFill"
-            ></div>
-
-          </div>
-
-        </div>
-
-        <div
-          class="progress-count"
-          id="progressCount"
-        >
-          0 / 0
-        </div>
-
-      </section>
-
-
-      <!-- TASKS -->
-
-      <section
-        class="tasks-list"
-        id="tasksList"
-      ></section>
-
-
-      <!-- EMPTY STATE -->
-
-      <section
-        class="empty-state"
-        id="emptyState"
-      >
-
-        <div class="empty-icon">
-          ✓
-        </div>
-
-        <div class="empty-title">
-          На сегодня задач нет
-        </div>
-
-        <div class="empty-subtitle">
-          Добавьте первую задачу
-        </div>
-
-      </section>
-
-
-      <!-- ADD TASK -->
-
-      <button
-        class="add-task-button"
-        id="addTaskButton"
-        type="button"
-      >
-
-        <span class="add-icon">
-          +
-        </span>
-
-        <span>
-          Добавить задачу
-        </span>
-
-      </button>
-
-    </main>
-
-
-    <!-- BOTTOM NAVIGATION -->
-
-    <nav class="bottom-navigation">
-
-      <button
-        class="nav-item active"
-        type="button"
-        data-page="tasks"
-      >
-
-        <span class="nav-icon">
-          ✓
-        </span>
-
-        <span class="nav-text">
-          Задачи
-        </span>
-
-      </button>
-
-
-      <button
-        class="nav-item"
-        type="button"
-        data-page="habits"
-      >
-
-        <span class="nav-icon">
-          ↻
-        </span>
-
-        <span class="nav-text">
-          Привычки
-        </span>
-
-      </button>
-
-
-      <button
-        class="nav-item"
-        type="button"
-        data-page="goals"
-      >
-
-        <span class="nav-icon">
-          ◎
-        </span>
-
-        <span class="nav-text">
-          Цели
-        </span>
-
-      </button>
-
-
-      <button
-        class="nav-item"
-        type="button"
-        data-page="analytics"
-      >
-
-        <span class="nav-icon">
-          ▥
-        </span>
-
-        <span class="nav-text">
-          Аналитика
-        </span>
-
-      </button>
-
-    </nav>
-
-
-    <!-- TASK MODAL -->
-
-    <div
-      class="modal hidden"
-      id="taskModal"
-    >
-
-      <div
-        class="modal-backdrop"
-        id="modalBackdrop"
-      ></div>
-
-
-      <div class="modal-sheet">
-
-        <div class="modal-header">
-
-          <h2
-            class="modal-title"
-            id="modalTitle"
-          >
-            Новая задача
-          </h2>
-
-          <button
-            class="modal-close"
-            id="closeModal"
-            type="button"
-          >
-            ×
-          </button>
-
-        </div>
-
-
-        <!-- TITLE -->
-
-        <label class="field-label">
-          Название
-
-          <input
-            class="text-input"
-            id="taskTitle"
-            type="text"
-            placeholder="Например: Прочитать 20 страниц"
-            maxlength="200"
-            autocomplete="off"
-          >
-
-        </label>
-
-
-        <!-- DESCRIPTION -->
-
-        <label class="field-label">
-
-          Описание
-
-          <textarea
-            class="description-input"
-            id="taskDescription"
-            placeholder="Дополнительная информация"
-            maxlength="1000"
-          ></textarea>
-
-        </label>
-
-
-        <!-- DATE -->
-
-        <button
-          class="option-row"
-          id="taskDateButton"
-          type="button"
-        >
-
-          <span class="option-icon">
-            📅
-          </span>
-
-          <span class="option-text">
-
-            <span class="option-name">
-              Дата
-            </span>
-
-            <span
-              class="option-value"
-              id="taskDateValue"
-            >
-              Сегодня
-            </span>
-
-          </span>
-
-          <span class="option-arrow">
-            ›
-          </span>
-
-        </button>
-
-
-        <!-- TIME -->
-
-        <button
-          class="option-row"
-          id="taskTimeButton"
-          type="button"
-        >
-
-          <span class="option-icon">
-            🕐
-          </span>
-
-          <span class="option-text">
-
-            <span class="option-name">
-              Время
-            </span>
-
-            <span
-              class="option-value"
-              id="taskTimeValue"
-            >
-              Без времени
-            </span>
-
-          </span>
-
-          <span class="option-arrow">
-            ›
-          </span>
-
-        </button>
-
-
-        <!-- REPEAT -->
-
-        <button
-          class="option-row"
-          id="taskRepeatButton"
-          type="button"
-        >
-
-          <span class="option-icon">
-            🔁
-          </span>
-
-          <span class="option-text">
-
-            <span class="option-name">
-              Повторение
-            </span>
-
-            <span
-              class="option-value"
-              id="taskRepeatValue"
-            >
-              Не повторять
-            </span>
-
-          </span>
-
-          <span class="option-arrow">
-            ›
-          </span>
-
-        </button>
-
-
-        <!-- REMINDER -->
-
-        <button
-          class="option-row"
-          id="taskReminderButton"
-          type="button"
-        >
-
-          <span class="option-icon">
-            🔔
-          </span>
-
-          <span class="option-text">
-
-            <span class="option-name">
-              Напоминание
-            </span>
-
-            <span
-              class="option-value"
-              id="taskReminderValue"
-            >
-              Без напоминания
-            </span>
-
-          </span>
-
-          <span class="option-arrow">
-            ›
-          </span>
-
-        </button>
-
-
-        <!-- IMPORTANT -->
-
-        <button
-          class="option-row"
-          id="importantButton"
-          type="button"
-        >
-
-          <span class="option-icon">
-            ⭐
-          </span>
-
-          <span class="option-text">
-
-            <span class="option-name">
-              Важная задача
-            </span>
-
-            <span
-              class="option-value"
-              id="importantValue"
-            >
-              Выключено
-            </span>
-
-          </span>
-
-          <span
-            class="switch"
-            id="importantSwitch"
-          >
-
-            <span class="switch-circle"></span>
-
-          </span>
-
-        </button>
-
-
-        <!-- SUBTASKS -->
-
-        <div class="subtasks-section">
-
-          <div class="subtasks-title">
-            Подзадачи
-          </div>
-
-          <div
-            class="subtasks-list"
-            id="subtasksList"
-          ></div>
-
-          <button
-            class="add-subtask-button"
-            id="addSubtaskButton"
-            type="button"
-          >
-            + Добавить подзадачу
-          </button>
-
-        </div>
-
-
-        <!-- SAVE -->
-
-        <button
-          class="primary-button"
-          id="saveTaskButton"
-          type="button"
-        >
-          Сохранить
-        </button>
-
-
-        <!-- DELETE -->
-
-        <button
-          class="delete-button hidden"
-          id="deleteTaskButton"
-          type="button"
-        >
-          Удалить задачу
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- DATE PICKER -->
-
-    <div
-      class="picker hidden"
-      id="datePicker"
-    >
-
-      <div
-        class="picker-backdrop"
-        id="datePickerBackdrop"
-      ></div>
-
-      <div class="picker-sheet">
-
-        <div class="picker-header">
-
-          <h3>
-            Выберите дату
-          </h3>
-
-          <button
-            id="closeDatePicker"
-            type="button"
-          >
-            ×
-          </button>
-
-        </div>
-
-        <input
-          id="dateInput"
-          class="picker-input"
-          type="date"
-        >
-
-        <button
-          id="confirmDate"
-          class="primary-button"
-          type="button"
-        >
-          Готово
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- TIME PICKER -->
-
-    <div
-      class="picker hidden"
-      id="timePicker"
-    >
-
-      <div
-        class="picker-backdrop"
-        id="timePickerBackdrop"
-      ></div>
-
-      <div class="picker-sheet">
-
-        <div class="picker-header">
-
-          <h3>
-            Выберите время
-          </h3>
-
-          <button
-            id="closeTimePicker"
-            type="button"
-          >
-            ×
-          </button>
-
-        </div>
-
-        <input
-          id="timeInput"
-          class="picker-input"
-          type="time"
-        >
-
-        <button
-          id="removeTime"
-          class="secondary-button"
-          type="button"
-        >
-          Без времени
-        </button>
-
-        <button
-          id="confirmTime"
-          class="primary-button"
-          type="button"
-        >
-          Готово
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- REPEAT PICKER -->
-
-    <div
-      class="picker hidden"
-      id="repeatPicker"
-    >
-
-      <div
-        class="picker-backdrop"
-        id="repeatPickerBackdrop"
-      ></div>
-
-      <div class="picker-sheet">
-
-        <div class="picker-header">
-
-          <h3>
-            Повторение
-          </h3>
-
-          <button
-            id="closeRepeatPicker"
-            type="button"
-          >
-            ×
-          </button>
-
-        </div>
-
-
-        <button
-          class="repeat-option"
-          data-repeat="none"
-          type="button"
-        >
-          Не повторять
-        </button>
-
-        <button
-          class="repeat-option"
-          data-repeat="daily"
-          type="button"
-        >
-          Каждый день
-        </button>
-
-        <button
-          class="repeat-option"
-          data-repeat="weekdays"
-          type="button"
-        >
-          По будням
-        </button>
-
-        <button
-          class="repeat-option"
-          data-repeat="weekly"
-          type="button"
-        >
-          Каждую неделю
-        </button>
-
-        <button
-          class="repeat-option"
-          data-repeat="monthly"
-          type="button"
-        >
-          Каждый месяц
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- REMINDER PICKER -->
-
-    <div
-      class="picker hidden"
-      id="reminderPicker"
-    >
-
-      <div
-        class="picker-backdrop"
-        id="reminderPickerBackdrop"
-      ></div>
-
-      <div class="picker-sheet">
-
-        <div class="picker-header">
-
-          <h3>
-            Напоминание
-          </h3>
-
-          <button
-            id="closeReminderPicker"
-            type="button"
-          >
-            ×
-          </button>
-
-        </div>
-
-
-        <button
-          class="reminder-option"
-          data-reminder="none"
-          type="button"
-        >
-          Без напоминания
-        </button>
-
-        <button
-          class="reminder-option"
-          data-reminder="at"
-          type="button"
-        >
-          В момент события
-        </button>
-
-        <button
-          class="reminder-option"
-          data-reminder="5m"
-          type="button"
-        >
-          За 5 минут
-        </button>
-
-        <button
-          class="reminder-option"
-          data-reminder="10m"
-          type="button"
-        >
-          За 10 минут
-        </button>
-
-        <button
-          class="reminder-option"
-          data-reminder="15m"
-          type="button"
-        >
-          За 15 минут
-        </button>
-
-        <button
-          class="reminder-option"
-          data-reminder="30m"
-          type="button"
-        >
-          За 30 минут
-        </button>
-
-        <button
-          class="reminder-option"
-          data-reminder="1h"
-          type="button"
-        >
-          За 1 час
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- CALENDAR -->
-
-    <div
-      class="picker hidden"
-      id="calendarPicker"
-    >
-
-      <div
-        class="picker-backdrop"
-        id="calendarPickerBackdrop"
-      ></div>
-
-      <div class="picker-sheet calendar-sheet">
-
-        <div class="picker-header">
-
-          <h3>
-            Перейти к дате
-          </h3>
-
-          <button
-            id="closeCalendarPicker"
-            type="button"
-          >
-            ×
-          </button>
-
-        </div>
-
-        <input
-          id="calendarInput"
-          class="picker-input"
-          type="date"
-        >
-
-        <button
-          id="goToDate"
-          class="primary-button"
-          type="button"
-        >
-          Перейти
-        </button>
-
-      </div>
-
-    </div>
-
-
+<header class="app-header">
+  <div class="h-title">Просто Трекер</div>
+  <div class="h-actions">
+    <button class="icon-btn" id="btnMenu" aria-label="Меню">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+    </button>
+    <button class="icon-btn" id="btnCloseX" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
   </div>
+</header>
 
+<div class="topbar">
+  <div class="avatar" id="avatarBtn">🙂</div>
+  <button class="icon-btn round" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button>
+  <button class="pill" id="pillBtn"><span class="t" id="pillTop">Сегодня</span><span class="b" id="pillBottom"></span></button>
+  <button class="icon-btn round" id="nextBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button>
+  <button class="icon-btn round" id="calBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></button>
+</div>
 
-  <script src="app.js"></script>
+<main>
+  <!-- ЗАДАЧИ -->
+  <section id="tabTasks" class="tab">
+    <div class="card" id="calCard">
+      <div class="cal-head">
+        <div class="m" id="calTitle"></div>
+        <div class="cal-nav">
+          <button id="calPrev">‹</button><button id="calNext">›</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="calWd"></div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="card summary"><div class="v" id="daySummary">0 / 0</div></div>
+    <div class="card">
+      <div id="taskList"></div>
+      <div class="add-row">
+        <input id="taskInput" type="text" placeholder="Новая задача..." maxlength="120">
+        <button class="plus" id="taskAddBtn">+</button>
+      </div>
+    </div>
+  </section>
 
+  <!-- ПРИВЫЧКИ -->
+  <section id="tabHabits" class="tab hidden">
+    <div class="card hidden" id="yearCardHab">
+      <div class="year-head">
+        <button id="yearPrevHab">‹</button><div class="y" id="yearTitleHab"></div><button id="yearNextHab">›</button>
+      </div>
+      <div class="months-grid" id="yearGridHab"></div>
+    </div>
+    <div class="segment">
+      <button id="segWeek"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="5" width="4" height="14" rx="1.5"/><rect x="10" y="5" width="4" height="14" rx="1.5"/><rect x="16" y="5" width="4" height="14" rx="1.5"/></svg>Неделя</button>
+      <button id="segMonth"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Месяц</button>
+    </div>
+    <div class="card" id="habitsBody"></div>
+    <button class="wide-btn" id="addHabitBtn">+ Добавить привычку</button>
+  </section>
+
+  <!-- ЦЕЛИ -->
+  <section id="tabGoals" class="tab hidden">
+    <div class="card hidden" id="yearCardGoal">
+      <div class="year-head">
+        <button id="yearPrevGoal">‹</button><div class="y" id="yearTitleGoal"></div><button id="yearNextGoal">›</button>
+      </div>
+      <div class="months-grid" id="yearGridGoal"></div>
+    </div>
+    <div class="card" id="goalsBody"></div>
+    <button class="wide-btn" id="addGoalBtn">+ Добавить цель</button>
+  </section>
+
+  <!-- АНАЛИТИКА -->
+  <section id="tabAnalytics" class="tab hidden">
+    <div id="anaBody"></div>
+  </section>
+
+  <div class="foot" id="mainFooter">@ProstoTrackerBot</div>
+</main>
+
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-btn active" data-tab="tasks">
+    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 10h7M8.5 14h4.5"/></svg></span>
+    Задачи
+  </button>
+  <button class="nav-btn" data-tab="habits" id="navHabits">
+    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 12.5l2.5 2.5 5-5.5"/></svg></span>
+    Привычки
+  </button>
+  <button class="nav-btn" data-tab="goals" id="navGoals">
+    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5.5-5.5 3.5 3.5L20 8"/><path d="M15 8h5v5"/></svg></span>
+    Цели на год
+  </button>
+  <button class="nav-btn" data-tab="analytics" id="navAnalytics">
+    <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 20v-8M12 20V5M18 20v-5"/></svg></span>
+    Аналитика
+  </button>
+</nav>
+
+<!-- ОВЕРЛЕЙ (настройки и формы) -->
+<div class="overlay hidden" id="overlay">
+  <div class="ov-header">
+    <button class="icon-btn" id="ovBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button>
+    <div class="t" id="ovTitle"></div>
+    <button class="icon-btn" id="ovClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="ov-body" id="ovBody"></div>
+  <div class="foot" id="ovFooter">@ProstoTrackerBot</div>
+</div>
+
+<div id="confettiRoot"></div>
+<div id="toast"></div>
+
+<script>
+/* ================= КОНФИГ =================
+   Замени на свои данные перед публикацией:   */
+const CONFIG = {
+  APP_NAME: "Просто Трекер",
+  FOOTER: "@ProstoTrackerBot",      // твой @username бота
+  SUPPORT_URL: ""                   // например "https://t.me/твой_ник"
+};
+/* ========================================== */
+
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+const cloud = tg && tg.CloudStorage ? tg.CloudStorage : null;
+const $ = s => document.querySelector(s);
+const STORE_KEY = "prosto_tracker_v3";
+
+const MONTHS_FULL = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+const MONTHS_GRID = ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"];
+const MONTHS_SHORT = ["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
+const WD = ["ПН","ВТ","СР","ЧТ","ПТ","СБ","ВС"];
+
+const today = new Date();
+function iso(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function fromISO(s){ const p=s.split("-").map(Number); return new Date(p[0],p[1]-1,p[2]); }
+function monthStart(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+function startOfWeek(d){ const x=new Date(d); x.setDate(x.getDate()-((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x; }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+function esc(t){ const d=document.createElement("div"); d.textContent=t; return d.innerHTML; }
+
+/* ---------- Состояние ---------- */
+let state = {
+  settings: {
+    habitsDesc:false, habitsConfetti:true,
+    goalsDesc:false, goalsSmart:false, goalsSubgoals:false, goalsConfetti:true,
+    showHabits:true, showGoals:true, showAnalytics:true,
+    notifications:false
+  },
+  tasks: [],   // {id,date,text,done,createdAt}
+  habits: [],  // {id,name,desc,logs:[],createdAt}
+  goals: [],   // {id,year,title,desc,smart,target,progress,subs:[],celebrated,createdAt}
+  updatedAt: 0
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){ const p = JSON.parse(raw); if(p && p.settings) state = Object.assign(state, p); }
+  }catch(e){}
+  if(cloud && cloud.getItem){
+    try{
+      cloud.getItem(STORE_KEY, (err, val)=>{
+        if(!err && val){
+          try{
+            const p = JSON.parse(val);
+            if(p && p.updatedAt && p.updatedAt > state.updatedAt){ state = Object.assign(state, p); renderAll(); }
+          }catch(e){}
+        }
+      });
+    }catch(e){}
+  }
+}
+function persist(){
+  state.updatedAt = Date.now();
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+  if(cloud && cloud.setItem){
+    try{ cloud.setItem(STORE_KEY, JSON.stringify(state), ()=>{}); }catch(e){}
+  }
+}
+
+/* ---------- Вью ---------- */
+const view = {
+  tab: "tasks",
+  selectedDate: iso(today),
+  calMonth: monthStart(today),
+  calOpen: true,
+  habitsMode: "month",
+  period: monthStart(today),
+  yearOpenHab: false, yearPickHab: today.getFullYear(),
+  yearOpenGoal: false, yearPickGoal: today.getFullYear(),
+  goalsYear: today.getFullYear(),
+  anaMonth: monthStart(today)
+};
+
+/* ---------- Хелперы данных ---------- */
+function tasksOn(key){
+  const list = state.tasks.filter(t=>t.date===key);
+  return { list, done: list.filter(t=>t.done).length, total: list.length };
+}
+function habitMarksInMonth(h, y, m){
+  return h.logs.filter(l=>{ const d=fromISO(l); return d.getFullYear()===y && d.getMonth()===m; }).length;
+}
+function marksOn(key){
+  return state.habits.filter(h=>h.logs.includes(key)).length;
+}
+function anyCompletionOn(key){
+  return state.tasks.some(t=>t.date===key && t.done) || state.habits.some(h=>h.logs.includes(key));
+}
+
+/* ---------- UI-утилиты ---------- */
+function haptic(kind){
+  try{
+    if(!tg || !tg.HapticFeedback) return;
+    if(kind==="success") tg.HapticFeedback.notificationOccurred("success");
+    else tg.HapticFeedback.impactOccurred(kind||"light");
+  }catch(e){}
+}
+let toastTimer=null;
+function toast(msg){
+  const el=$("#toast"); el.textContent=msg; el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove("show"),1800);
+}
+function confetti(){
+  const root=$("#confettiRoot");
+  const colors=["#f2c94c","#64a9dd","#e06c6c","#6fce8a","#d78bf0","#ffffff"];
+  for(let i=0;i<70;i++){
+    const p=document.createElement("i");
+    const s=6+Math.random()*7;
+    p.style.left=(Math.random()*100)+"vw";
+    p.style.width=s+"px"; p.style.height=s+"px";
+    p.style.background=colors[i%colors.length];
+    p.style.animationDelay=(Math.random()*0.35)+"s";
+    root.appendChild(p);
+    setTimeout(()=>p.remove(),2100);
+  }
+}
+
+/* ================= РЕНДЕР ================= */
+function renderAll(){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.add("hidden"));
+  $("#tab"+cap(view.tab)).classList.remove("hidden");
+
+  document.querySelectorAll(".nav-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.tab===view.tab);
+  });
+  $("#navHabits").classList.toggle("hidden", !state.settings.showHabits);
+  $("#navGoals").classList.toggle("hidden", !state.settings.showGoals);
+  $("#navAnalytics").classList.toggle("hidden", !state.settings.showAnalytics);
+
+  renderTopbar();
+  if(view.tab==="tasks") renderTasks();
+  if(view.tab==="habits") renderHabits();
+  if(view.tab==="goals") renderGoals();
+  if(view.tab==="analytics") renderAnalytics();
+}
+
+function renderTopbar(){
+  const pillTop=$("#pillTop"), pillBottom=$("#pillBottom");
+  const calBtn=$("#calBtn"); calBtn.classList.remove("hidden");
+
+  if(view.tab==="tasks"){
+    const d=fromISO(view.selectedDate);
+    const isToday = view.selectedDate===iso(today);
+    pillTop.textContent = isToday ? "Сегодня" : cap(new Intl.DateTimeFormat("ru-RU",{weekday:"short",day:"numeric",month:"short"}).format(d));
+    pillBottom.textContent = isToday ? new Intl.DateTimeFormat("ru-RU",{weekday:"short",day:"numeric",month:"short"}).format(d) : String(d.getFullYear());
+  }else if(view.tab==="habits"){
+    if(view.habitsMode==="week"){
+      const mon=startOfWeek(view.period), sun=addDays(mon,6);
+      const lbl = mon.getMonth()===sun.getMonth()
+        ? mon.getDate()+"–"+sun.getDate()+" "+MONTHS_SHORT[sun.getMonth()]
+        : mon.getDate()+" "+MONTHS_SHORT[mon.getMonth()]+" – "+sun.getDate()+" "+MONTHS_SHORT[sun.getMonth()];
+      pillTop.textContent = "Неделя"; pillBottom.textContent = lbl;
+    }else{
+      pillTop.textContent = MONTHS_FULL[view.period.getMonth()];
+      pillBottom.textContent = String(view.period.getFullYear());
+    }
+  }else if(view.tab==="goals"){
+    pillTop.textContent = String(view.goalsYear); pillBottom.textContent = "год";
+  }else{
+    pillTop.textContent = MONTHS_FULL[view.anaMonth.getMonth()];
+    pillBottom.textContent = String(view.anaMonth.getFullYear());
+    calBtn.classList.add("hidden");
+  }
+}
+
+/* ---------- Задачи ---------- */
+function renderTasks(){
+  $("#calCard").classList.toggle("hidden", !view.calOpen);
+  const y=view.calMonth.getFullYear(), m=view.calMonth.getMonth();
+  $("#calTitle").textContent = MONTHS_FULL[m]+" "+y+"г.";
+
+  const wd=$("#calWd");
+  wd.innerHTML = WD.map(w=>'<span class="cal-wd">'+w+"</span>").join("");
+
+  const offset=(new Date(y,m,1).getDay()+6)%7;
+  const dim=new Date(y,m+1,0).getDate();
+  let html="";
+  for(let i=0;i<offset;i++) html+='<span></span>';
+  for(let dd=1;dd<=dim;dd++){
+    const d=new Date(y,m,dd), key=iso(d);
+    const t=tasksOn(key);
+    const cnt = t.total>0 ? t.done+"/"+t.total : "0";
+    let cls="cal-day";
+    if(d<today && key!==iso(today)) cls+=" past";
+    if(key===iso(today)) cls+=" today";
+    if(key===view.selectedDate) cls+=" sel";
+    html+='<button class="'+cls+'" data-date="'+key+'"><span class="n">'+dd+'</span><span class="c">'+cnt+"</span></button>";
+  }
+  $("#calGrid").innerHTML=html;
+
+  const s=tasksOn(view.selectedDate);
+  $("#daySummary").textContent = s.done+" / "+s.total;
+
+  const list=$("#taskList");
+  if(!s.list.length){
+    list.innerHTML='<div class="empty"><span class="e">🌤</span>Нет задач на этот день</div>';
+  }else{
+    list.innerHTML = s.list.map(t=>(
+      '<div class="task-row'+(t.done?" done":"")+'" data-id="'+t.id+'">'+
+        '<button class="chk">✓</button><div class="t">'+esc(t.text)+'</div>'+
+        '<button class="mini-del" data-del="'+t.id+'">🗑</button>'+
+      "</div>"
+    )).join("");
+  }
+}
+
+/* ---------- Привычки ---------- */
+function renderHabits(){
+  $("#yearCardHab").classList.toggle("hidden", !view.yearOpenHab);
+  $("#segWeek").classList.toggle("active", view.habitsMode==="week");
+  $("#segMonth").classList.toggle("active", view.habitsMode==="month");
+
+  if(view.yearOpenHab){
+    $("#yearTitleHab").textContent = view.yearPickHab;
+    const pm=view.period.getMonth(), py=view.period.getFullYear();
+    $("#yearGridHab").innerHTML = MONTHS_GRID.map((mn,i)=>(
+      '<button data-m="'+i+'" class="'+(i===pm&&view.yearPickHab===py?"cur":"")+'">'+mn+"</button>"
+    )).join("");
+  }
+
+  const body=$("#habitsBody");
+  if(!state.habits.length){
+    body.innerHTML='<div class="empty"><span class="e">😴</span>Привычек пока что нет</div>';
+    return;
+  }
+
+  if(view.habitsMode==="week"){
+    const mon=startOfWeek(view.period);
+    const days=[...Array(7)].map((_,i)=>addDays(mon,i));
+    let html='<div class="wd-head">'+days.map((d,i)=>"<span>"+WD[i]+"<br>"+d.getDate()+"</span>").join("")+"</div>";
+    html+=state.habits.map(h=>{
+      return '<div class="h-row"><div class="h-name">'+esc(h.name)+(h.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(h.desc)+"</span>":"")+"</div>"+
+        '<div class="h-dots">'+days.map(d=>{
+          const k=iso(d);
+          const on=h.logs.includes(k);
+          const fut=d>today;
+          return '<button class="dot'+(on?" on":"")+(fut?" future":"")+'" data-hid="'+h.id+'" data-date="'+k+'">'+d.getDate()+"</button>";
+        }).join("")+"</div></div>";
+    }).join("");
+    body.innerHTML=html;
+  }else{
+    const y=view.period.getFullYear(), m=view.period.getMonth();
+    const dim=new Date(y,m+1,0).getDate();
+    const isCur = y===today.getFullYear() && m===today.getMonth();
+    body.innerHTML = state.habits.map(h=>{
+      const n=habitMarksInMonth(h,y,m);
+      const doneToday=h.logs.includes(iso(today));
+      return '<div class="h-row"><div class="h-name">'+esc(h.name)+(h.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(h.desc)+"</span>":"")+"</div>"+
+        '<div class="h-month"><div class="bar"><i style="width:'+Math.round(n/dim*100)+'%"></i></div>'+
+        '<span class="cnt" style="color:var(--muted);font-size:12px">'+n+"/"+dim+"</span>"+
+        (isCur ? '<button class="mark-btn'+(doneToday?" off":"")+'" data-hid="'+h.id+'">'+(doneToday?"✅":"Отметить")+"</button>" : "")+
+        "</div></div>";
+    }).join("");
+  }
+}
+
+/* ---------- Цели ---------- */
+function renderGoals(){
+  $("#yearCardGoal").classList.toggle("hidden", !view.yearOpenGoal);
+  if(view.yearOpenGoal){
+    $("#yearTitleGoal").textContent = view.yearPickGoal;
+    $("#yearGridGoal").innerHTML = MONTHS_GRID.map((mn,i)=>(
+      '<button data-yset="'+i+'" class="'+(view.goalsYear===view.yearPickGoal?"cur":"")+'" style="visibility:hidden">'+mn+"</button>"
+    )).join("");
+  }
+  const body=$("#goalsBody");
+  const list=state.goals.filter(g=>g.year===view.goalsYear);
+  if(!list.length){
+    body.innerHTML='<div class="empty"><span class="e">⭐</span>Целей на '+view.goalsYear+" год пока нет</div>";
+    return;
+  }
+  body.innerHTML=list.map(g=>{
+    const pct=Math.min(100, Math.round(g.progress/Math.max(1,g.target)*100));
+    let html='<div class="goal" data-gid="'+g.id+'">'+
+      '<div class="g-head"><span class="star">⭐</span><div class="tt">'+esc(g.title)+"</div>"+
+      '<button class="mini-del" data-gdel="'+g.id+'">🗑</button></div>';
+    if(g.desc && state.settings.goalsDesc) html+='<div class="g-desc">'+esc(g.desc)+"</div>";
+    if(g.smart && state.settings.goalsSmart) html+='<div class="g-desc">🎯 '+esc(g.smart)+"</div>";
+    html+='<div class="g-prog"><div class="bar"><i style="width:'+pct+'%"></i></div><span class="num">'+g.progress+"/"+g.target+"</span></div>";
+    html+='<div class="g-ctrl"><button data-gminus="'+g.id+'">−</button><button data-gplus="'+g.id+'">+</button>';
+    if(g.progress>=g.target) html+='<div class="done-tag">Выполнено 🎉</div>';
+    html+="</div>";
+    if(state.settings.goalsSubgoals && g.subs.length){
+      html+='<div class="subs">'+g.subs.map(s=>(
+        '<div class="sub'+(s.done?" done":"")+'"><button class="chk" data-sub="'+g.id+":"+s.id+'">✓</button><span class="t">'+esc(s.text)+"</span></div>"
+      )).join("")+"</div>";
+    }
+    return html+"</div>";
+  }).join("");
+}
+
+/* ---------- Аналитика ---------- */
+function renderAnalytics(){
+  const y=view.anaMonth.getFullYear(), m=view.anaMonth.getMonth();
+  const dim=new Date(y,m+1,0).getDate();
+  let tTotal=0,tDone=0,hMarks=0;
+  state.tasks.forEach(t=>{ const d=fromISO(t.date); if(d.getFullYear()===y&&d.getMonth()===m){ tTotal++; if(t.done)tDone++; } });
+  state.habits.forEach(h=>{ hMarks+=habitMarksInMonth(h,y,m); });
+
+  const days=[...Array(7)].map((_,i)=>addDays(today,i-6));
+  const vals=days.map(d=>{ const k=iso(d); return tasksOn(k).done + marksOn(k); });
+  const max=Math.max(1,...vals);
+
+  let curStreak=0; let d=new Date(today);
+  while(anyCompletionOn(iso(d))){ curStreak++; d=addDays(d,-1); }
+  let best=0,cur=0; d=new Date(today);
+  for(let i=0;i<180;i++){ if(anyCompletionOn(iso(d))){cur++; if(cur>best)best=cur;} else cur=0; d=addDays(d,-1); }
+
+  const tp = tTotal? Math.round(tDone/tTotal*100):0;
+  $("#anaBody").innerHTML =
+    '<div class="card"><div class="a-title">Задачи за '+MONTHS_SHORT[m]+"</div>"+
+    '<div class="a-big">'+tDone+" / "+tTotal+'</div><div class="a-bar"><i style="width:'+tp+'%"></i></div></div>'+
+    '<div class="card"><div class="a-title">Привычки за '+MONTHS_SHORT[m]+'</div><div class="a-big">'+hMarks+' отметок</div>'+
+    '<div class="a-bar"><i style="width:'+Math.min(100,hMarks*4)+'%"></i></div></div>'+
+    '<div class="card"><div class="a-title">Последние 7 дней</div><div class="bars">'+
+    days.map((dd,i)=>'<div class="col"><div class="b" style="height:'+Math.round(vals[i]/max*80)+'%"></div><span class="l">'+WD[(dd.getDay()+6)%7]+"</span></div>").join("")+
+    "</div></div>"+
+    '<div class="card"><div class="a-title">Серия</div><div class="a-big">🔥 '+curStreak+' дн.</div>'+
+    '<div class="a-title" style="margin:0">Лучшая серия: '+best+" дн.</div></div>";
+}
+
+/* ================= ОВЕРЛЕЙ ================= */
+let ovStack=[];
+function openScreen(name){ ovStack.push(name); renderOverlay(); $("#overlay").classList.remove("hidden"); }
+function backScreen(){ ovStack.pop(); if(ovStack.length) renderOverlay(); else $("#overlay").classList.add("hidden"); }
+
+const SCREENS={
+  settings(){ return { title: CONFIG.APP_NAME, html:
+    '<div class="sec-title">Основные настройки</div><div class="list-card">'+
+    row("👤","#3f8ec7","Профиль","","open:profile")+
+    row("⭐","#3f8ec7","Подписка","Всё бесплатно","open:subs")+
+    row("🔔","#e06c6c","Уведомления","","open:notif")+
+    row("⚙️","#6fce8a","Предпочтения","","open:prefs")+
+    "</div>"+
+    '<div class="sec-title">Задачи</div><div class="list-card">'+
+    row("📥","#3f8ec7","Просроченные задачи","","open:overdue")+
+    "</div>"+
+    '<div class="sec-title">Другое</div><div class="list-card">'+
+    row("💬","#f2994a","Связаться с поддержкой","","act:support")+
+    row("📄","#3f8ec7","Пользовательское соглашение","","open:terms")+
+    row("🛡️","#6fce8a","Политика конфиденциальности","","open:privacy")+
+    "</div>"
+  };},
+  subs(){ return { title:"Подписка", html:
+    '<div class="card"><div class="empty"><span class="e">🎁</span>В этой сборке все разделы открыты бесплатно.<br>Платная подписка отключена.</div></div>' };},
+  profile(){
+    const u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+    return { title:"Профиль", html:
+      '<div class="card"><div class="profile-head"><div class="pa">'+(u&&u.first_name?esc(u.first_name.charAt(0).toUpperCase()):"🙂")+"</div>"+
+      '<div class="pn">'+(u?esc((u.first_name||"")+" "+(u.last_name||"")).trim():"Гость")+"</div>"+
+      '<div class="pu">'+(u&&u.username?"@"+esc(u.username):"открой в Telegram")+"</div></div></div>" };},
+  notif(){ return { title:"Уведомления", html:
+    '<div class="list-card"><div class="list-row"><div class="lt">Напоминания</div>'+
+    sw("notifications", state.settings.notifications)+"</div></div>"+
+    '<div class="card" style="margin-top:12px"><div class="doc"><p>Напоминания будет присылать бот, когда появится серверная часть. Сейчас настройка сохраняется локально.</p></div></div>' };},
+  prefs(){ return { title:"Предпочтения", html:
+    '<div class="sec-title">Привычки</div><div class="list-card">'+
+    prow("habitsDesc","Описание")+prow("habitsConfetti","Конфетти при выполнении")+"</div>"+
+    '<div class="sec-title">Цели</div><div class="list-card">'+
+    prow("goalsDesc","Описание")+prow("goalsSmart","Критерии SMART")+prow("goalsSubgoals","Подцели (бета)")+"<br>".repeat(0)+prow("goalsConfetti","Конфетти при выполнении")+"</div>"+
+    '<div class="sec-title">Разделы меню</div><div class="list-card">'+
+    prow("showHabits","Раздел «Привычки»")+prow("showGoals","Раздел «Цели»»".replace("»»","»"))+prow("showAnalytics","Раздел «Аналитика»")+"</div>" };},
+  overdue(){
+    const list=state.tasks.filter(t=>!t.done && t.date<iso(today)).sort((a,b)=>a.date<b.date?-1:1);
+    return { title:"Просроченные задачи", html: !list.length
+      ? '<div class="card"><div class="empty"><span class="e">✨</span>Просроченных задач нет</div></div>'
+      : '<div class="list-card">'+list.map(t=>'<div class="list-row"><div class="lt">'+esc(t.text)+'<div class="val">'+cap(new Intl.DateTimeFormat("ru-RU",{day:"numeric",month:"short"}).format(fromISO(t.date)))+"</div></div>"+
+        '<button class="mark-btn" data-ovdone="'+t.id+'">✅</button><button class="mark-btn off" data-ovmove="'+t.id+'">→</button></div>').join("")+"</div>" };},
+  terms(){ return { title:"Соглашение", html:'<div class="card doc"><p>Используя приложение, ты соглашаешься использовать его для добрых целей: планировать задачи, укреплять привычки и достигать целей.</p><p>Приложение хранит данные локально на твоём устройстве и (при наличии) в облачном хранилище Telegram.</p></div>' };},
+  privacy(){ return { title:"Конфиденциальность", html:'<div class="card doc"><p>Мы не собираем и не передаём третьим лицам никакие персональные данные.</p><p>Задачи, привычки и цели хранятся только в твоём Telegram-клиенте.</p></div>' };},
+  addHabit(){ return { title:"Новая привычка", html:
+    '<form class="form-card" id="habitForm"><label>Название</label><input id="hfName" maxlength="60" required placeholder="Например: зарядка">'+
+    (state.settings.habitsDesc?'<label>Описание</label><input id="hfDesc" maxlength="80" placeholder="Краткое описание">':"")+
+    '<button class="save-btn" type="submit">Сохранить</button></form>' };},
+  addGoal(){ return { title:"Новая цель на "+view.goalsYear, html:
+    '<form class="form-card" id="goalForm"><label>Название</label><input id="gfTitle" maxlength="80" required placeholder="Например: прочитать 12 книг">'+
+    (state.settings.goalsDesc?'<label>Описание</label><textarea id="gfDesc" rows="2" maxlength="200"></textarea>':"")+
+    (state.settings.goalsSmart?'<label>Критерий успеха (SMART)</label><input id="gfSmart" maxlength="120" placeholder="Как пойму, что цель достигнута">':"")+
+    '<label>Сколько шагов (целевое число)</label><input id="gfTarget" type="number" min="1" max="999" value="1">'+
+    (state.settings.goalsSubgoals?'<label>Подцели (каждая с новой строки)</label><textarea id="gfSubs" rows="3" placeholder="Шаг 1&#10;Шаг 2"></textarea>':"")+
+    '<button class="save-btn" type="submit">Сохранить</button></form>' };}
+};
+function row(ic,bg,lt,val,act){
+  return '<button class="list-row" data-'+act.split(":")[0]+'="'+act.split(":")[1]+'"><span class="li" style="background:'+bg+'">'+ic+'</span><span class="lt">'+lt+'</span><span class="val">'+val+'</span><span class="arr">›</span></button>';
+}
+function prow(key,label){
+  return '<div class="list-row"><div class="lt">'+label+"</div>"+sw(key,state.settings[key])+"</div>";
+}
+function sw(key,on){
+  return '<label class="switch"><input type="checkbox" data-sw="'+key+'"'+(on?" checked":"")+'><span class="sl"></span></label>';
+}
+function renderOverlay(){
+  const cur=ovStack[ovStack.length-1];
+  const s=SCREENS[cur]();
+  $("#ovTitle").textContent=s.title;
+  $("#ovBody").innerHTML=s.html;
+  const hf=$("#habitForm");
+  if(hf) hf.addEventListener("submit",e=>{
+    e.preventDefault();
+    const name=$("#hfName").value.trim(); if(!name) return;
+    state.habits.unshift({id:uid(),name:name,desc:($("#hfDesc")?$("#hfDesc").value.trim():""),logs:[],createdAt:Date.now()});
+    persist(); backScreen(); renderAll(); haptic("success"); toast("Привычка добавлена 🔥");
+  });
+  const gf=$("#goalForm");
+  if(gf) gf.addEventListener("submit",e=>{
+    e.preventDefault();
+    const title=$("#gfTitle").value.trim(); if(!title) return;
+    const target=Math.max(1,parseInt($("#gfTarget").value,10)||1);
+    const subs=$("#gfSubs")?$("#gfSubs").value.split("\n").map(x=>x.trim()).filter(Boolean).map(x=>({id:uid(),text:x,done:false})) : [];
+    state.goals.unshift({id:uid(),year:view.goalsYear,title:title,
+      desc:$("#gfDesc")?$("#gfDesc").value.trim():"",
+      smart:$("#gfSmart")?$("#gfSmart").value.trim():"",
+      target:target,progress:0,subs:subs,celebrated:false,createdAt:Date.now()});
+    persist(); backScreen(); renderAll(); haptic("success"); toast("Цель добавлена ⭐");
+  });
+}
+
+/* ================= СОБЫТИЯ ================= */
+$("#btnMenu").addEventListener("click",()=>{ ovStack=["settings"]; renderOverlay(); $("#overlay").classList.remove("hidden"); });
+$("#btnCloseX").addEventListener("click",()=>{ if(tg&&tg.close) tg.close(); else toast("Мини-приложение"); });
+$("#ovBack").addEventListener("click",backScreen);
+$("#ovClose").addEventListener("click",()=>{ ovStack=[]; $("#overlay").classList.add("hidden"); });
+
+$("#ovBody").addEventListener("click",e=>{
+  const t=e.target.closest("[data-open],[data-act],[data-ovdone],[data-ovmove]");
+  const swEl=e.target.closest("[data-sw]");
+  if(swEl){
+    const k=swEl.dataset.sw;
+    state.settings[k]=swEl.checked;
+    persist();
+    if(["showHabits","showGoals","showAnalytics"].includes(k)){
+      if(!state.settings.showHabits&&view.tab==="habits") view.tab="tasks";
+      if(!state.settings.showGoals&&view.tab==="goals") view.tab="tasks";
+      if(!state.settings.showAnalytics&&view.tab==="analytics") view.tab="tasks";
+      renderAll();
+    }
+    haptic("light");
+    return;
+  }
+  if(!t) return;
+  if(t.dataset.open) { openScreen(t.dataset.open); return; }
+  if(t.dataset.act==="support"){
+    if(CONFIG.SUPPORT_URL && tg && tg.openLink) tg.openLink(CONFIG.SUPPORT_URL);
+    else toast("Ссылка поддержки не настроена");
+    return;
+  }
+  if(t.dataset.ovdone){
+    const task=state.tasks.find(x=>x.id===t.dataset.ovdone);
+    if(task){ task.done=true; persist(); renderOverlay(); renderAll(); haptic("success"); }
+    return;
+  }
+  if(t.dataset.ovmove){
+    const task=state.tasks.find(x=>x.id===t.dataset.ovmove);
+    if(task){ task.date=iso(today); persist(); renderOverlay(); renderAll(); toast("Перенесено на сегодня"); }
+    return;
+  }
+});
+
+/* Навигация вкладок */
+$("#bottomNav").addEventListener("click",e=>{
+  const b=e.target.closest(".nav-btn"); if(!b) return;
+  view.tab=b.dataset.tab; renderAll(); haptic("light");
+});
+
+/* Верхняя панель */
+$("#prevBtn").addEventListener("click",()=>shiftPeriod(-1));
+$("#nextBtn").addEventListener("click",()=>shiftPeriod(1));
+function shiftPeriod(dir){
+  if(view.tab==="tasks"){
+    const d=addDays(fromISO(view.selectedDate),dir);
+    view.selectedDate=iso(d); view.calMonth=monthStart(d);
+  }else if(view.tab==="habits"){
+    if(view.habitsMode==="week") view.period=addDays(view.period,7*dir);
+    else view.period=monthStart(new Date(view.period.getFullYear(),view.period.getMonth()+dir,1));
+  }else if(view.tab==="goals"){
+    view.goalsYear+=dir;
+  }else{
+    view.anaMonth=monthStart(new Date(view.anaMonth.getFullYear(),view.anaMonth.getMonth()+dir,1));
+  }
+  renderAll(); haptic("light");
+}
+$("#pillBtn").addEventListener("click",()=>{
+  if(view.tab==="habits"){ view.yearOpenHab=!view.yearOpenHab; view.yearPickHab=view.period.getFullYear(); }
+  else if(view.tab==="goals"){ view.yearOpenGoal=!view.yearOpenGoal; view.yearPickGoal=view.goalsYear; }
+  else return;
+  renderAll();
+});
+$("#calBtn").addEventListener("click",()=>{
+  if(view.tab==="tasks") view.calOpen=!view.calOpen;
+  else if(view.tab==="habits"){ view.yearOpenHab=!view.yearOpenHab; view.yearPickHab=view.period.getFullYear(); }
+  else if(view.tab==="goals"){ view.yearOpenGoal=!view.yearOpenGoal; view.yearPickGoal=view.goalsYear; }
+  renderAll();
+});
+
+/* Календарь задач */
+$("#calPrev").addEventListener("click",()=>{ view.calMonth=monthStart(new Date(view.calMonth.getFullYear(),view.calMonth.getMonth()-1,1)); renderTasks(); });
+$("#calNext").addEventListener("click",()=>{ view.calMonth=monthStart(new Date(view.calMonth.getFullYear(),view.calMonth.getMonth()+1,1)); renderTasks(); });
+$("#calGrid").addEventListener("click",e=>{
+  const d=e.target.closest(".cal-day"); if(!d) return;
+  view.selectedDate=d.dataset.date; renderTasks(); renderTopbar(); haptic("light");
+});
+
+/* Задачи: список и добавление */
+$("#taskList").addEventListener("click",e=>{
+  const del=e.target.closest("[data-del]");
+  if(del){ state.tasks=state.tasks.filter(t=>t.id!==del.dataset.del); persist(); renderTasks(); renderTopbar(); haptic("medium"); return; }
+  const rowEl=e.target.closest(".task-row");
+  if(rowEl){
+    const task=state.tasks.find(t=>t.id===rowEl.dataset.id);
+    if(task){ task.done=!task.done; persist(); renderTasks(); haptic(task.done?"success":"light"); }
+  }
+});
+function addTask(){
+  const inp=$("#taskInput"); const text=inp.value.trim(); if(!text) return;
+  state.tasks.unshift({id:uid(),date:view.selectedDate,text:text,done:false,createdAt:Date.now()});
+  inp.value=""; persist(); renderTasks(); haptic("light");
+}
+$("#taskAddBtn").addEventListener("click",addTask);
+$("#taskInput").addEventListener("keydown",e=>{ if(e.key==="Enter") addTask(); });
+
+/* Привычки */
+$("#segWeek").addEventListener("click",()=>{ view.habitsMode="week"; view.period=startOfWeek(view.period); renderAll(); });
+$("#segMonth").addEventListener("click",()=>{ view.habitsMode="month"; view.period=monthStart(view.period); renderAll(); });
+$("#yearPrevHab").addEventListener("click",()=>{ view.yearPickHab--; renderHabits(); });
+$("#yearNextHab").addEventListener("click",()=>{ view.yearPickHab++; renderHabits(); });
+$("#yearGridHab").addEventListener("click",e=>{
+  const b=e.target.closest("[data-m]"); if(!b) return;
+  view.period=new Date(view.yearPickHab,parseInt(b.dataset.m,10),1);
+  view.habitsMode="month"; view.yearOpenHab=false; renderAll();
+});
+$("#habitsBody").addEventListener("click",e=>{
+  const dot=e.target.closest(".dot");
+  if(dot){
+    if(dot.classList.contains("future")) return;
+    const h=state.habits.find(x=>x.id===dot.dataset.hid); if(!h) return;
+    const k=dot.dataset.date;
+    if(h.logs.includes(k)) h.logs=h.logs.filter(l=>l!==k);
+    else { h.logs.push(k); if(state.settings.habitsConfetti) confetti(); }
+    persist(); renderHabits(); haptic("success"); return;
+  }
+  const mk=e.target.closest(".mark-btn");
+  if(mk){
+    const h=state.habits.find(x=>x.id===mk.dataset.hid); if(!h) return;
+    const k=iso(today);
+    if(!h.logs.includes(k)){ h.logs.push(k); if(state.settings.habitsConfetti) confetti(); haptic("success"); }
+    persist(); renderHabits();
+  }
+});
+$("#addHabitBtn").addEventListener("click",()=>openScreen("addHabit"));
+
+/* Цели */
+$("#yearPrevGoal").addEventListener("click",()=>{ view.yearPickGoal--; renderGoals(); });
+$("#yearNextGoal").addEventListener("click",()=>{ view.yearPickGoal++; renderGoals(); });
+$("#goalsBody").addEventListener("click",e=>{
+  const gdel=e.target.closest("[data-gdel]");
+  if(gdel){ state.goals=state.goals.filter(g=>g.id!==gdel.dataset.gdel); persist(); renderGoals(); haptic("medium"); return; }
+  const plus=e.target.closest("[data-gplus]");
+  const minus=e.target.closest("[data-gminus]");
+  const sub=e.target.closest("[data-sub]");
+  if(plus||minus){
+    const id=plus?plus.dataset.gplus:minus.dataset.gminus;
+    const g=state.goals.find(x=>x.id===id); if(!g) return;
+    g.progress=Math.max(0,Math.min(g.target,g.progress+(plus?1:-1)));
+    if(g.progress>=g.target&&!g.celebrated){ g.celebrated=true; if(state.settings.goalsConfetti) confetti(); }
+    persist(); renderGoals(); haptic("success"); return;
+  }
+  if(sub){
+    const gid=sub.dataset.sub.split(":")[0], sid=sub.dataset.sub.split(":")[1];
+    const g=state.goals.find(x=>x.id===gid); if(!g) return;
+    const s=g.subs.find(x=>x.id===sid); if(!s) return;
+    s.done=!s.done; persist(); renderGoals(); haptic("light");
+  }
+});
+$("#addGoalBtn").addEventListener("click",()=>openScreen("addGoal"));
+
+/* Инициализация */
+document.querySelectorAll(".foot").forEach(f=>f.textContent=CONFIG.FOOTER);
+if(tg){ try{ tg.ready(); tg.expand(); tg.setHeaderColor&&tg.setHeaderColor("#17212b"); tg.setBackgroundColor&&tg.setBackgroundColor("#17212b"); }catch(e){} }
+const tgUser = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+if(tgUser && tgUser.first_name) $("#avatarBtn").textContent = tgUser.first_name.charAt(0).toUpperCase();
+loadState();
+renderAll();
+</script>
 </body>
 </html>
