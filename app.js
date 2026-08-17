@@ -1,16 +1,10 @@
 /* =====================================================
    TRACKER
-   Версия с подзадачами и напоминаниями
-   GitHub Pages
+   Полная версия
    ===================================================== */
 
-
-/* ================= STATE ================= */
-
 let tasks = [];
-
 let selectedDate = new Date();
-
 let editingTaskId = null;
 
 let taskFormDate = "";
@@ -19,2088 +13,777 @@ let taskFormRepeat = "none";
 let taskFormImportant = false;
 let taskFormReminder = "none";
 
-
-/* ================= STORAGE ================= */
-
 const STORAGE_KEY = "tracker_tasks_v1";
 
+/* =====================================================
+   HELPERS
+   ===================================================== */
+
+const $ = id => document.getElementById(id);
+
+function pad(n) {
+  return String(n).padStart(2, "0");
+}
+
+function getDateKey(date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function dateFromKey(key) {
+  const [y, m, d] = key.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function isToday(date) {
+  const now = new Date();
+
+  return (
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate()
+  );
+}
+
+function formatFullDate(date) {
+  return date.toLocaleDateString("ru-RU", {
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+  });
+}
+
+function repeatText(value) {
+  return {
+    none: "Не повторять",
+    daily: "Каждый день",
+    weekdays: "По будням",
+    weekly: "Каждую неделю",
+    monthly: "Каждый месяц"
+  }[value] || "Не повторять";
+}
+
+const reminderOptions = {
+  none: "Без напоминания",
+  at: "В момент события",
+  "5m": "За 5 минут",
+  "10m": "За 10 минут",
+  "15m": "За 15 минут",
+  "30m": "За 30 минут",
+  "1h": "За 1 час"
+};
+
+function reminderText(value) {
+  return reminderOptions[value] || "Без напоминания";
+}
+
+/* =====================================================
+   STORAGE
+   ===================================================== */
 
 function loadTasks() {
-
   try {
-
-    const saved =
-      localStorage.getItem(
-        STORAGE_KEY
-      );
+    const saved = localStorage.getItem(STORAGE_KEY);
 
     if (!saved) {
       tasks = [];
       return;
     }
 
-    const parsed =
-      JSON.parse(saved);
+    const parsed = JSON.parse(saved);
 
     if (!Array.isArray(parsed)) {
       tasks = [];
       return;
     }
 
-    tasks =
-      parsed.map(task => {
+    tasks = parsed.map(task => ({
+      ...task,
 
-        let completedDates =
-          task.completedDates;
+      completedDates:
+        task.completedDates &&
+        typeof task.completedDates === "object"
+          ? task.completedDates
+          : {},
 
-        if (
-          !completedDates ||
-          typeof completedDates !== "object"
-        ) {
+      subtasks: Array.isArray(task.subtasks)
+        ? task.subtasks
+            .map(subtask => {
+              if (typeof subtask === "string") {
+                return {
+                  text: subtask,
+                  completed: false
+                };
+              }
 
-          completedDates = {};
+              return {
+                text: subtask.text || "",
+                completed: Boolean(subtask.completed)
+              };
+            })
+            .filter(x => x.text.trim())
+        : [],
 
-          if (
-            task.completed &&
-            task.date
-          ) {
-
-            completedDates[
-              task.date
-            ] = true;
-
-          }
-
-        }
-
-
-        let subtasks = [];
-
-
-        if (
-          Array.isArray(
-            task.subtasks
-          )
-        ) {
-
-          subtasks =
-            task.subtasks
-              .map(
-                subtask => {
-
-                  if (
-                    typeof subtask ===
-                    "string"
-                  ) {
-
-                    return {
-                      text: subtask,
-                      completed: false
-                    };
-
-                  }
-
-
-                  return {
-                    text:
-                      subtask.text || "",
-
-                    completed:
-                      Boolean(
-                        subtask.completed
-                      )
-                  };
-
-                }
-              )
-              .filter(
-                subtask =>
-                  subtask.text
-                    .trim()
-                    .length > 0
-              );
-
-        }
-
-
-        return {
-
-          ...task,
-
-          completedDates,
-
-          subtasks,
-
-          reminder:
-            task.reminder ||
-            "none"
-
-        };
-
-      });
-
+      repeat: task.repeat || "none",
+      reminder: task.reminder || "none",
+      important: Boolean(task.important)
+    }));
 
   } catch (error) {
-
-    console.error(
-      "Ошибка загрузки задач:",
-      error
-    );
-
+    console.error("Ошибка загрузки задач:", error);
     tasks = [];
-
   }
-
 }
 
-
 function saveTasks() {
-
   try {
-
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify(tasks)
     );
-
   } catch (error) {
+    console.error("Ошибка сохранения:", error);
+  }
+}
 
-    console.error(
-      "Ошибка сохранения задач:",
-      error
-    );
+/* =====================================================
+   REPEAT
+   ===================================================== */
 
+function taskOccursOnDate(task, dateKey) {
+  if (!task || !task.date) return false;
+
+  const start = dateFromKey(task.date);
+  const target = dateFromKey(dateKey);
+
+  if (target < start) return false;
+
+  const repeat = task.repeat || "none";
+
+  if (repeat === "none") {
+    return task.date === dateKey;
   }
 
-}
-
-
-/* ================= HELPERS ================= */
-
-function pad(number) {
-
-  return String(number)
-    .padStart(2, "0");
-
-}
-
-
-function getDateKey(date) {
-
-  return [
-
-    date.getFullYear(),
-
-    pad(
-      date.getMonth() + 1
-    ),
-
-    pad(
-      date.getDate()
-    )
-
-  ].join("-");
-
-}
-
-
-function dateFromKey(key) {
-
-  const [
-    year,
-    month,
-    day
-  ] =
-    key
-      .split("-")
-      .map(Number);
-
-
-  return new Date(
-    year,
-    month - 1,
-    day
-  );
-
-}
-
-
-function isToday(date) {
-
-  const today =
-    new Date();
-
-
-  return (
-
-    date.getFullYear() ===
-      today.getFullYear() &&
-
-    date.getMonth() ===
-      today.getMonth() &&
-
-    date.getDate() ===
-      today.getDate()
-
-  );
-
-}
-
-
-function formatFullDate(date) {
-
-  return date.toLocaleDateString(
-    "ru-RU",
-    {
-      weekday: "long",
-      day: "numeric",
-      month: "long"
-    }
-  );
-
-}
-
-
-function formatShortDate(key) {
-
-  const date =
-    dateFromKey(key);
-
-
-  if (
-    isToday(date)
-  ) {
-
-    return "Сегодня";
-
-  }
-
-
-  return date.toLocaleDateString(
-    "ru-RU",
-    {
-      day: "numeric",
-      month: "short"
-    }
-  );
-
-}
-
-
-/* ================= REPEAT ================= */
-
-function repeatText(repeat) {
-
-  const values = {
-
-    none:
-      "Не повторять",
-
-    daily:
-      "Каждый день",
-
-    weekdays:
-      "По будням",
-
-    weekly:
-      "Каждую неделю",
-
-    monthly:
-      "Каждый месяц"
-
-  };
-
-
-  return (
-
-    values[repeat] ||
-    "Не повторять"
-
-  );
-
-}
-
-
-function taskOccursOnDate(
-  task,
-  dateKey
-) {
-
-  if (
-    !task ||
-    !task.date
-  ) {
-
-    return false;
-
-  }
-
-
-  const start =
-    dateFromKey(
-      task.date
-    );
-
-  const target =
-    dateFromKey(
-      dateKey
-    );
-
-
-  if (
-    target < start
-  ) {
-
-    return false;
-
-  }
-
-
-  const repeat =
-    task.repeat ||
-    "none";
-
-
-  if (
-    repeat === "none"
-  ) {
-
-    return (
-      dateKey ===
-      task.date
-    );
-
-  }
-
-
-  if (
-    repeat === "daily"
-  ) {
-
+  if (repeat === "daily") {
     return true;
-
   }
 
-
-  if (
-    repeat === "weekdays"
-  ) {
-
-    const day =
-      target.getDay();
-
-
-    return (
-      day >= 1 &&
-      day <= 5
-    );
-
+  if (repeat === "weekdays") {
+    const day = target.getDay();
+    return day >= 1 && day <= 5;
   }
 
-
-  if (
-    repeat === "weekly"
-  ) {
-
-    return (
-      start.getDay() ===
-      target.getDay()
-    );
-
+  if (repeat === "weekly") {
+    return start.getDay() === target.getDay();
   }
 
-
-  if (
-    repeat === "monthly"
-  ) {
-
-    return (
-      start.getDate() ===
-      target.getDate()
-    );
-
+  if (repeat === "monthly") {
+    return start.getDate() === target.getDate();
   }
-
 
   return false;
-
 }
-
 
 function getTasksForSelectedDate() {
+  const dateKey = getDateKey(selectedDate);
 
-  const key =
-    getDateKey(
-      selectedDate
-    );
-
-
-  return tasks.filter(
-    task =>
-      taskOccursOnDate(
-        task,
-        key
-      )
+  return tasks.filter(task =>
+    taskOccursOnDate(task, dateKey)
   );
-
 }
 
+/* =====================================================
+   COMPLETION
+   ===================================================== */
 
-/* ================= COMPLETION ================= */
-
-function isTaskCompletedOnDate(
-  task,
-  dateKey
-) {
-
+function isTaskCompletedOnDate(task, dateKey) {
   if (
     task.completedDates &&
-    typeof task.completedDates ===
-      "object"
+    typeof task.completedDates === "object"
   ) {
-
-    return Boolean(
-      task.completedDates[
-        dateKey
-      ]
-    );
-
+    return Boolean(task.completedDates[dateKey]);
   }
-
 
   return Boolean(
     task.completed &&
-    task.date ===
-      dateKey
+    task.date === dateKey
   );
-
 }
-
 
 function setTaskCompletedOnDate(
   task,
   dateKey,
   completed
 ) {
-
   if (
     !task.completedDates ||
-    typeof task.completedDates !==
-      "object"
+    typeof task.completedDates !== "object"
   ) {
-
     task.completedDates = {};
-
   }
-
 
   if (completed) {
-
-    task.completedDates[
-      dateKey
-    ] = true;
-
+    task.completedDates[dateKey] = true;
   } else {
-
-    delete task.completedDates[
-      dateKey
-    ];
-
+    delete task.completedDates[dateKey];
   }
 
-
-  task.completed =
-    Boolean(
-      task.completedDates[
-        dateKey
-      ]
-    );
-
+  task.completed = completed;
 }
 
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
 
-/* ================= REMINDERS ================= */
+const dateMain = $("dateMain");
+const dateSmall = $("dateSmall");
 
-const reminderOptions = {
+const previousDay = $("previousDay");
+const nextDay = $("nextDay");
+const todayButton = $("todayButton");
+const calendarButton = $("calendarButton");
 
-  none:
-    "Без напоминания",
+const tasksList = $("tasksList");
+const emptyState = $("emptyState");
 
-  at:
-    "В момент события",
+const progressFill = $("progressFill");
+const progressCount = $("progressCount");
 
-  "5m":
-    "За 5 минут",
+const addTaskButton = $("addTaskButton");
 
-  "10m":
-    "За 10 минут",
+/* MODAL */
 
-  "15m":
-    "За 15 минут",
+const taskModal = $("taskModal");
+const modalBackdrop = $("modalBackdrop");
+const closeModal = $("closeModal");
+const modalTitle = $("modalTitle");
 
-  "30m":
-    "За 30 минут",
+const taskTitle = $("taskTitle");
+const taskDescription = $("taskDescription");
 
-  "1h":
-    "За 1 час"
+const taskDateButton = $("taskDateButton");
+const taskDateValue = $("taskDateValue");
 
-};
+const taskTimeButton = $("taskTimeButton");
+const taskTimeValue = $("taskTimeValue");
 
+const taskRepeatButton = $("taskRepeatButton");
+const taskRepeatValue = $("taskRepeatValue");
 
-function reminderText(
-  value
-) {
+const taskReminderButton = $("taskReminderButton");
+const taskReminderValue = $("taskReminderValue");
 
-  return (
-    reminderOptions[value] ||
-    "Без напоминания"
-  );
+const importantButton = $("importantButton");
+const importantSwitch = $("importantSwitch");
+const importantValue = $("importantValue");
 
-}
+const subtasksList = $("subtasksList");
+const addSubtaskButton = $("addSubtaskButton");
 
+const saveTaskButton = $("saveTaskButton");
+const deleteTaskButton = $("deleteTaskButton");
 
-/* ================= ELEMENTS ================= */
+/* DATE */
 
-const dateMain =
-  document.getElementById(
-    "dateMain"
-  );
+const datePicker = $("datePicker");
+const datePickerBackdrop = $("datePickerBackdrop");
+const dateInput = $("dateInput");
+const confirmDate = $("confirmDate");
+const closeDatePicker = $("closeDatePicker");
 
-const dateSmall =
-  document.getElementById(
-    "dateSmall"
-  );
+/* TIME */
 
-const previousDay =
-  document.getElementById(
-    "previousDay"
-  );
+const timePicker = $("timePicker");
+const timePickerBackdrop = $("timePickerBackdrop");
+const timeInput = $("timeInput");
+const confirmTime = $("confirmTime");
+const removeTime = $("removeTime");
+const closeTimePicker = $("closeTimePicker");
 
-const nextDay =
-  document.getElementById(
-    "nextDay"
-  );
+/* REPEAT */
 
-const todayButton =
-  document.getElementById(
-    "todayButton"
-  );
+const repeatPicker = $("repeatPicker");
+const repeatPickerBackdrop = $("repeatPickerBackdrop");
+const closeRepeatPicker = $("closeRepeatPicker");
 
-const calendarButton =
-  document.getElementById(
-    "calendarButton"
-  );
+/* REMINDER */
 
-const tasksList =
-  document.getElementById(
-    "tasksList"
-  );
+const reminderPicker = $("reminderPicker");
+const reminderPickerBackdrop =
+  $("reminderPickerBackdrop");
+const closeReminderPicker =
+  $("closeReminderPicker");
 
-const emptyState =
-  document.getElementById(
-    "emptyState"
-  );
+/* CALENDAR */
 
-const progressFill =
-  document.getElementById(
-    "progressFill"
-  );
-
-const progressCount =
-  document.getElementById(
-    "progressCount"
-  );
-
-const addTaskButton =
-  document.getElementById(
-    "addTaskButton"
-  );
-
-
-/* ================= MODAL ================= */
-
-const taskModal =
-  document.getElementById(
-    "taskModal"
-  );
-
-const modalBackdrop =
-  document.getElementById(
-    "modalBackdrop"
-  );
-
-const closeModal =
-  document.getElementById(
-    "closeModal"
-  );
-
-const modalTitle =
-  document.getElementById(
-    "modalTitle"
-  );
-
-const taskTitle =
-  document.getElementById(
-    "taskTitle"
-  );
-
-const taskDescription =
-  document.getElementById(
-    "taskDescription"
-  );
-
-const taskDateButton =
-  document.getElementById(
-    "taskDateButton"
-  );
-
-const taskDateValue =
-  document.getElementById(
-    "taskDateValue"
-  );
-
-const taskTimeButton =
-  document.getElementById(
-    "taskTimeButton"
-  );
-
-const taskTimeValue =
-  document.getElementById(
-    "taskTimeValue"
-  );
-
-const taskRepeatButton =
-  document.getElementById(
-    "taskRepeatButton"
-  );
-
-const taskRepeatValue =
-  document.getElementById(
-    "taskRepeatValue"
-  );
-
-const importantButton =
-  document.getElementById(
-    "importantButton"
-  );
-
-const importantSwitch =
-  document.getElementById(
-    "importantSwitch"
-  );
-
-const importantValue =
-  document.getElementById(
-    "importantValue"
-  );
-
-const subtasksList =
-  document.getElementById(
-    "subtasksList"
-  );
-
-const addSubtaskButton =
-  document.getElementById(
-    "addSubtaskButton"
-  );
-
-const saveTaskButton =
-  document.getElementById(
-    "saveTaskButton"
-  );
-
-const deleteTaskButton =
-  document.getElementById(
-    "deleteTaskButton"
-  );
-
-
-/* ================= DATE PICKER ================= */
-
-const datePicker =
-  document.getElementById(
-    "datePicker"
-  );
-
-const datePickerBackdrop =
-  document.getElementById(
-    "datePickerBackdrop"
-  );
-
-const dateInput =
-  document.getElementById(
-    "dateInput"
-  );
-
-const confirmDate =
-  document.getElementById(
-    "confirmDate"
-  );
-
-const closeDatePicker =
-  document.getElementById(
-    "closeDatePicker"
-  );
-
-
-/* ================= TIME PICKER ================= */
-
-const timePicker =
-  document.getElementById(
-    "timePicker"
-  );
-
-const timePickerBackdrop =
-  document.getElementById(
-    "timePickerBackdrop"
-  );
-
-const timeInput =
-  document.getElementById(
-    "timeInput"
-  );
-
-const confirmTime =
-  document.getElementById(
-    "confirmTime"
-  );
-
-const removeTime =
-  document.getElementById(
-    "removeTime"
-  );
-
-const closeTimePicker =
-  document.getElementById(
-    "closeTimePicker"
-  );
-
-
-/* ================= REPEAT PICKER ================= */
-
-const repeatPicker =
-  document.getElementById(
-    "repeatPicker"
-  );
-
-const repeatPickerBackdrop =
-  document.getElementById(
-    "repeatPickerBackdrop"
-  );
-
-const closeRepeatPicker =
-  document.getElementById(
-    "closeRepeatPicker"
-  );
-
-
-/* ================= CALENDAR ================= */
-
-const calendarPicker =
-  document.getElementById(
-    "calendarPicker"
-  );
-
+const calendarPicker = $("calendarPicker");
 const calendarPickerBackdrop =
-  document.getElementById(
-    "calendarPickerBackdrop"
-  );
-
-const calendarInput =
-  document.getElementById(
-    "calendarInput"
-  );
-
-const goToDate =
-  document.getElementById(
-    "goToDate"
-  );
-
+  $("calendarPickerBackdrop");
+const calendarInput = $("calendarInput");
+const goToDate = $("goToDate");
 const closeCalendarPicker =
-  document.getElementById(
-    "closeCalendarPicker"
-  );
-
-
-/* ================= REMINDER UI ================= */
-
-let reminderRow = null;
-let reminderValueElement = null;
-let reminderPicker = null;
-let reminderPickerBackdrop = null;
-let closeReminderPicker = null;
-
-
-/* ================= CREATE REMINDER UI ================= */
-
-function createReminderUI() {
-
-  if (
-    document.getElementById(
-      "taskReminderButton"
-    )
-  ) {
-
-    return;
-
-  }
-
-
-  const anchor =
-    taskRepeatButton.closest(
-      ".form-row"
-    ) ||
-    taskRepeatButton.parentElement;
-
-
-  if (!anchor) {
-    return;
-  }
-
-
-  reminderRow =
-    document.createElement(
-      "div"
-    );
-
-  reminderRow.className =
-    "form-row";
-
-
-  const button =
-    document.createElement(
-      "button"
-    );
-
-  button.type =
-    "button";
-
-  button.id =
-    "taskReminderButton";
-
-  button.className =
-    "task-setting-button";
-
-
-  button.innerHTML = `
-    <span class="task-setting-icon">🔔</span>
-    <span class="task-setting-content">
-      <span class="task-setting-title">
-        Напоминание
-      </span>
-      <span
-        id="taskReminderValue"
-        class="task-setting-value"
-      >
-        Без напоминания
-      </span>
-    </span>
-    <span class="task-setting-arrow">›</span>
-  `;
-
-
-  reminderRow.appendChild(
-    button
-  );
-
-
-  anchor.insertAdjacentElement(
-    "afterend",
-    reminderRow
-  );
-
-
-  reminderValueElement =
-    document.getElementById(
-      "taskReminderValue"
-    );
-
-
-  button.addEventListener(
-    "click",
-    openReminderPicker
-  );
-
-
-  createReminderPicker();
-
-}
-
-
-/* ================= REMINDER PICKER ================= */
-
-function createReminderPicker() {
-
-  reminderPicker =
-    document.createElement(
-      "div"
-    );
-
-  reminderPicker.id =
-    "reminderPicker";
-
-  reminderPicker.className =
-    "modal hidden";
-
-
-  reminderPicker.innerHTML = `
-
-    <div
-      class="modal-backdrop"
-      id="reminderPickerBackdrop"
-    ></div>
-
-    <div class="modal-content">
-
-      <div class="modal-header">
-
-        <h2>
-          Напоминание
-        </h2>
-
-        <button
-          type="button"
-          class="modal-close"
-          id="closeReminderPicker"
-        >
-          ×
-        </button>
-
-      </div>
-
-      <div
-        class="reminder-options"
-      >
-
-        <button
-          type="button"
-          class="reminder-option"
-          data-reminder="none"
-        >
-          <span>
-            Без напоминания
-          </span>
-        </button>
-
-        <button
-          type="button"
-          class="reminder-option"
-          data-reminder="at"
-        >
-          <span>
-            В момент события
-          </span>
-        </button>
-
-        <button
-          type="button"
-          class="reminder-option"
-          data-reminder="5m"
-        >
-          <span>
-            За 5 минут
-          </span>
-        </button>
-
-        <button
-          type="button"
-          class="reminder-option"
-          data-reminder="10m"
-        >
-          <span>
-            За 10 минут
-          </span>
-        </button>
-
-        <button
-          type="button"
-          class="reminder-option"
-          data-reminder="15m"
-        >
-          <span>
-            За 15 минут
-          </span>
-        </button>
-
-        <button
-          type="button"
-          class="reminder-option"
-          data-reminder="30m"
-        >
-          <span>
-            За 30 минут
-          </span>
-        </button>
-
-        <button
-          type="button"
-          class="reminder-option"
-          data-reminder="1h"
-        >
-          <span>
-            За 1 час
-          </span>
-        </button>
-
-      </div>
-
-    </div>
-  `;
-
-
-  document.body.appendChild(
-    reminderPicker
-  );
-
-
-  reminderPickerBackdrop =
-    document.getElementById(
-      "reminderPickerBackdrop"
-    );
-
-
-  closeReminderPicker =
-    document.getElementById(
-      "closeReminderPicker"
-    );
-
-
-  closeReminderPicker.addEventListener(
-    "click",
-    closeReminderPickerWindow
-  );
-
-
-  reminderPickerBackdrop.addEventListener(
-    "click",
-    closeReminderPickerWindow
-  );
-
-
-  document
-    .querySelectorAll(
-      ".reminder-option"
-    )
-    .forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            taskFormReminder =
-              button.dataset.reminder;
-
-            updateReminderUI();
-
-            closeReminderPickerWindow();
-
-          }
-        );
-
-      }
-    );
-
-}
-
-
-/* ================= REMINDER UI UPDATE ================= */
-
-function updateReminderUI() {
-
-  if (
-    reminderValueElement
-  ) {
-
-    reminderValueElement.textContent =
-      reminderText(
-        taskFormReminder
-      );
-
-  }
-
-
-  document
-    .querySelectorAll(
-      ".reminder-option"
-    )
-    .forEach(
-      button => {
-
-        button.classList.toggle(
-          "selected",
-          button.dataset.reminder ===
-            taskFormReminder
-        );
-
-      }
-    );
-
-}
-
-
-/* ================= OPEN REMINDER ================= */
-
-function openReminderPicker() {
-
-  updateReminderUI();
-
-  reminderPicker.classList.remove(
-    "hidden"
-  );
-
-}
-
-
-function closeReminderPickerWindow() {
-
-  if (
-    reminderPicker
-  ) {
-
-    reminderPicker.classList.add(
-      "hidden"
-    );
-
-  }
-
-}
-
-
-/* ================= DATE RENDER ================= */
+  $("closeCalendarPicker");
+
+/* =====================================================
+   DATE RENDER
+   ===================================================== */
 
 function renderDate() {
-
-  if (
-    isToday(
-      selectedDate
-    )
-  ) {
-
-    dateMain.textContent =
-      "Сегодня";
-
+  if (isToday(selectedDate)) {
+    dateMain.textContent = "Сегодня";
   } else {
-
-    const weekday =
+    dateMain.textContent =
       selectedDate.toLocaleDateString(
         "ru-RU",
         {
-          weekday: "long"
+          day: "numeric",
+          month: "long"
         }
       );
-
-
-    dateMain.textContent =
-      weekday
-        .charAt(0)
-        .toUpperCase() +
-      weekday.slice(1);
-
   }
-
 
   dateSmall.textContent =
-    formatFullDate(
-      selectedDate
-    );
-
+    formatFullDate(selectedDate);
 }
 
-
-/* ================= SUBTASK HELPERS ================= */
-
-function normalizeSubtask(
-  subtask
-) {
-
-  if (
-    typeof subtask ===
-    "string"
-  ) {
-
-    return {
-
-      text:
-        subtask,
-
-      completed:
-        false
-
-    };
-
-  }
-
-
-  return {
-
-    text:
-      subtask.text || "",
-
-    completed:
-      Boolean(
-        subtask.completed
-      )
-
-  };
-
-}
-
-
-function getSubtaskStats(
-  task
-) {
-
-  const subtasks =
-    Array.isArray(
-      task.subtasks
-    )
-      ? task.subtasks
-      : [];
-
-
-  const total =
-    subtasks.length;
-
-
-  const completed =
-    subtasks.filter(
-      subtask =>
-        normalizeSubtask(
-          subtask
-        ).completed
-    ).length;
-
-
-  return {
-
-    total,
-
-    completed
-
-  };
-
-}
-
-
-/* ================= RENDER TASKS ================= */
+/* =====================================================
+   TASK RENDER
+   ===================================================== */
 
 function renderTasks() {
+  const list = getTasksForSelectedDate();
+  const dateKey = getDateKey(selectedDate);
 
-  const currentTasks =
-    getTasksForSelectedDate();
+  tasksList.innerHTML = "";
 
+  emptyState.classList.toggle(
+    "hidden",
+    list.length > 0
+  );
 
-  tasksList.innerHTML =
-    "";
+  let completedCount = 0;
 
-
-  if (
-    currentTasks.length ===
-    0
-  ) {
-
-    emptyState.classList.remove(
-      "hidden"
-    );
-
-  } else {
-
-    emptyState.classList.add(
-      "hidden"
-    );
-
-  }
-
-
-  let completedTasks = 0;
-
-
-  const currentDateKey =
-    getDateKey(
-      selectedDate
-    );
-
-
-  currentTasks.forEach(
-    task => {
-
-      const taskCompleted =
-        isTaskCompletedOnDate(
-          task,
-          currentDateKey
-        );
-
-
-      if (
-        taskCompleted
-      ) {
-
-        completedTasks++;
-
-      }
-
-
-      const card =
-        document.createElement(
-          "article"
-        );
-
-
-      card.className =
-        "task-card";
-
-
-      if (
-        taskCompleted
-      ) {
-
-        card.classList.add(
-          "completed"
-        );
-
-      }
-
-
-      if (
-        task.important
-      ) {
-
-        card.classList.add(
-          "important"
-        );
-
-      }
-
-
-      const check =
-        document.createElement(
-          "button"
-        );
-
-
-      check.className =
-        "task-check";
-
-
-      check.type =
-        "button";
-
-
-      check.textContent =
-        taskCompleted
-          ? "✓"
-          : "";
-
-
-      check.addEventListener(
-        "click",
-        event => {
-
-          event.stopPropagation();
-
-          toggleTask(
-            task.id
-          );
-
-        }
+  list.forEach(task => {
+    const completed =
+      isTaskCompletedOnDate(
+        task,
+        dateKey
       );
 
+    if (completed) {
+      completedCount++;
+    }
 
-      const content =
-        document.createElement(
-          "div"
+    const card =
+      document.createElement("div");
+
+    card.className = "task-card";
+
+    if (completed) {
+      card.classList.add("completed");
+    }
+
+    if (task.important) {
+      card.classList.add("important");
+    }
+
+    /* CHECK */
+
+    const check =
+      document.createElement("button");
+
+    check.className = "task-check";
+
+    check.type = "button";
+
+    check.textContent =
+      completed ? "✓" : "";
+
+    check.addEventListener(
+      "click",
+      event => {
+
+        event.stopPropagation();
+
+        setTaskCompletedOnDate(
+          task,
+          dateKey,
+          !completed
         );
 
+        saveTasks();
+        renderTasks();
 
-      content.className =
-        "task-content";
+      }
+    );
 
+    /* CONTENT */
 
-      const title =
-        document.createElement(
-          "div"
-        );
+    const content =
+      document.createElement("div");
 
+    content.className =
+      "task-content";
 
-      title.className =
-        "task-title";
+    const title =
+      document.createElement("div");
 
+    title.className =
+      "task-title";
 
-      title.textContent =
-        task.title;
+    title.textContent =
+      task.title || "Без названия";
 
+    if (completed) {
+      title.classList.add(
+        "completed-text"
+      );
+    }
+
+    content.appendChild(title);
+
+    if (task.description) {
+
+      const description =
+        document.createElement("div");
+
+      description.className =
+        "task-description";
+
+      description.textContent =
+        task.description;
 
       content.appendChild(
-        title
-      );
-
-
-      if (
-        task.description
-      ) {
-
-        const description =
-          document.createElement(
-            "div"
-          );
-
-
-        description.className =
-          "task-description";
-
-
-        description.textContent =
-          task.description;
-
-
-        content.appendChild(
-          description
-        );
-
-      }
-
-
-      const info =
-        document.createElement(
-          "div"
-        );
-
-
-      info.className =
-        "task-info";
-
-
-      if (
-        task.time
-      ) {
-
-        const time =
-          document.createElement(
-            "span"
-          );
-
-
-        time.textContent =
-          "🕐 " +
-          task.time;
-
-
-        info.appendChild(
-          time
-        );
-
-      }
-
-
-      if (
-        task.repeat &&
-        task.repeat !== "none"
-      ) {
-
-        const repeat =
-          document.createElement(
-            "span"
-          );
-
-
-        repeat.textContent =
-          "🔁 " +
-          repeatText(
-            task.repeat
-          );
-
-
-        info.appendChild(
-          repeat
-        );
-
-      }
-
-
-      if (
-        task.reminder &&
-        task.reminder !==
-          "none"
-      ) {
-
-        const reminder =
-          document.createElement(
-            "span"
-          );
-
-
-        reminder.textContent =
-          "🔔 " +
-          reminderText(
-            task.reminder
-          );
-
-
-        info.appendChild(
-          reminder
-        );
-
-      }
-
-
-      if (
-        task.important
-      ) {
-
-        const star =
-          document.createElement(
-            "span"
-          );
-
-
-        star.className =
-          "task-star";
-
-
-        star.textContent =
-          "★";
-
-
-        info.appendChild(
-          star
-        );
-
-      }
-
-
-      const stats =
-        getSubtaskStats(
-          task
-        );
-
-
-      if (
-        stats.total > 0
-      ) {
-
-        const subtaskCount =
-          document.createElement(
-            "span"
-          );
-
-
-        subtaskCount.textContent =
-          `☷ ${stats.completed}/${stats.total}`;
-
-
-        info.appendChild(
-          subtaskCount
-        );
-
-      }
-
-
-      if (
-        info.children.length >
-        0
-      ) {
-
-        content.appendChild(
-          info
-        );
-
-      }
-
-
-      if (
-        stats.total > 0
-      ) {
-
-        const preview =
-          document.createElement(
-            "div"
-          );
-
-
-        preview.className =
-          "task-subtasks-preview";
-
-
-        const progress =
-          document.createElement(
-            "div"
-          );
-
-
-        progress.className =
-          "task-subtasks-progress";
-
-
-        const fill =
-          document.createElement(
-            "div"
-          );
-
-
-        fill.className =
-          "task-subtasks-fill";
-
-
-        const percent =
-          Math.round(
-            (
-              stats.completed /
-              stats.total
-            ) *
-            100
-          );
-
-
-        fill.style.width =
-          `${percent}%`;
-
-
-        progress.appendChild(
-          fill
-        );
-
-
-        preview.appendChild(
-          progress
-        );
-
-
-        content.appendChild(
-          preview
-        );
-
-      }
-
-
-      card.appendChild(
-        check
-      );
-
-
-      card.appendChild(
-        content
-      );
-
-
-      card.addEventListener(
-        "click",
-        () => {
-
-          openEditTask(
-            task.id
-          );
-
-        }
-      );
-
-
-      tasksList.appendChild(
-        card
+        description
       );
 
     }
-  );
 
+    /* META */
 
-  const total =
-    currentTasks.length;
+    const meta =
+      document.createElement("div");
 
+    meta.className =
+      "task-meta";
 
-  const percent =
-    total === 0
-      ? 0
-      : Math.round(
-          (
-            completedTasks /
-            total
-          ) *
-          100
-        );
+    if (task.time) {
 
+      const time =
+        document.createElement("span");
+
+      time.textContent =
+        `🕐 ${task.time}`;
+
+      meta.appendChild(time);
+
+    }
+
+    if (task.reminder &&
+        task.reminder !== "none") {
+
+      const reminder =
+        document.createElement("span");
+
+      reminder.textContent =
+        `🔔 ${reminderText(
+          task.reminder
+        )}`;
+
+      meta.appendChild(reminder);
+
+    }
+
+    if (task.repeat &&
+        task.repeat !== "none") {
+
+      const repeat =
+        document.createElement("span");
+
+      repeat.textContent =
+        `🔁 ${repeatText(
+          task.repeat
+        )}`;
+
+      meta.appendChild(repeat);
+
+    }
+
+    if (task.important) {
+
+      const important =
+        document.createElement("span");
+
+      important.textContent =
+        "⭐";
+
+      meta.appendChild(
+        important
+      );
+
+    }
+
+    if (meta.children.length) {
+      content.appendChild(meta);
+    }
+
+    /* SUBTASKS */
+
+    if (
+      Array.isArray(task.subtasks) &&
+      task.subtasks.length
+    ) {
+
+      const subtaskInfo =
+        document.createElement("div");
+
+      subtaskInfo.className =
+        "task-subtasks";
+
+      const done =
+        task.subtasks.filter(
+          s => s.completed
+        ).length;
+
+      subtaskInfo.textContent =
+        `Подзадачи: ${done}/${task.subtasks.length}`;
+
+      content.appendChild(
+        subtaskInfo
+      );
+
+    }
+
+    /* OPEN */
+
+    card.addEventListener(
+      "click",
+      () => openEditTask(task)
+    );
+
+    card.appendChild(check);
+    card.appendChild(content);
+
+    tasksList.appendChild(card);
+  });
 
   progressCount.textContent =
-    `${completedTasks} / ${total}`;
+    `${completedCount} / ${list.length}`;
 
+  const progress =
+    list.length
+      ? (completedCount / list.length) * 100
+      : 0;
 
   progressFill.style.width =
-    `${percent}%`;
-
+    `${progress}%`;
 }
 
+/* =====================================================
+   MODAL
+   ===================================================== */
 
-/* ================= TOGGLE TASK ================= */
-
-function toggleTask(id) {
-
-  const task =
-    tasks.find(
-      item =>
-        item.id === id
-    );
-
-
-  if (!task) {
-    return;
-  }
-
-
-  const dateKey =
-    getDateKey(
-      selectedDate
-    );
-
-
-  const current =
-    isTaskCompletedOnDate(
-      task,
-      dateKey
-    );
-
-
-  setTaskCompletedOnDate(
-    task,
-    dateKey,
-    !current
+function openModal() {
+  taskModal.classList.remove(
+    "hidden"
   );
-
-
-  saveTasks();
-
-  renderTasks();
-
 }
 
+function closeTaskModal() {
+  taskModal.classList.add(
+    "hidden"
+  );
+}
 
-/* ================= RESET FORM ================= */
-
-function resetForm() {
-
-  editingTaskId =
-    null;
-
-
-  taskFormDate =
-    getDateKey(
-      selectedDate
-    );
-
-
-  taskFormTime =
-    "";
-
-
-  taskFormRepeat =
-    "none";
-
-
-  taskFormImportant =
-    false;
-
-
-  taskFormReminder =
-    "none";
-
-
-  taskTitle.value =
-    "";
-
-
-  taskDescription.value =
-    "";
-
+function openNewTask() {
+  editingTaskId = null;
 
   modalTitle.textContent =
     "Новая задача";
 
+  taskTitle.value = "";
+  taskDescription.value = "";
 
-  saveTaskButton.textContent =
-    "Сохранить";
+  taskFormDate =
+    getDateKey(selectedDate);
 
+  taskFormTime = "";
+  taskFormRepeat = "none";
+  taskFormImportant = false;
+  taskFormReminder = "none";
+
+  subtasksList.innerHTML = "";
 
   deleteTaskButton.classList.add(
     "hidden"
   );
 
+  updateFormUI();
 
-  subtasksList.innerHTML =
-    "";
+  openModal();
+}
 
+function openEditTask(task) {
+  editingTaskId =
+    task.id;
+
+  modalTitle.textContent =
+    "Редактировать задачу";
+
+  taskTitle.value =
+    task.title || "";
+
+  taskDescription.value =
+    task.description || "";
+
+  taskFormDate =
+    task.date ||
+    getDateKey(selectedDate);
+
+  taskFormTime =
+    task.time || "";
+
+  taskFormRepeat =
+    task.repeat || "none";
+
+  taskFormImportant =
+    Boolean(task.important);
+
+  taskFormReminder =
+    task.reminder || "none";
+
+  subtasksList.innerHTML = "";
+
+  if (
+    Array.isArray(task.subtasks)
+  ) {
+
+    task.subtasks.forEach(
+      subtask => {
+
+        createSubtask(
+          subtask.text,
+          subtask.completed
+        );
+
+      }
+    );
+
+  }
+
+  deleteTaskButton.classList.remove(
+    "hidden"
+  );
 
   updateFormUI();
 
+  openModal();
 }
 
-
-/* ================= FORM UI ================= */
+/* =====================================================
+   FORM UI
+   ===================================================== */
 
 function updateFormUI() {
-
   taskDateValue.textContent =
-    formatShortDate(
-      taskFormDate
-    );
-
+    taskFormDate
+      ? dateFromKey(
+          taskFormDate
+        ).toLocaleDateString(
+          "ru-RU",
+          {
+            day: "numeric",
+            month: "long"
+          }
+        )
+      : "Сегодня";
 
   taskTimeValue.textContent =
     taskFormTime ||
     "Без времени";
-
 
   taskRepeatValue.textContent =
     repeatText(
       taskFormRepeat
     );
 
+  taskReminderValue.textContent =
+    reminderText(
+      taskFormReminder
+    );
 
   importantValue.textContent =
     taskFormImportant
       ? "Включено"
       : "Выключено";
 
-
   importantSwitch.classList.toggle(
     "active",
     taskFormImportant
   );
 
+  importantButton.classList.toggle(
+    "active",
+    taskFormImportant
+  );
+}
 
-  document
-    .querySelectorAll(
-      ".repeat-option"
+/* =====================================================
+   SAVE TASK
+   ===================================================== */
+
+function collectSubtasks() {
+  return [
+    ...subtasksList.querySelectorAll(
+      ".subtask-row"
     )
-    .forEach(
-      button => {
+  ]
+    .map(row => {
 
-        button.classList.toggle(
-          "selected",
-          button.dataset.repeat ===
-            taskFormRepeat
+      const input =
+        row.querySelector(
+          ".subtask-input"
         );
 
-      }
-    );
+      const check =
+        row.querySelector(
+          ".subtask-check"
+        );
 
+      return {
+        text:
+          input
+            ? input.value.trim()
+            : "",
 
-  updateReminderUI();
+        completed:
+          Boolean(
+            check &&
+            check.classList.contains(
+              "active"
+            )
+          )
+      };
 
-}
-
-
-/* ================= NEW TASK ================= */
-
-function openNewTask() {
-
-  resetForm();
-
-
-  taskModal.classList.remove(
-    "hidden"
-  );
-
-
-  setTimeout(
-    () => {
-
-      taskTitle.focus();
-
-    },
-    100
-  );
-
-}
-
-
-/* ================= EDIT TASK ================= */
-
-function openEditTask(id) {
-
-  const task =
-    tasks.find(
+    })
+    .filter(
       item =>
-        item.id === id
+        item.text.length > 0
     );
-
-
-  if (!task) {
-    return;
-  }
-
-
-  editingTaskId =
-    id;
-
-
-  taskFormDate =
-    task.date;
-
-
-  taskFormTime =
-    task.time || "";
-
-
-  taskFormRepeat =
-    task.repeat ||
-    "none";
-
-
-  taskFormImportant =
-    Boolean(
-      task.important
-    );
-
-
-  taskFormReminder =
-    task.reminder ||
-    "none";
-
-
-  taskTitle.value =
-    task.title ||
-    "";
-
-
-  taskDescription.value =
-    task.description ||
-    "";
-
-
-  modalTitle.textContent =
-    "Редактировать задачу";
-
-
-  saveTaskButton.textContent =
-    "Сохранить";
-
-
-  deleteTaskButton.classList.remove(
-    "hidden"
-  );
-
-
-  subtasksList.innerHTML =
-    "";
-
-
-  if (
-    Array.isArray(
-      task.subtasks
-    )
-  ) {
-
-    task.subtasks.forEach(
-      subtask => {
-
-        const normalized =
-          normalizeSubtask(
-            subtask
-          );
-
-
-        createSubtask(
-          normalized.text,
-          normalized.completed
-        );
-
-      }
-    );
-
-  }
-
-
-  updateFormUI();
-
-
-  taskModal.classList.remove(
-    "hidden"
-  );
-
 }
-
-
-/* ================= CLOSE MODAL ================= */
-
-function closeTaskModal() {
-
-  taskModal.classList.add(
-    "hidden"
-  );
-
-}
-
-
-/* ================= SAVE TASK ================= */
 
 function saveTask() {
-
   const title =
     taskTitle.value.trim();
 
-
   if (!title) {
-
     taskTitle.focus();
-
     return;
-
   }
 
-
-  const description =
-    taskDescription.value.trim();
-
-
   const subtasks =
-    Array.from(
-      subtasksList.querySelectorAll(
-        ".subtask-row"
-      )
-    )
-      .map(
-        row => {
+    collectSubtasks();
 
-          const input =
-            row.querySelector(
-              ".subtask-input"
-            );
-
-
-          const check =
-            row.querySelector(
-              ".subtask-check"
-            );
-
-
-          return {
-
-            text:
-              input
-                ? input.value.trim()
-                : "",
-
-            completed:
-              Boolean(
-                check &&
-                check.classList.contains(
-                  "active"
-                )
-              )
-
-          };
-
-        }
-      )
-      .filter(
-        subtask =>
-          subtask.text.length >
-          0
-      );
-
-
-  if (
-    editingTaskId !==
-    null
-  ) {
+  if (editingTaskId) {
 
     const task =
       tasks.find(
@@ -2109,68 +792,43 @@ function saveTask() {
           editingTaskId
       );
 
-
-    if (!task) {
-      return;
-    }
-
+    if (!task) return;
 
     task.title =
       title;
 
-
     task.description =
-      description;
-
+      taskDescription.value.trim();
 
     task.date =
       taskFormDate;
 
-
     task.time =
       taskFormTime;
-
 
     task.repeat =
       taskFormRepeat;
 
-
     task.important =
       taskFormImportant;
-
 
     task.reminder =
       taskFormReminder;
 
-
     task.subtasks =
       subtasks;
 
+  } else {
 
-    if (
-      !task.completedDates ||
-      typeof task.completedDates !==
-        "object"
-    ) {
-
-      task.completedDates =
-        {};
-
-    }
-
-  }
-
-
-  else {
-
-    tasks.push({
+    const task = {
 
       id:
-        Date.now(),
+        Date.now().toString(),
 
       title,
 
-      description,
+      description:
+        taskDescription.value.trim(),
 
       date:
         taskFormDate,
@@ -2187,54 +845,41 @@ function saveTask() {
       reminder:
         taskFormReminder,
 
-      completed:
-        false,
+      completed: false,
 
-      completedDates:
-        {},
+      completedDates: {},
 
-      subtasks
+      subtasks,
 
-    });
+      createdAt:
+        Date.now()
+
+    };
+
+    tasks.push(task);
 
   }
-
 
   saveTasks();
 
-
   closeTaskModal();
 
-
   renderTasks();
-
 }
 
-
-/* ================= DELETE ================= */
+/* =====================================================
+   DELETE
+   ===================================================== */
 
 function deleteCurrentTask() {
-
-  if (
-    editingTaskId ===
-    null
-  ) {
-
-    return;
-
-  }
-
+  if (!editingTaskId) return;
 
   const confirmed =
-    window.confirm(
+    confirm(
       "Удалить эту задачу?"
     );
 
-
-  if (!confirmed) {
-    return;
-  }
-
+  if (!confirmed) return;
 
   tasks =
     tasks.filter(
@@ -2243,401 +888,305 @@ function deleteCurrentTask() {
         editingTaskId
     );
 
-
   saveTasks();
-
 
   closeTaskModal();
 
+  editingTaskId = null;
 
   renderTasks();
-
 }
 
-
-/* ================= SUBTASK ================= */
+/* =====================================================
+   SUBTASKS
+   ===================================================== */
 
 function createSubtask(
-  value = "",
+  text = "",
   completed = false
 ) {
-
   const row =
-    document.createElement(
-      "div"
-    );
-
+    document.createElement("div");
 
   row.className =
     "subtask-row";
 
-
   const check =
-    document.createElement(
-      "button"
-    );
-
+    document.createElement("button");
 
   check.type =
     "button";
 
-
   check.className =
     "subtask-check";
 
-
-  const input =
-    document.createElement(
-      "input"
-    );
-
-
-  input.className =
-    "subtask-input";
-
-
-  input.type =
-    "text";
-
-
-  input.placeholder =
-    "Подзадача";
-
-
-  input.value =
-    value;
-
-
-  input.maxLength =
-    200;
-
-
-  const remove =
-    document.createElement(
-      "button"
-    );
-
-
-  remove.className =
-    "subtask-remove";
-
-
-  remove.type =
-    "button";
-
-
-  remove.textContent =
-    "×";
-
-
-  function updateSubtaskVisual() {
-
-    const active =
-      check.classList.contains(
-        "active"
-      );
-
-
-    row.classList.toggle(
-      "completed",
-      active
-    );
-
-
-    check.textContent =
-      active
-        ? "✓"
-        : "";
-
-  }
-
-
-  if (
-    completed
-  ) {
-
+  if (completed) {
     check.classList.add(
       "active"
     );
 
-
-    updateSubtaskVisual();
-
+    check.textContent =
+      "✓";
   }
 
+  const input =
+    document.createElement("input");
+
+  input.type =
+    "text";
+
+  input.className =
+    "subtask-input";
+
+  input.placeholder =
+    "Подзадача";
+
+  input.value =
+    text;
+
+  const remove =
+    document.createElement("button");
+
+  remove.type =
+    "button";
+
+  remove.className =
+    "subtask-remove";
+
+  remove.textContent =
+    "×";
 
   check.addEventListener(
     "click",
-    event => {
-
-      event.preventDefault();
-
+    () => {
 
       check.classList.toggle(
         "active"
       );
 
-
-      updateSubtaskVisual();
+      check.textContent =
+        check.classList.contains(
+          "active"
+        )
+          ? "✓"
+          : "";
 
     }
   );
 
-
   remove.addEventListener(
     "click",
-    event => {
-
-      event.preventDefault();
-
-
-      event.stopPropagation();
-
+    () => {
 
       row.remove();
 
     }
   );
 
+  row.appendChild(check);
+  row.appendChild(input);
+  row.appendChild(remove);
 
-  row.appendChild(
-    check
-  );
+  subtasksList.appendChild(row);
 
-
-  row.appendChild(
-    input
-  );
-
-
-  row.appendChild(
-    remove
-  );
-
-
-  subtasksList.appendChild(
-    row
-  );
-
+  input.focus();
 }
 
-
-/* ================= DATE PICKER ================= */
+/* =====================================================
+   DATE PICKER
+   ===================================================== */
 
 function openDatePicker() {
-
   dateInput.value =
     taskFormDate;
-
 
   datePicker.classList.remove(
     "hidden"
   );
-
 }
 
-
 function closeDatePickerWindow() {
-
   datePicker.classList.add(
     "hidden"
   );
-
 }
-
 
 function confirmSelectedDate() {
-
-  if (
-    dateInput.value
-  ) {
-
+  if (dateInput.value) {
     taskFormDate =
       dateInput.value;
-
-
-    updateFormUI();
-
   }
 
-
+  updateFormUI();
   closeDatePickerWindow();
-
 }
 
-
-/* ================= TIME PICKER ================= */
+/* =====================================================
+   TIME PICKER
+   ===================================================== */
 
 function openTimePicker() {
-
   timeInput.value =
     taskFormTime;
-
 
   timePicker.classList.remove(
     "hidden"
   );
-
 }
 
-
 function closeTimePickerWindow() {
-
   timePicker.classList.add(
     "hidden"
   );
-
 }
-
 
 function confirmSelectedTime() {
-
   taskFormTime =
-    timeInput.value ||
-    "";
-
+    timeInput.value || "";
 
   updateFormUI();
 
-
   closeTimePickerWindow();
-
 }
-
 
 function clearTime() {
-
-  taskFormTime =
-    "";
-
-
-  taskFormReminder =
-    "none";
-
+  taskFormTime = "";
+  taskFormReminder = "none";
 
   updateFormUI();
-
 
   closeTimePickerWindow();
-
 }
 
-
-/* ================= REPEAT PICKER ================= */
+/* =====================================================
+   REPEAT PICKER
+   ===================================================== */
 
 function openRepeatPicker() {
-
-  updateFormUI();
-
-
   repeatPicker.classList.remove(
     "hidden"
   );
 
+  document
+    .querySelectorAll(
+      ".repeat-option"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "selected",
+        button.dataset.repeat ===
+          taskFormRepeat
+      );
+
+    });
 }
 
-
 function closeRepeatPickerWindow() {
-
   repeatPicker.classList.add(
     "hidden"
   );
-
 }
 
+/* =====================================================
+   REMINDER PICKER
+   ===================================================== */
 
-/* ================= CALENDAR ================= */
+function openReminderPicker() {
+  reminderPicker.classList.remove(
+    "hidden"
+  );
+
+  document
+    .querySelectorAll(
+      ".reminder-option"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "selected",
+        button.dataset.reminder ===
+          taskFormReminder
+      );
+
+    });
+}
+
+function closeReminderPickerWindow() {
+  reminderPicker.classList.add(
+    "hidden"
+  );
+}
+
+function selectReminder(value) {
+  taskFormReminder =
+    value;
+
+  updateFormUI();
+
+  closeReminderPickerWindow();
+}
+
+/* =====================================================
+   CALENDAR
+   ===================================================== */
 
 function openCalendar() {
-
   calendarInput.value =
     getDateKey(
       selectedDate
     );
 
-
   calendarPicker.classList.remove(
     "hidden"
   );
-
 }
 
-
 function closeCalendarWindow() {
-
   calendarPicker.classList.add(
     "hidden"
   );
-
 }
 
-
 function goToSelectedDate() {
-
-  if (
-    !calendarInput.value
-  ) {
-
-    return;
-
-  }
-
+  if (!calendarInput.value) return;
 
   selectedDate =
     dateFromKey(
       calendarInput.value
     );
 
-
   renderDate();
-
-
   renderTasks();
 
-
   closeCalendarWindow();
-
 }
 
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
 
-/* ================= DAY NAVIGATION ================= */
-
-function changeDay(
-  amount
-) {
-
+function changeDay(amount) {
   selectedDate.setDate(
     selectedDate.getDate() +
       amount
   );
 
-
   renderDate();
-
-
   renderTasks();
-
 }
 
-
-/* ================= TODAY ================= */
-
 function goToToday() {
-
   selectedDate =
     new Date();
 
-
   renderDate();
-
-
   renderTasks();
-
 }
 
-
-/* ================= EVENTS ================= */
-
+/* =====================================================
+   EVENTS
+   ===================================================== */
 
 /* ADD */
 
@@ -2646,36 +1195,27 @@ addTaskButton.addEventListener(
   openNewTask
 );
 
-
-/* CLOSE */
+/* MODAL */
 
 closeModal.addEventListener(
   "click",
   closeTaskModal
 );
 
-
 modalBackdrop.addEventListener(
   "click",
   closeTaskModal
 );
-
-
-/* SAVE */
 
 saveTaskButton.addEventListener(
   "click",
   saveTask
 );
 
-
-/* DELETE */
-
 deleteTaskButton.addEventListener(
   "click",
   deleteCurrentTask
 );
-
 
 /* DATE */
 
@@ -2684,24 +1224,20 @@ taskDateButton.addEventListener(
   openDatePicker
 );
 
-
 closeDatePicker.addEventListener(
   "click",
   closeDatePickerWindow
 );
-
 
 datePickerBackdrop.addEventListener(
   "click",
   closeDatePickerWindow
 );
 
-
 confirmDate.addEventListener(
   "click",
   confirmSelectedDate
 );
-
 
 /* TIME */
 
@@ -2710,30 +1246,25 @@ taskTimeButton.addEventListener(
   openTimePicker
 );
 
-
 closeTimePicker.addEventListener(
   "click",
   closeTimePickerWindow
 );
-
 
 timePickerBackdrop.addEventListener(
   "click",
   closeTimePickerWindow
 );
 
-
 confirmTime.addEventListener(
   "click",
   confirmSelectedTime
 );
 
-
 removeTime.addEventListener(
   "click",
   clearTime
 );
-
 
 /* REPEAT */
 
@@ -2742,45 +1273,73 @@ taskRepeatButton.addEventListener(
   openRepeatPicker
 );
 
-
 closeRepeatPicker.addEventListener(
   "click",
   closeRepeatPickerWindow
 );
-
 
 repeatPickerBackdrop.addEventListener(
   "click",
   closeRepeatPickerWindow
 );
 
-
 document
   .querySelectorAll(
     ".repeat-option"
   )
-  .forEach(
-    button => {
+  .forEach(button => {
 
-      button.addEventListener(
-        "click",
-        () => {
+    button.addEventListener(
+      "click",
+      () => {
 
-          taskFormRepeat =
-            button.dataset.repeat;
+        taskFormRepeat =
+          button.dataset.repeat;
 
+        updateFormUI();
 
-          updateFormUI();
+        closeRepeatPickerWindow();
 
+      }
+    );
 
-          closeRepeatPickerWindow();
+  });
 
-        }
-      );
+/* REMINDER */
 
-    }
-  );
+taskReminderButton.addEventListener(
+  "click",
+  openReminderPicker
+);
 
+closeReminderPicker.addEventListener(
+  "click",
+  closeReminderPickerWindow
+);
+
+reminderPickerBackdrop.addEventListener(
+  "click",
+  closeReminderPickerWindow
+);
+
+document
+  .querySelectorAll(
+    ".reminder-option"
+  )
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        selectReminder(
+          button.dataset.reminder
+        );
+
+      }
+    );
+
+  });
 
 /* IMPORTANT */
 
@@ -2791,54 +1350,40 @@ importantButton.addEventListener(
     taskFormImportant =
       !taskFormImportant;
 
-
     updateFormUI();
 
   }
 );
-
 
 /* SUBTASK */
 
 addSubtaskButton.addEventListener(
   "click",
   () => {
-
     createSubtask();
-
   }
 );
 
-
-/* DAY */
+/* DAYS */
 
 previousDay.addEventListener(
   "click",
   () => {
-
     changeDay(-1);
-
   }
 );
-
 
 nextDay.addEventListener(
   "click",
   () => {
-
     changeDay(1);
-
   }
 );
-
-
-/* TODAY */
 
 todayButton.addEventListener(
   "click",
   goToToday
 );
-
 
 /* CALENDAR */
 
@@ -2847,156 +1392,113 @@ calendarButton.addEventListener(
   openCalendar
 );
 
-
 closeCalendarPicker.addEventListener(
   "click",
   closeCalendarWindow
 );
-
 
 calendarPickerBackdrop.addEventListener(
   "click",
   closeCalendarWindow
 );
 
-
 goToDate.addEventListener(
   "click",
   goToSelectedDate
 );
 
-
-/* ================= KEYBOARD ================= */
+/* =====================================================
+   KEYBOARD
+   ===================================================== */
 
 document.addEventListener(
   "keydown",
   event => {
 
     if (
-      event.key ===
-      "Escape"
+      event.key !== "Escape"
     ) {
-
-      taskModal.classList.add(
-        "hidden"
-      );
-
-
-      datePicker.classList.add(
-        "hidden"
-      );
-
-
-      timePicker.classList.add(
-        "hidden"
-      );
-
-
-      repeatPicker.classList.add(
-        "hidden"
-      );
-
-
-      calendarPicker.classList.add(
-        "hidden"
-      );
-
-
-      closeReminderPickerWindow();
-
+      return;
     }
+
+    taskModal.classList.add(
+      "hidden"
+    );
+
+    datePicker.classList.add(
+      "hidden"
+    );
+
+    timePicker.classList.add(
+      "hidden"
+    );
+
+    repeatPicker.classList.add(
+      "hidden"
+    );
+
+    reminderPicker.classList.add(
+      "hidden"
+    );
+
+    calendarPicker.classList.add(
+      "hidden"
+    );
 
   }
 );
 
-
-/* ================= BOTTOM NAV ================= */
+/* =====================================================
+   BOTTOM NAVIGATION
+   ===================================================== */
 
 document
   .querySelectorAll(
     ".nav-item"
   )
-  .forEach(
-    item => {
+  .forEach(item => {
 
-      item.addEventListener(
-        "click",
-        () => {
+    item.addEventListener(
+      "click",
+      () => {
 
-          document
-            .querySelectorAll(
-              ".nav-item"
-            )
-            .forEach(
-              nav => {
+        const page =
+          item.dataset.page;
 
-                nav.classList.remove(
-                  "active"
-                );
+        if (
+          page !== "tasks"
+        ) {
 
-              }
-            );
-
-
-          item.classList.add(
-            "active"
+          alert(
+            "Этот раздел сделаем следующим этапом."
           );
 
-
-          const page =
-            item.dataset.page;
-
-
-          if (
-            page !== "tasks"
-          ) {
-
-            alert(
-              "Этот раздел сделаем следующим этапом."
-            );
-
-
-            document
-              .querySelectorAll(
-                ".nav-item"
-              )
-              .forEach(
-                nav => {
-
-                  nav.classList.remove(
-                    "active"
-                  );
-
-                }
-              );
-
-
-            const tasksNav =
-              document.querySelector(
-                '[data-page="tasks"]'
-              );
-
-
-            if (
-              tasksNav
-            ) {
-
-              tasksNav.classList.add(
-                "active"
-              );
-
-            }
-
-          }
+          return;
 
         }
-      );
 
-    }
-  );
+        document
+          .querySelectorAll(
+            ".nav-item"
+          )
+          .forEach(nav =>
+            nav.classList.remove(
+              "active"
+            )
+          );
 
+        item.classList.add(
+          "active"
+        );
 
-/* ================= REMINDER STYLES ================= */
+      }
+    );
+
+  });
+
+/* =====================================================
+   EXTRA REMINDER STYLES
+   ===================================================== */
 
 function injectReminderStyles() {
 
@@ -3005,143 +1507,95 @@ function injectReminderStyles() {
       "tracker-reminder-styles"
     )
   ) {
-
     return;
-
   }
-
 
   const style =
     document.createElement(
       "style"
     );
 
-
   style.id =
     "tracker-reminder-styles";
 
-
   style.textContent = `
-
-    .task-setting-button {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      border: 0;
-      border-radius: 14px;
-      background: transparent;
-      color: inherit;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .task-setting-button:hover {
-      background: rgba(255,255,255,.04);
-    }
-
-    .task-setting-icon {
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      background: rgba(255,255,255,.06);
-      flex-shrink: 0;
-    }
-
-    .task-setting-content {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .task-setting-title {
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .task-setting-value {
-      font-size: 13px;
-      opacity: .58;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .task-setting-arrow {
-      font-size: 24px;
-      opacity: .45;
-    }
-
-    .reminder-options {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      padding: 8px 0 16px;
-    }
-
-    .reminder-option {
-      width: 100%;
-      padding: 15px 16px;
-      border: 0;
-      border-radius: 12px;
-      background: transparent;
-      color: inherit;
-      text-align: left;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .reminder-option:hover {
-      background: rgba(255,255,255,.05);
-    }
 
     .reminder-option.selected {
       background: rgba(255,255,255,.09);
       font-weight: 600;
     }
 
-    .task-subtasks-preview {
-      width: 100%;
-      margin-top: 8px;
+    .task-card.completed {
+      opacity: .65;
     }
 
-    .task-subtasks-progress {
-      width: 100%;
-      height: 4px;
-      overflow: hidden;
-      border-radius: 99px;
-      background: rgba(255,255,255,.08);
+    .task-title.completed-text {
+      text-decoration: line-through;
     }
 
-    .task-subtasks-fill {
-      height: 100%;
-      border-radius: inherit;
-      background: currentColor;
-      opacity: .75;
-      transition: width .2s ease;
+    .task-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 12px;
+      opacity: .65;
+    }
+
+    .task-subtasks {
+      margin-top: 6px;
+      font-size: 12px;
+      opacity: .55;
+    }
+
+    .subtask-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .subtask-check {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      background: transparent;
+      color: inherit;
+    }
+
+    .subtask-check.active {
+      background: rgba(255,255,255,.12);
+    }
+
+    .subtask-input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .subtask-remove {
+      width: 28px;
+      height: 28px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      opacity: .5;
+      font-size: 20px;
     }
 
   `;
 
-
   document.head.appendChild(
     style
   );
-
 }
 
-
-/* ================= INITIALIZE ================= */
+/* =====================================================
+   START
+   ===================================================== */
 
 injectReminderStyles();
-
-createReminderUI();
 
 loadTasks();
 
