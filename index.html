@@ -82,6 +82,16 @@
   .cal-day.today .n{background:var(--card2);color:var(--accent)}
   .cal-day.sel .n{background:var(--accent);color:#0d1720}
   .cal-day:active{background:var(--card2)}
+  .cal-week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;border-radius:12px;padding:3px 0;margin:1px 0}
+  .cal-week.sel{background:var(--card2)}
+  .cal-day2{padding:9px 0;text-align:center;font-size:15px;font-weight:600;border-radius:10px;color:var(--text)}
+  .cal-day2.dim{opacity:.32}
+  .cal-day2.today{color:var(--accent)}
+  .cal-day2:active{background:var(--card)}
+  .months-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .months-grid.cols4{grid-template-columns:repeat(4,1fr)}
+  .months-grid button{background:var(--card2);border-radius:12px;padding:12px 0;color:var(--muted);font-weight:600;font-size:14px}
+  .months-grid button.cur{background:#2b4a66;color:var(--accent)}
 
   .summary{display:flex;justify-content:flex-end;align-items:center;padding:14px 18px}
   .summary .v{font-size:22px;font-weight:800}
@@ -118,15 +128,6 @@
   .segment button{flex:1;padding:10px;border-radius:11px;color:var(--muted);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:7px}
   .segment button.active{background:var(--card2);color:var(--accent)}
 
-  .year-head{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px}
-  .year-head .y{font-size:17px;font-weight:700}
-  .year-head button{color:var(--accent);width:30px;height:30px;display:flex;align-items:center;justify-content:center}
-  .year-head .icn{width:16px;height:16px;stroke-width:2.4}
-  .months-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .months-grid button{background:var(--card2);border-radius:12px;padding:12px 0;color:var(--muted);font-weight:600;font-size:14px}
-  .months-grid button.cur{background:#2b4a66;color:var(--accent)}
-  .wd-head{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
-  .wd-head span{color:var(--muted);font-size:10px;text-align:center}
   .h-row{background:var(--card2);border-radius:14px;padding:12px;margin-bottom:8px}
   .h-name{font-size:15px;font-weight:600;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
   .h-name .cnt{color:var(--muted);font-weight:500;font-size:12px;flex:none}
@@ -342,10 +343,7 @@
   </section>
 
   <section id="tabHabits" class="tab hidden">
-    <div class="card hidden" id="yearCardHab">
-      <div class="year-head"><button id="yearPrevHab"><svg class="icn"><use href="#i-chev-l"/></svg></button><div class="y" id="yearTitleHab"></div><button id="yearNextHab"><svg class="icn"><use href="#i-chev-r"/></svg></button></div>
-      <div class="months-grid" id="yearGridHab"></div>
-    </div>
+    <div class="card hidden" id="habCalCard"></div>
     <div class="segment">
       <button id="segWeek"><svg class="icn"><use href="#i-week"/></svg><span data-t="week">Неделя</span></button>
       <button id="segMonth"><svg class="icn"><use href="#i-month"/></svg><span data-t="month">Месяц</span></button>
@@ -355,6 +353,7 @@
   </section>
 
   <section id="tabGoals" class="tab hidden">
+    <div class="card hidden" id="goalCalCard"></div>
     <div class="card" id="goalsBody"></div>
     <button class="wide-btn" id="addGoalBtn"><svg class="icn"><use href="#i-plus"/></svg><span data-t="addGoal">Добавить цель</span></button>
   </section>
@@ -386,21 +385,18 @@
 
 <script>
 "use strict";
-/* ============ КОНФИГ ============ */
 var CONFIG={APP_NAME:"Просто Трекер",FOOTER:"@ProstoTrackerBot",SUPPORT_URL:""};
-/* ================================ */
 
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
 var cloud=tg&&tg.CloudStorage?tg.CloudStorage:null;
 var tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 function $(s){return document.querySelector(s);}
 function ic(id){return '<svg class="icn"><use href="#'+id+'"/></svg>';}
-var STORE_KEY="prosto_tracker_v8";
+var STORE_KEY="prosto_tracker_v9";
 
-/* ---------- i18n ---------- */
 var STR={
 ru:{appName:"Просто Трекер",tasks:"Задачи",habits:"Привычки",goals:"Цели на год",analytics:"Аналитика",today:"Сегодня",week:"Неделя",month:"Месяц",year:"Год",addTask:"Добавить задачу",addHabit:"Добавить привычку",addGoal:"Добавить цель",more:"Ещё",notes:"Заметки",lesson:"Урок дня",gratitude:"Благодарность",thoughts:"Мысли",templates:"Шаблоны",random:"Случайная задача",searchPh:"Поиск...",fAll:"Все",fActive:"Активные",fDone:"Выполненные",noTasksToday:"На сегодня задач нет",noTasksDay:"На этот день задач нет",noHabits:"Привычек пока что нет",noGoals:"Целей на этот год пока нет",nothingFound:"Ничего не найдено",mainSec:"Основные настройки",otherSec:"Другое",dataSec:"Данные",profile:"Профиль",subscription:"Подписка",subFree:"Всё бесплатно",notif:"Уведомления",prefs:"Предпочтения",overdue:"Просроченные задачи",support:"Связаться с поддержкой",terms:"Пользовательское соглашение",privacy:"Политика конфиденциальности",theme:"Тема",thAuto:"Авто",thDark:"Тёмная",thLight:"Светлая",language:"Язык",name:"Имя",email:"Email",timezone:"Часовой пояс",regDate:"Дата регистрации",notSpecified:"Не указан",morning:"Утренняя сводка",evening:"Вечерняя сводка",morningRem:"🌅 Время утренней сводки! Загляни в трекер и спланируй день.",eveningRem:"🌙 Время вечерней сводки! Отметь прогресс за день.",pTasks:"Задачи",pHabits:"Привычки",pGoals:"Цели",pMenu:"Разделы меню",description:"Описание",important:"Пометка «Важная»",subtasks:"Подзадачи (бета)",overduePref:"Просроченные задачи",moreSec:"Раздел «Ещё»",confetti:"Конфетти при выполнении",smart:"Критерии SMART",goalSubs:"Подцели (бета)",secHabits:"Раздел «Привычки»",secGoals:"Раздел «Цели»",secAnalytics:"Раздел «Аналитика»",date:"Дата",repeat:"Периодичность",notify:"Уведомление",imp:"Важная",tag:"Тег",noTag:"Без тега",startDate:"Дата начала",endDate:"Дата окончания",enterTask:"Введите задачу",enterHabit:"Введите привычку",save:"Сохранить",repOnce:"Однократно",repDaily:"Ежедневно",repWeekly:"Еженедельно",repMonthly:"Ежемесячно",hRepDaily:"Ежедневная",hRepWeekly:"Еженедельная",hRepMonthly:"Ежемесячная",totalTasks:"Всего задач:",completed:"Выполнено:",notCompleted:"Не выполнено:",avgProgress:"Средний прогресс:",prodDay:"Продуктивный день:",totalHabits:"Всего привычек:",marks:"Отметок:",expected:"Ожидалось:",dynamics:"Динамика:",heatmap:"Активность за год",streak:"Серия",bestStreak:"Лучшая серия",days:"дн.",useFreeze:"Заморозить сегодня",water:"Вода",steps:"Шаги",sleep:"Сон",glasses:"стак.",stepsU:"шаг.",hours:"ч.",sync:"Синхронизация (Telegram Cloud)",toCloud:"В облако",fromCloud:"Из облака",lastSync:"Синхронизировано",never:"никогда",serverRem:"Серверные напоминания (код)",copy:"Копировать",copied:"Скопировано",tplTitle:"Шаблоны задач",tplAdded:"Шаблон добавлен ✅",mark:"Отметить",history:"История",entryFor:"Запись за",freeNote:"Все функции доступны бесплатно — подписка не нужна 🎉",tagWork:"Работа",tagStudy:"Учёба",tagHome:"Дом",tagHealth:"Здоровье",tagOther:"Другое",tplWork:"Работа",tplWorkout:"Тренировка",tplClean:"Уборка",tplStudy:"Учёба",vsPrev:"к прошлому периоду"},
-en:{appName:"Prosto Tracker",tasks:"Tasks",habits:"Habits",goals:"Year Goals",analytics:"Analytics",today:"Today",week:"Week",month:"Month",year:"Year",addTask:"Add task",addHabit:"Add habit",addGoal:"Add goal",more:"More",notes:"Notes",lesson:"Lesson of the day",gratitude:"Gratitude",thoughts:"Thoughts",templates:"Templates",random:"Random task",searchPh:"Search...",fAll:"All",fActive:"Active",fDone:"Done",noTasksToday:"No tasks for today",noTasksDay:"No tasks for this day",noHabits:"No habits yet",noGoals:"No goals for this year yet",nothingFound:"Nothing found",mainSec:"Main settings",otherSec:"Other",dataSec:"Data",profile:"Profile",subscription:"Subscription",subFree:"All free",notif:"Notifications",prefs:"Preferences",overdue:"Overdue tasks",support:"Contact support",terms:"Terms of use",privacy:"Privacy policy",theme:"Theme",thAuto:"Auto",thDark:"Dark",thLight:"Light",language:"Language",name:"Name",email:"Email",timezone:"Time zone",regDate:"Registration date",notSpecified:"Not specified",morning:"Morning summary",evening:"Evening summary",morningRem:"🌅 Morning summary time! Open the tracker and plan your day.",eveningRem:"🌙 Evening summary time! Log your progress.",pTasks:"Tasks",pHabits:"Habits",pGoals:"Goals",pMenu:"Menu sections",description:"Description",important:"Important mark",subtasks:"Subtasks (beta)",overduePref:"Overdue tasks",moreSec:"“More” section",confetti:"Confetti on completion",smart:"SMART criteria",goalSubs:"Subgoals (beta)",secHabits:"“Habits” section",secGoals:"“Goals” section",secAnalytics:"“Analytics” section",date:"Date",repeat:"Repeat",notify:"Notification",imp:"Important",tag:"Tag",noTag:"No tag",startDate:"Start date",endDate:"End date",enterTask:"Enter a task",enterHabit:"Enter a habit",save:"Save",repOnce:"Once",repDaily:"Daily",repWeekly:"Weekly",repMonthly:"Monthly",hRepDaily:"Daily",hRepWeekly:"Weekly",hRepMonthly:"Monthly",totalTasks:"Total tasks:",completed:"Completed:",notCompleted:"Not completed:",avgProgress:"Average progress:",prodDay:"Productive day:",totalHabits:"Total habits:",marks:"Check-ins:",expected:"Expected:",dynamics:"Dynamics:",heatmap:"Year activity",streak:"Streak",bestStreak:"Best streak",days:"d",useFreeze:"Freeze today",water:"Water",steps:"Steps",sleep:"Sleep",glasses:"gl.",stepsU:"steps",hours:"h",sync:"Sync (Telegram Cloud)",toCloud:"Upload",fromCloud:"Download",lastSync:"Synced",never:"never",serverRem:"Server reminders (code)",copy:"Copy",copied:"Copied",tplTitle:"Task templates",tplAdded:"Template added ✅",mark:"Mark",history:"History",entryFor:"Entry for",freeNote:"All features are free — no subscription needed 🎉",tagWork:"Work",tagStudy:"Study",tagHome:"Home",tagHealth:"Health",tagOther:"Other",tplWork:"Work",tplWorkout:"Workout",tplClean:"Cleaning",tplStudy:"Study",vsPrev:"vs previous period"}
+en:{appName:"Prosto Tracker",tasks:"Tasks",habits:"Habits",goals:"Year Goals",analytics:"Analytics",today:"Today",week:"Week",month:"Month",year:"Year",addTask:"Add task",addHabit:"Add habit",addGoal:"Add goal",more:"More",notes:"Notes",lesson:"Lesson of the day",gratitude:"Gratitude",thoughts:"Thoughts",templates:"Templates",random:"Random task",searchPh:"Search...",fAll:"All",fActive:"Active",fDone:"Done",noTasksToday:"No tasks for today",noTasksDay:"No tasks for this day",noHabits:"No habits yet",noGoals:"No goals for this year yet",nothingFound:"Nothing found",mainSec:"Main settings",otherSec:"Other",dataSec:"Data",profile:"Profile",subscription:"Subscription",subFree:"All free",notif:"Notifications",prefs:"Preferences",overdue:"Overdue tasks",support:"Contact support",terms:"Terms of use",privacy:"Privacy policy",theme:"Theme",thAuto:"Auto",thDark:"Dark",thLight:"Light",language:"Language",name:"Name",email:"Email",timezone:"Time zone",regDate:"Registration date",notSpecified:"Not specified",morning:"Morning summary",evening:"Evening summary",morningRem:"🌅 Morning summary time!",eveningRem:"🌙 Evening summary time!",pTasks:"Tasks",pHabits:"Habits",pGoals:"Goals",pMenu:"Menu sections",description:"Description",important:"Important mark",subtasks:"Subtasks (beta)",overduePref:"Overdue tasks",moreSec:"“More” section",confetti:"Confetti on completion",smart:"SMART criteria",goalSubs:"Subgoals (beta)",secHabits:"“Habits” section",secGoals:"“Goals” section",secAnalytics:"“Analytics” section",date:"Date",repeat:"Repeat",notify:"Notification",imp:"Important",tag:"Tag",noTag:"No tag",startDate:"Start date",endDate:"End date",enterTask:"Enter a task",enterHabit:"Enter a habit",save:"Save",repOnce:"Once",repDaily:"Daily",repWeekly:"Weekly",repMonthly:"Monthly",hRepDaily:"Daily",hRepWeekly:"Weekly",hRepMonthly:"Monthly",totalTasks:"Total tasks:",completed:"Completed:",notCompleted:"Not completed:",avgProgress:"Average progress:",prodDay:"Productive day:",totalHabits:"Total habits:",marks:"Check-ins:",expected:"Expected:",dynamics:"Dynamics:",heatmap:"Year activity",streak:"Streak",bestStreak:"Best streak",days:"d",useFreeze:"Freeze today",water:"Water",steps:"Steps",sleep:"Sleep",glasses:"gl.",stepsU:"steps",hours:"h",sync:"Sync (Telegram Cloud)",toCloud:"Upload",fromCloud:"Download",lastSync:"Synced",never:"never",serverRem:"Server reminders (code)",copy:"Copy",copied:"Copied",tplTitle:"Task templates",tplAdded:"Template added ✅",mark:"Mark",history:"History",entryFor:"Entry for",freeNote:"All features are free — no subscription needed 🎉",tagWork:"Work",tagStudy:"Study",tagHome:"Home",tagHealth:"Health",tagOther:"Other",tplWork:"Work",tplWorkout:"Workout",tplClean:"Cleaning",tplStudy:"Study",vsPrev:"vs previous period"}
 };
 function lang(){return state.settings.lang==="en"?"en":"ru";}
 function t(k){var L=lang();return (STR[L]&&STR[L][k])||STR.ru[k]||k;}
@@ -411,7 +407,6 @@ function applyI18n(){
   for(var j=0;j<ph.length;j++)ph[j].placeholder=t(ph[j].getAttribute("data-tph"));
 }
 
-/* ---------- справочники ---------- */
 var MONTHS_FULL={ru:["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],en:["January","February","March","April","May","June","July","August","September","October","November","December"]};
 var MONTHS_GRID={ru:["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]};
 var MONTHS_SHORT={ru:["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"],en:["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"]};
@@ -442,11 +437,21 @@ function addDays(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x;}
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 function esc(x){var d=document.createElement("div");d.textContent=x;return d.innerHTML;}
-function loc(fmt){return new Intl.DateTimeFormat(lang()==="en"?"en-US":"ru-RU",fmt);}
+function loc(f){return new Intl.DateTimeFormat(lang()==="en"?"en-US":"ru-RU",f);}
 function fmtDayLong(key){return cap(loc({day:"numeric",month:"short",year:"numeric"}).format(fromISO(key)))+".";}
 function fmtShort(d){return loc({day:"numeric",month:"short"}).format(d);}
+function fmtWd(d){return loc({weekday:"short",day:"numeric",month:"short"}).format(d);}
 function isoWeek(dt){var d=new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),dt.getDate()));var day=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-day);var ys=new Date(Date.UTC(d.getUTCFullYear(),0,1));return Math.ceil((((d-ys)/86400000)+1)/7);}
 function sameWeek(a,b){return +startOfWeek(fromISO(a))===+startOfWeek(fromISO(b));}
+function monthWeeks(y,m){
+  var first=new Date(y,m,1),last=new Date(y,m+1,0);
+  var wStart=startOfWeek(first),weeks=[];
+  while(wStart<=startOfWeek(last)){
+    var week=[];for(var i=0;i<7;i++)week.push(addDays(wStart,i));
+    weeks.push(week);wStart=addDays(wStart,7);
+  }
+  return weeks;
+}
 
 var state={
   settings:{
@@ -475,13 +480,7 @@ function initProfile(){
 function loadState(){
   try{
     var raw=localStorage.getItem(STORE_KEY);
-    if(raw){
-      var p=JSON.parse(raw);
-      if(p){
-        if(p.settings)p.settings=Object.assign({},state.settings,p.settings);
-        state=Object.assign(state,p);
-      }
-    }
+    if(raw){var p=JSON.parse(raw);if(p){if(p.settings)p.settings=Object.assign({},state.settings,p.settings);state=Object.assign(state,p);}}
   }catch(e){}
   initProfile();
 }
@@ -506,20 +505,20 @@ function pullCloud(){
   });
 }
 
-var view={tab:"tasks",selectedDate:iso(today),calMonth:monthStart(today),calOpen:false,
+var view={tab:"tasks",selectedDate:iso(today),calMonth:monthStart(today),
+  calOpen:{tasks:false,habits:false,goals:false,analytics:false},
   searchOpen:false,taskQuery:"",taskFilter:"all",tagFilter:"",habitQuery:"",
-  habitsMode:"month",period:monthStart(today),yearOpenHab:false,yearPickHab:today.getFullYear(),
-  goalsYear:today.getFullYear(),anaMode:"tasks",anaPeriod:"week",anaDate:new Date(today),moreOpen:false};
+  habitsMode:"month",period:monthStart(today),habCalMonth:monthStart(today),
+  goalsYear:today.getFullYear(),goalYearPage:Math.floor(today.getFullYear()/12)*12,
+  anaMode:"tasks",anaPeriod:"week",anaDate:new Date(today),anaCalMonth:monthStart(today),anaYearPage:Math.floor(today.getFullYear()/12)*12,
+  moreOpen:false};
 
 function applyTheme(){
   var th=state.settings.theme||"auto";
-  if(th==="auto"){
-    try{th=(tg&&tg.colorScheme)||(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");}catch(e){th="dark";}
-  }
+  if(th==="auto"){try{th=(tg&&tg.colorScheme)||(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");}catch(e){th="dark";}}
   document.documentElement.setAttribute("data-theme",th==="light"?"light":"dark");
 }
 
-/* ---------- данные ---------- */
 function occursOn(tk,key){
   if(key<tk.date)return false;
   if(tk.repeat==="daily")return true;
@@ -549,6 +548,40 @@ function confetti(){
   for(var i=0;i<70;i++){var p=document.createElement("i");var s=6+Math.random()*7;p.style.left=(Math.random()*100)+"vw";p.style.width=s+"px";p.style.height=s+"px";p.style.background=cols[i%cols.length];p.style.animationDelay=(Math.random()*0.35)+"s";root.appendChild(p);setTimeout(function(el){return function(){el.remove();};}(p),2100);}
 }
 
+/* ---------- календарные блоки ---------- */
+function calHeadHTML(title,prevAttr,nextAttr){
+  return '<div class="cal-head"><div class="m">'+title+'</div><div class="cal-nav"><button '+prevAttr+'>'+ic("i-chev-l")+'</button><button '+nextAttr+'>'+ic("i-chev-r")+"</button></div></div>";
+}
+function weekCalHTML(disp,selWeekStart,tag){
+  var y=disp.getFullYear(),m=disp.getMonth();
+  var html=calHeadHTML(mF()[m]+" "+y,"data-"+tag+"mprev","data-"+tag+"mnext");
+  html+='<div class="cal-grid">'+wd().map(function(w){return '<span class="cal-wd">'+w+"</span>";}).join("")+"</div>";
+  var weeks=monthWeeks(y,m);
+  for(var w=0;w<weeks.length;w++){
+    var isSel=+weeks[w][0]===+selWeekStart;
+    html+='<div class="cal-week'+(isSel?" sel":"")+'">';
+    for(var d=0;d<7;d++){
+      var day=weeks[w][d],k=iso(day);
+      var cls="cal-day2";if(day.getMonth()!==m)cls+=" dim";if(k===iso(today))cls+=" today";
+      html+='<button class="'+cls+'" data-'+tag+'day="'+k+'">'+day.getDate()+"</button>";
+    }
+    html+="</div>";
+  }
+  return html;
+}
+function monthsCalHTML(year,selM,tag){
+  var html=calHeadHTML(String(year),"data-"+tag+"yprev","data-"+tag+"ynext");
+  html+='<div class="months-grid">';
+  for(var i=0;i<12;i++)html+='<button data-'+tag+'m="'+i+'" class="'+(i===selM?"cur":"")+'">'+mG()[i]+"</button>";
+  return html+"</div>";
+}
+function yearsCalHTML(pageStart,selYear,tag){
+  var html=calHeadHTML(String(selYear),"data-"+tag+"pprev","data-"+tag+"pnext");
+  html+='<div class="months-grid cols4">';
+  for(var i=0;i<12;i++){var y=pageStart+i;html+='<button data-'+tag+'y="'+y+'" class="'+(y===selYear?"cur":"")+'">'+y+"</button>";}
+  return html+"</div>";
+}
+
 /* ================= РЕНДЕР ================= */
 function renderAll(){
   var tabs=document.querySelectorAll(".tab");
@@ -572,27 +605,27 @@ function renderAll(){
 }
 
 function renderTopbar(){
-  var pt=$("#pillTop"),pb=$("#pillBottom"),cb=$("#calBtn");cb.classList.remove("hidden");
+  var pt=$("#pillTop"),pb=$("#pillBottom");
   if(view.tab==="tasks"){
     var d=fromISO(view.selectedDate),isT=view.selectedDate===iso(today);
-    pt.textContent=isT?t("today"):cap(loc({weekday:"short",day:"numeric",month:"short"}).format(d));
-    pb.textContent=isT?fmtShort(d):String(d.getFullYear());
+    pt.textContent=isT?t("today"):cap(fmtWd(d));
+    pb.textContent=isT?fmtWd(d):String(d.getFullYear());
   }else if(view.tab==="habits"){
     if(view.habitsMode==="week"){
       var mon=startOfWeek(view.period),sun=addDays(mon,6);
-      pb.textContent=fmtShort(mon)+" – "+fmtShort(sun);pt.textContent=t("week");
+      pt.textContent=isoWeek(mon)+" "+t("week").toLowerCase();
+      pb.textContent=fmtShort(mon)+" – "+fmtShort(sun);
     }else{pt.textContent=mF()[view.period.getMonth()];pb.textContent=String(view.period.getFullYear());}
   }else if(view.tab==="goals"){pt.textContent=String(view.goalsYear);pb.textContent=t("year");}
   else{
-    cb.classList.add("hidden");
-    if(view.anaPeriod==="week"){var mo=startOfWeek(view.anaDate),su=addDays(mo,6);pt.textContent=isoWeek(mo)+" · "+t("week").toLowerCase();pb.textContent=fmtShort(mo)+" – "+fmtShort(su);}
+    if(view.anaPeriod==="week"){var mo=startOfWeek(view.anaDate),su=addDays(mo,6);pt.textContent=isoWeek(mo)+" "+t("week").toLowerCase();pb.textContent=fmtShort(mo)+" – "+fmtShort(su);}
     else if(view.anaPeriod==="month"){pt.textContent=mF()[view.anaDate.getMonth()];pb.textContent=String(view.anaDate.getFullYear());}
     else{pt.textContent=String(view.anaDate.getFullYear());pb.textContent=t("year");}
   }
 }
 
 function renderTasks(){
-  $("#calCard").classList.toggle("hidden",!view.calOpen);
+  $("#calCard").classList.toggle("hidden",!view.calOpen.tasks);
   var showMore=!!state.settings.showMore;
   $("#moreBtn").classList.toggle("hidden",!showMore);
   if(!showMore)view.moreOpen=false;
@@ -607,22 +640,19 @@ function renderTasks(){
     chips+='<button class="chip'+(view.tagFilter===tg2.id?" active":"")+'" data-tag="'+tg2.id+'"><span class="tagdot" style="background:'+tg2.color+'"></span>'+t(tg2.key)+"</button>";}
   $("#taskChips").innerHTML=chips;
 
-  var k=iso(today);var cHtml="";
+  var k=iso(today),cHtml="";
   for(var c=0;c<COUNTERS.length;c++){
-    var cc=COUNTERS[c];var map=state.counters[cc.key]||{};var v=map[k]||0;
-    cHtml+='<div class="cnt-row"><span class="ci">'+cc.icon+'</span><span class="cn">'+t(cc.key)+"</span>"+
-      '<div class="bar"><i style="width:'+Math.min(100,Math.round(v/cc.goal*100))+'%"></i></div>'+
-      '<span class="cv">'+v+"/"+cc.goal+" "+t(cc.unit)+"</span>"+
-      '<button class="cnt-btn" data-cnt="'+cc.key+':-">−</button><button class="cnt-btn" data-cnt="'+cc.key+':+">+</button></div>';
+    var cc=COUNTERS[c],map=state.counters[cc.key]||{},v=map[k]||0;
+    cHtml+='<div class="cnt-row"><span class="ci">'+cc.icon+'</span><span class="cn">'+t(cc.key)+'</span><div class="bar"><i style="width:'+Math.min(100,Math.round(v/cc.goal*100))+'%"></i></div><span class="cv">'+v+"/"+cc.goal+" "+t(cc.unit)+'</span><button class="cnt-btn" data-cnt="'+cc.key+':-">−</button><button class="cnt-btn" data-cnt="'+cc.key+':+">+</button></div>';
   }
   $("#countersCard").innerHTML=cHtml;
 
   var y=view.calMonth.getFullYear(),m=view.calMonth.getMonth();
   $("#calTitle").textContent=mF()[m]+" "+y;
-  var wds=wd();var wdHtml="";for(var w=0;w<7;w++)wdHtml+='<span class="cal-wd">'+wds[w]+"</span>";
+  var wdHtml="";for(var w=0;w<7;w++)wdHtml+='<span class="cal-wd">'+wd()[w]+"</span>";
   $("#calWd").innerHTML=wdHtml;
-  var off=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate();
-  var html="";for(var o=0;o<off;o++)html+="<span></span>";
+  var off=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate(),html="";
+  for(var o=0;o<off;o++)html+="<span></span>";
   for(var dd=1;dd<=dim;dd++){
     var d=new Date(y,m,dd),kk=iso(d),tt=tasksOn(kk);
     var cls="cal-day";if(d<today&&kk!==iso(today))cls+=" past";if(kk===iso(today))cls+=" today";if(kk===view.selectedDate)cls+=" sel";
@@ -633,31 +663,27 @@ function renderTasks(){
   var s=tasksOn(view.selectedDate);
   $("#daySummary").textContent=s.done+" / "+s.total;
 
-  var q=view.taskQuery.trim().toLowerCase();
-  var rows=s.list;
+  var q=view.taskQuery.trim().toLowerCase(),rows=s.list;
   if(q)rows=rows.filter(function(x){return x.task.text.toLowerCase().indexOf(q)>=0||(x.task.desc||"").toLowerCase().indexOf(q)>=0;});
   if(view.taskFilter==="active")rows=rows.filter(function(x){return !x.done;});
   if(view.taskFilter==="done")rows=rows.filter(function(x){return x.done;});
   if(view.tagFilter)rows=rows.filter(function(x){return x.task.tag===view.tagFilter;});
 
   var list=$("#taskList");
-  if(!s.list.length){
-    list.innerHTML='<div class="empty">'+ic("i-duck")+(view.selectedDate===iso(today)?t("noTasksToday"):t("noTasksDay"))+"</div>";
-  }else if(!rows.length){
-    list.innerHTML='<div class="empty">'+ic("i-search")+t("nothingFound")+"</div>";
-  }else{
+  if(!s.list.length)list.innerHTML='<div class="empty">'+ic("i-duck")+(view.selectedDate===iso(today)?t("noTasksToday"):t("noTasksDay"))+"</div>";
+  else if(!rows.length)list.innerHTML='<div class="empty">'+ic("i-search")+t("nothingFound")+"</div>";
+  else{
     var out="";
     for(var r=0;r<rows.length;r++){
       var x=rows[r],tk=x.task,mIc="";
       if(tk.important&&state.settings.tasksImportant)mIc+='<span class="t-ic imp">'+ic("i-alert")+"</span>";
       if(tk.notify)mIc+='<span class="t-ic ntf">'+ic("i-bell")+"</span>";
       if(tk.repeat&&tk.repeat!=="once")mIc+='<span class="t-ic rpt">'+ic("i-repeat")+"</span>";
-      var tag=tk.tag?TAGS.filter(function gg(z){return z.id===tk.tag;})[0]:null;
+      var tag=tk.tag?TAGS.filter(function(z){return z.id===tk.tag;})[0]:null;
       var tagIc=tag?'<span class="tagdot" style="background:'+tag.color+'"></span>':"";
       var desc=(tk.desc&&state.settings.tasksDesc)?'<span class="desc">'+esc(tk.desc)+"</span>":"";
       var showSubs=state.settings.tasksSubtasks&&tk.subs&&tk.subs.length;
-      out+='<div class="task-wrap'+(showSubs?" has-subs":"")+'">';
-      out+='<div class="task-row'+(x.done?" done":"")+'" data-id="'+tk.id+'"><button class="chk">'+ic("i-check")+'</button><div class="t">'+mIc+tagIc+esc(tk.text)+desc+'</div><button class="mini-del" data-del="'+tk.id+'">'+ic("i-trash")+"</button></div>";
+      out+='<div class="task-wrap'+(showSubs?" has-subs":"")+'"><div class="task-row'+(x.done?" done":"")+'" data-id="'+tk.id+'"><button class="chk">'+ic("i-check")+'</button><div class="t">'+mIc+tagIc+esc(tk.text)+desc+'</div><button class="mini-del" data-del="'+tk.id+'">'+ic("i-trash")+"</button></div>";
       if(showSubs){
         out+='<div class="subs">';
         for(var sb=0;sb<tk.subs.length;sb++){var sub=tk.subs[sb];
@@ -671,26 +697,27 @@ function renderTasks(){
 }
 
 function renderHabits(){
-  $("#yearCardHab").classList.toggle("hidden",!view.yearOpenHab);
+  var open=!!view.calOpen.habits;
+  var card=$("#habCalCard");
+  card.classList.toggle("hidden",!open);
+  if(open){
+    if(view.habitsMode==="week")card.innerHTML=weekCalHTML(view.habCalMonth,startOfWeek(view.period),"hcw");
+    else card.innerHTML=monthsCalHTML(view.habCalMonth.getFullYear(),view.period.getMonth(),"hcm");
+  }
   $("#segWeek").classList.toggle("active",view.habitsMode==="week");
   $("#segMonth").classList.toggle("active",view.habitsMode==="month");
-  if(view.yearOpenHab){
-    $("#yearTitleHab").textContent=view.yearPickHab;
-    var pm=view.period.getMonth(),py=view.period.getFullYear(),mg=mG(),mh="";
-    for(var i=0;i<12;i++)mh+='<button data-m="'+i+'" class="'+(i===pm&&view.yearPickHab===py?"cur":"")+'">'+mg[i]+"</button>";
-    $("#yearGridHab").innerHTML=mh;
-  }
+
   var q=view.habitQuery.trim().toLowerCase();
   var habits=q?state.habits.filter(function(h){return h.name.toLowerCase().indexOf(q)>=0;}):state.habits;
   var body=$("#habitsBody");
   if(!state.habits.length){body.innerHTML='<div class="empty">'+ic("i-sleep")+t("noHabits")+"</div>";return;}
   if(!habits.length){body.innerHTML='<div class="empty">'+ic("i-search")+t("nothingFound")+"</div>";return;}
   if(view.habitsMode==="week"){
-    var mon=startOfWeek(view.period);var days=[];for(var d=0;d<7;d++)days.push(addDays(mon,d));
+    var mon=startOfWeek(view.period),days=[];for(var d=0;d<7;d++)days.push(addDays(mon,d));
     var html='<div class="wd-head">'+days.map(function(dd,i){return "<span>"+wd()[i]+"<br>"+dd.getDate()+"</span>";}).join("")+"</div>";
     for(var h=0;h<habits.length;h++){
       var hb=habits[h];
-      html+='<div class="h-row"><div class="h-name">'+esc(hb.name)+(hb.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(hb.desc)+"</span>":"")+"</div><div class=\"h-dots\">";
+      html+='<div class="h-row"><div class="h-name">'+esc(hb.name)+(hb.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(hb.desc)+"</span>":"")+'</div><div class="h-dots">';
       for(var di=0;di<7;di++){
         var day=days[di],kk=iso(day);
         html+='<button class="dot'+(hb.logs.indexOf(kk)>=0?" on":"")+((day>today||!habitActiveOn(hb,kk))?" future":"")+'" data-hid="'+hb.id+'" data-date="'+kk+'">'+day.getDate()+"</button>";
@@ -700,12 +727,10 @@ function renderHabits(){
     body.innerHTML=html;
   }else{
     var y=view.period.getFullYear(),m2=view.period.getMonth(),dim=new Date(y,m2+1,0).getDate();
-    var isCur=y===today.getFullYear()&&m2===today.getMonth();
-    var out="";
+    var isCur=y===today.getFullYear()&&m2===today.getMonth(),out="";
     for(var hh=0;hh<habits.length;hh++){
       var h2=habits[hh],n=habitMarksInMonth(h2,y,m2),doneToday=h2.logs.indexOf(iso(today))>=0;
-      out+='<div class="h-row"><div class="h-name">'+esc(h2.name)+(h2.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(h2.desc)+"</span>":"")+"</div>"+
-        '<div class="h-month"><div class="bar"><i style="width:'+Math.round(n/dim*100)+'%"></i></div><span class="cnt" style="color:var(--muted);font-size:12px">'+n+"/"+dim+"</span>"+
+      out+='<div class="h-row"><div class="h-name">'+esc(h2.name)+(h2.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(h2.desc)+"</span>":"")+'</div><div class="h-month"><div class="bar"><i style="width:'+Math.round(n/dim*100)+'%"></i></div><span class="cnt" style="color:var(--muted);font-size:12px">'+n+"/"+dim+"</span>"+
         (isCur&&habitActiveOn(h2,iso(today))?'<button class="mark-btn'+(doneToday?" off":"")+'" data-hid="'+h2.id+'">'+(doneToday?"✅":t("mark"))+"</button>":"")+"</div></div>";
     }
     body.innerHTML=out;
@@ -713,11 +738,16 @@ function renderHabits(){
 }
 
 function renderGoals(){
-  var body=$("#goalsBody");var list=state.goals.filter(function(g){return g.year===view.goalsYear;});
+  var open=!!view.calOpen.goals;
+  var card=$("#goalCalCard");
+  card.classList.toggle("hidden",!open);
+  if(open)card.innerHTML=yearsCalHTML(view.goalYearPage,view.goalsYear,"gc");
+
+  var body=$("#goalsBody"),list=state.goals.filter(function(g){return g.year===view.goalsYear;});
   if(!list.length){body.innerHTML='<div class="empty" style="color:var(--accent)">'+ic("i-target")+'<span style="color:var(--muted)">'+t("noGoals")+"</span></div>";return;}
   var out="";
   for(var i=0;i<list.length;i++){
-    var g=list[i];var pct=Math.min(100,Math.round(g.progress/Math.max(1,g.target)*100));
+    var g=list[i],pct=Math.min(100,Math.round(g.progress/Math.max(1,g.target)*100));
     var html='<div class="goal"><div class="g-head"><span class="star">'+ic("i-star")+'</span><div class="tt">'+esc(g.title)+'</div><button class="mini-del" data-gdel="'+g.id+'">'+ic("i-trash")+"</button></div>";
     if(g.desc&&state.settings.goalsDesc)html+='<div class="g-desc">'+esc(g.desc)+"</div>";
     if(g.smart&&state.settings.goalsSmart)html+='<div class="g-desc">'+esc(g.smart)+"</div>";
@@ -736,7 +766,6 @@ function renderGoals(){
   body.innerHTML=out;
 }
 
-/* ---------- аналитика ---------- */
 function bucketsFor(anchor,period){
   var b=[];
   if(period==="week"){var mon=startOfWeek(anchor);for(var i=0;i<7;i++)b.push({label:wd()[i],days:[addDays(mon,i)]});}
@@ -765,12 +794,18 @@ function prevAnchor(anchor,period){
 }
 function renderAnalytics(){
   var mode=view.anaMode,period=view.anaPeriod;
+  var calHtml="";
+  if(view.calOpen.analytics){
+    if(period==="week")calHtml='<div class="card">'+weekCalHTML(view.anaCalMonth,startOfWeek(view.anaDate),"acw")+"</div>";
+    else if(period==="month")calHtml='<div class="card">'+monthsCalHTML(view.anaCalMonth.getFullYear(),view.anaDate.getMonth(),"acm")+"</div>";
+    else calHtml='<div class="card">'+yearsCalHTML(view.anaYearPage,view.anaDate.getFullYear(),"acy")+"</div>";
+  }
+
   var A=agg(bucketsFor(view.anaDate,period));
   var P=agg(bucketsFor(prevAnchor(view.anaDate,period),period));
   var cur=mode==="tasks"?A.done:A.marks,prev=mode==="tasks"?P.done:P.marks;
   var delta=prev>0?Math.round((cur-prev)/prev*100):(cur>0?100:0);
-  var dCls=delta>0?"up":delta<0?"down":"flat";
-  var dArrow=delta>0?"▲":delta<0?"▼":"•";
+  var dCls=delta>0?"up":delta<0?"down":"flat",dArrow=delta>0?"▲":delta<0?"▼":"•";
   var pct=mode==="tasks"?(A.total?Math.round(A.done/A.total*100):0):(A.expected?Math.round(A.marks/A.expected*100):0);
 
   var bestI=-1,bestV=0;
@@ -795,11 +830,11 @@ function renderAnalytics(){
   });
   chart+="</div>";
 
-  var start=startOfWeek(addDays(today,-364));var hm="";
+  var start=startOfWeek(addDays(today,-364)),hm="";
   for(var d=new Date(start);d<=today;d=addDays(d,1)){
     var n=activityOn(iso(d));
     var a=n===0?0:n===1?33:n===2?55:n<=4?78:100;
-    hm+='<i style="'+(a?"opacity:1;background:var(--accent);filter:brightness("+(1.4-a/200)+")":"")+'"></i>';
+    hm+='<i style="'+(a?"background:var(--accent);filter:brightness("+(1.4-a/200)+")":"")+'"></i>';
   }
 
   var curStreak=0,dd2=new Date(today);
@@ -809,12 +844,11 @@ function renderAnalytics(){
   var tk=iso(today);
   var freezeBtn=(!dayOk(tk)&&canFreeze(tk))?'<button class="wide-btn" id="freezeBtn" style="margin:10px 0 0">'+ic("i-snow")+t("useFreeze")+"</button>":"";
 
-  $("#anaBody").innerHTML=
+  $("#anaBody").innerHTML=calHtml+
     '<div class="segment"><button data-anamode="tasks" class="'+(mode==="tasks"?"active":"")+'">'+ic("i-tasks")+t("tasks")+'</button><button data-anamode="habits" class="'+(mode==="habits"?"active":"")+'">'+ic("i-repeat")+t("habits")+"</button></div>"+
     '<div class="segment"><button data-anaperiod="week" class="'+(period==="week"?"active":"")+'">'+t("week")+'</button><button data-anaperiod="month" class="'+(period==="month"?"active":"")+'">'+t("month")+'</button><button data-anaperiod="year" class="'+(period==="year"?"active":"")+'">'+t("year")+"</button></div>"+
     '<div class="card"><div class="ana-stats">'+ring+'<div class="st-rows">'+rows.map(function(r){return '<div class="st-row"><span>'+r[0]+'</span><span class="v">'+r[1]+"</span></div>";}).join("")+
-    '<div class="st-row"><span>'+t("dynamics")+'</span><span class="v"><span class="delta '+dCls+'">'+dArrow+" "+Math.abs(delta)+"%</span></span></div>"+
-    "</div></div></div>"+
+    '<div class="st-row"><span>'+t("dynamics")+'</span><span class="v"><span class="delta '+dCls+'">'+dArrow+" "+Math.abs(delta)+"%</span></span></div></div></div></div>"+
     '<div class="card">'+chart+"</div>"+
     '<div class="card"><div class="a-title">'+ic("i-fire")+t("streak")+'</div><div class="a-big">'+curStreak+" "+t("days")+'</div><div class="a-title" style="margin:0">'+t("bestStreak")+": "+best+" "+t("days")+"</div>"+freezeBtn+"</div>"+
     '<div class="card"><div class="a-title">'+ic("i-cal")+t("heatmap")+'</div><div class="hm">'+hm+"</div></div>";
@@ -895,7 +929,7 @@ var SCREENS={
     var L=lang();
     return{title:t("tplTitle"),html:'<div class="list-card">'+TEMPLATES.map(function(tp,i){return '<button class="list-row" data-tpl="'+i+'"><span class="li" style="background:#3f8ec7">'+tp.icon+'</span><span class="lt">'+t(tp.key)+'<div class="val">'+tp.tasks[L].join(" · ")+"</div></span></button>";}).join("")+"</div>"};},
   addTask:function(){
-    var d=taskDraft;var tag=d.tag?TAGS.filter(function(z){return z.id===d.tag;})[0]:null;
+    var d=taskDraft,tag=d.tag?TAGS.filter(function(z){return z.id===d.tag;})[0]:null;
     return{title:CONFIG.APP_NAME,html:
       '<div class="ov-title-big">'+t("addTask")+"</div>"+
       '<div class="form-card"><textarea id="atText" rows="3" placeholder="'+t("enterTask")+'">'+esc(d.text)+"</textarea></div>"+
@@ -932,7 +966,7 @@ var SCREENS={
     (state.settings.goalsSubgoals?'<label>'+t("goalSubs")+'</label><textarea id="gfSubs" rows="3"></textarea>':"")+
     '<button class="save-btn" type="submit">'+t("save")+"</button></form>"};},
   journal:function(type){
-    var J=JOURNALS[type];var L=lang();
+    var J=JOURNALS[type],L=lang();
     var entries=(state.journals[type]||[]).slice().sort(function(a,b){return a.date<b.date?1:-1;});
     return{title:t(J.title),html:
       '<div class="form-card"><textarea id="jText" rows="3" placeholder="'+J.ph[L]+'"></textarea><div class="val" style="color:var(--muted);font-size:12px;margin-top:8px">'+t("entryFor")+": "+fmtDayLong(view.selectedDate)+"</div></div>"+
@@ -943,8 +977,7 @@ var SCREENS={
 function pad2(v,max){var n=parseInt(v||"0",10);if(isNaN(n))n=0;return String(Math.max(0,Math.min(max,n))).padStart(2,"0");}
 
 function renderOverlay(){
-  var cur=ovStack[ovStack.length-1];
-  var name=cur,param=null;
+  var cur=ovStack[ovStack.length-1],name=cur,param=null;
   if(cur.indexOf("journal:")===0){name="journal";param=cur.split(":")[1];}
   else if(cur.indexOf("edit:")===0){name="edit";param=cur.split(":")[1];}
   var s=(name==="journal")?SCREENS.journal(param):(name==="edit")?SCREENS.edit(param):SCREENS[name]();
@@ -1018,10 +1051,18 @@ function renderOverlay(){
 }
 
 /* ================= СОБЫТИЯ ================= */
-$("#btnSearch").addEventListener("click",function(){
-  view.searchOpen=!view.searchOpen;
+function toggleCal(){
+  view.calOpen[view.tab]=!view.calOpen[view.tab];
+  if(view.tab==="habits")view.habCalMonth=monthStart(view.period);
+  if(view.tab==="analytics")view.anaCalMonth=monthStart(view.anaDate);
   renderAll();
-  if(view.searchOpen){var inp=$("#searchInput");try{inp.focus();}catch(e){}}
+}
+$("#pillBtn").addEventListener("click",toggleCal);
+$("#calBtn").addEventListener("click",toggleCal);
+
+$("#btnSearch").addEventListener("click",function(){
+  view.searchOpen=!view.searchOpen;renderAll();
+  if(view.searchOpen){try{$("#searchInput").focus();}catch(e){}}
   haptic("light");
 });
 $("#searchInput").addEventListener("input",function(e){
@@ -1061,7 +1102,7 @@ $("#ovBody").addEventListener("click",function(e){
   if(jdel){var p=jdel.getAttribute("data-jdel").split(":");state.journals[p[0]]=state.journals[p[0]].filter(function(x){return x.id!==p[1];});persist();renderOverlay();return;}
   var tpl=e.target.closest("[data-tpl]");
   if(tpl){
-    var L=lang();var tp=TEMPLATES[parseInt(tpl.getAttribute("data-tpl"),10)];
+    var L=lang(),tp=TEMPLATES[parseInt(tpl.getAttribute("data-tpl"),10)];
     tp.tasks[L].forEach(function(tx){state.tasks.unshift({id:uid(),date:view.selectedDate,text:tx,desc:"",repeat:"once",notify:false,important:false,tag:"",subs:[],doneDates:[],createdAt:Date.now()});});
     persist();backScreen();renderAll();toast(t("tplAdded"));return;
   }
@@ -1087,25 +1128,42 @@ $("#prevBtn").addEventListener("click",function(){shiftPeriod(-1);});
 $("#nextBtn").addEventListener("click",function(){shiftPeriod(1);});
 function shiftPeriod(dir){
   if(view.tab==="tasks"){var d=addDays(fromISO(view.selectedDate),dir);view.selectedDate=iso(d);view.calMonth=monthStart(d);}
-  else if(view.tab==="habits"){if(view.habitsMode==="week")view.period=addDays(view.period,7*dir);else view.period=monthStart(new Date(view.period.getFullYear(),view.period.getMonth()+dir,1));}
+  else if(view.tab==="habits"){
+    if(view.habitsMode==="week"){view.period=addDays(view.period,7*dir);view.habCalMonth=monthStart(view.period);}
+    else{view.period=monthStart(new Date(view.period.getFullYear(),view.period.getMonth()+dir,1));view.habCalMonth=monthStart(view.period);}
+  }
   else if(view.tab==="goals")view.goalsYear+=dir;
   else{
-    if(view.anaPeriod==="week")view.anaDate=addDays(view.anaDate,7*dir);
-    else if(view.anaPeriod==="month")view.anaDate=monthStart(new Date(view.anaDate.getFullYear(),view.anaDate.getMonth()+dir,1));
+    if(view.anaPeriod==="week"){view.anaDate=addDays(view.anaDate,7*dir);view.anaCalMonth=monthStart(view.anaDate);}
+    else if(view.anaPeriod==="month"){view.anaDate=monthStart(new Date(view.anaDate.getFullYear(),view.anaDate.getMonth()+dir,1));view.anaCalMonth=monthStart(view.anaDate);}
     else view.anaDate=new Date(view.anaDate.getFullYear()+dir,0,1);
   }
   renderAll();haptic("light");
 }
-$("#pillBtn").addEventListener("click",function(){if(view.tab==="habits"){view.yearOpenHab=!view.yearOpenHab;view.yearPickHab=view.period.getFullYear();renderAll();}});
-$("#calBtn").addEventListener("click",function(){
-  if(view.tab==="tasks")view.calOpen=!view.calOpen;
-  else if(view.tab==="habits"){view.yearOpenHab=!view.yearOpenHab;view.yearPickHab=view.period.getFullYear();}
-  renderAll();
-});
 
 $("#calPrev").addEventListener("click",function(){view.calMonth=monthStart(new Date(view.calMonth.getFullYear(),view.calMonth.getMonth()-1,1));renderTasks();});
 $("#calNext").addEventListener("click",function(){view.calMonth=monthStart(new Date(view.calMonth.getFullYear(),view.calMonth.getMonth()+1,1));renderTasks();});
 $("#calGrid").addEventListener("click",function(e){var d=e.target.closest(".cal-day");if(!d)return;view.selectedDate=d.getAttribute("data-date");renderTasks();renderTopbar();haptic("light");});
+
+/* календарь привычек */
+$("#habCalCard").addEventListener("click",function(e){
+  if(e.target.closest("[data-hcwmprev]")){view.habCalMonth=monthStart(new Date(view.habCalMonth.getFullYear(),view.habCalMonth.getMonth()-1,1));renderHabits();return;}
+  if(e.target.closest("[data-hcwmnext]")){view.habCalMonth=monthStart(new Date(view.habCalMonth.getFullYear(),view.habCalMonth.getMonth()+1,1));renderHabits();return;}
+  if(e.target.closest("[data-hcmyprev]")){view.habCalMonth=new Date(view.habCalMonth.getFullYear()-1,view.habCalMonth.getMonth(),1);renderHabits();return;}
+  if(e.target.closest("[data-hcmynext]")){view.habCalMonth=new Date(view.habCalMonth.getFullYear()+1,view.habCalMonth.getMonth(),1);renderHabits();return;}
+  var mb=e.target.closest("[data-hcmm]");
+  if(mb){view.period=new Date(view.habCalMonth.getFullYear(),parseInt(mb.getAttribute("data-hcmm"),10),1);view.calOpen.habits=false;renderAll();return;}
+  var db=e.target.closest("[data-hcwday]");
+  if(db){var d=fromISO(db.getAttribute("data-hcwday"));view.period=startOfWeek(d);view.habCalMonth=monthStart(d);renderAll();}
+});
+
+/* календарь целей */
+$("#goalCalCard").addEventListener("click",function(e){
+  if(e.target.closest("[data-gcpprev]")){view.goalYearPage-=12;renderGoals();return;}
+  if(e.target.closest("[data-gcppnext]")){view.goalYearPage+=12;renderGoals();return;}
+  var yb=e.target.closest("[data-gcy]");
+  if(yb){view.goalsYear=parseInt(yb.getAttribute("data-gcy"),10);view.calOpen.goals=false;renderAll();}
+});
 
 $("#taskChips").addEventListener("click",function(e){
   var tf=e.target.closest("[data-tf]");
@@ -1119,7 +1177,7 @@ $("#countersCard").addEventListener("click",function(e){
   var p=b.getAttribute("data-cnt").split(":");var key=p[0],dir=p[1];
   var c=COUNTERS.filter(function(x){return x.key===key;})[0];if(!c)return;
   if(!state.counters[key])state.counters[key]={};
-  var k=iso(today);var v=state.counters[key][k]||0;
+  var k=iso(today),v=state.counters[key][k]||0;
   v=Math.max(0,v+(dir==="+"?c.step:-c.step));
   state.counters[key][k]=v;persist();renderTasks();haptic("light");
 });
@@ -1169,11 +1227,8 @@ $("#morePanel").addEventListener("click",function(e){
   openScreen("journal:"+b.getAttribute("data-journal"));
 });
 
-$("#segWeek").addEventListener("click",function(){view.habitsMode="week";view.period=startOfWeek(view.period);renderAll();});
-$("#segMonth").addEventListener("click",function(){view.habitsMode="month";view.period=monthStart(view.period);renderAll();});
-$("#yearPrevHab").addEventListener("click",function(){view.yearPickHab--;renderHabits();});
-$("#yearNextHab").addEventListener("click",function(){view.yearPickHab++;renderHabits();});
-$("#yearGridHab").addEventListener("click",function(e){var b=e.target.closest("[data-m]");if(!b)return;view.period=new Date(view.yearPickHab,parseInt(b.getAttribute("data-m"),10),1);view.habitsMode="month";view.yearOpenHab=false;renderAll();});
+$("#segWeek").addEventListener("click",function(){view.habitsMode="week";view.period=startOfWeek(view.period);view.habCalMonth=monthStart(view.period);renderAll();});
+$("#segMonth").addEventListener("click",function(){view.habitsMode="month";view.period=monthStart(view.period);view.habCalMonth=monthStart(view.period);renderAll();});
 $("#habitsBody").addEventListener("click",function(e){
   var dot=e.target.closest(".dot");
   if(dot){
@@ -1194,6 +1249,18 @@ $("#habitsBody").addEventListener("click",function(e){
 });
 
 $("#anaBody").addEventListener("click",function(e){
+  if(e.target.closest("[data-acwmprev]")){view.anaCalMonth=monthStart(new Date(view.anaCalMonth.getFullYear(),view.anaCalMonth.getMonth()-1,1));renderAnalytics();return;}
+  if(e.target.closest("[data-acwmnext]")){view.anaCalMonth=monthStart(new Date(view.anaCalMonth.getFullYear(),view.anaCalMonth.getMonth()+1,1));renderAnalytics();return;}
+  if(e.target.closest("[data-acmyprev]")){view.anaCalMonth=new Date(view.anaCalMonth.getFullYear()-1,view.anaCalMonth.getMonth(),1);renderAnalytics();return;}
+  if(e.target.closest("[data-acmynext]")){view.anaCalMonth=new Date(view.anaCalMonth.getFullYear()+1,view.anaCalMonth.getMonth(),1);renderAnalytics();return;}
+  if(e.target.closest("[data-acypprev]")){view.anaYearPage-=12;renderAnalytics();return;}
+  if(e.target.closest("[data-acypnext]")){view.anaYearPage+=12;renderAnalytics();return;}
+  var adb=e.target.closest("[data-acwday]");
+  if(adb){var d=fromISO(adb.getAttribute("data-acwday"));view.anaDate=d;view.anaCalMonth=monthStart(d);renderAll();return;}
+  var amb=e.target.closest("[data-acmm]");
+  if(amb){view.anaDate=new Date(view.anaCalMonth.getFullYear(),parseInt(amb.getAttribute("data-acmm"),10),1);view.calOpen.analytics=false;renderAll();return;}
+  var ayb=e.target.closest("[data-acyy]");
+  if(ayb){view.anaDate=new Date(parseInt(ayb.getAttribute("data-acyy"),10),0,1);view.calOpen.analytics=false;renderAll();return;}
   var m=e.target.closest("[data-anamode]");
   if(m){view.anaMode=m.getAttribute("data-anamode");renderAll();haptic("light");return;}
   var p=e.target.closest("[data-anaperiod]");
@@ -1205,8 +1272,7 @@ $("#goalsBody").addEventListener("click",function(e){
   if(gdel){state.goals=state.goals.filter(function(g){return g.id!==gdel.getAttribute("data-gdel");});persist();renderGoals();return;}
   var plus=e.target.closest("[data-gplus]"),minus=e.target.closest("[data-gminus]"),sub=e.target.closest("[data-sub]");
   if(plus||minus){
-    var id=(plus||minus).getAttribute("data-gplus")||((minus||{}).getAttribute?minus.getAttribute("data-gminus"):null);
-    id=plus?plus.getAttribute("data-gplus"):minus.getAttribute("data-gminus");
+    var id=plus?plus.getAttribute("data-gplus"):minus.getAttribute("data-gminus");
     var g=state.goals.find(function(x){return x.id===id;});if(!g)return;
     g.progress=Math.max(0,Math.min(g.target,g.progress+(plus?1:-1)));
     if(g.progress>=g.target&&!g.celebrated){g.celebrated=true;if(state.settings.goalsConfetti)confetti();}
@@ -1221,7 +1287,7 @@ $("#goalsBody").addEventListener("click",function(e){
 });
 $("#addGoalBtn").addEventListener("click",function(){openScreen("addGoal");});
 
-/* ---------- локальные напоминания ---------- */
+/* напоминания */
 setInterval(function(){
   var now=new Date();
   var hm=String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
