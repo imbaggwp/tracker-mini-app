@@ -89,7 +89,8 @@
   .cnt-row .cn{width:64px;font-size:13px;color:var(--muted)}
   .cnt-row .bar{flex:1;height:8px;border-radius:4px;background:var(--card2);overflow:hidden}
   .cnt-row .bar i{display:block;height:100%;background:var(--accent)}
-  .cnt-row .cv{width:74px;text-align:right;font-size:12.5px;font-weight:700}
+  .cnt-row .cv{width:82px;text-align:right;font-size:12.5px;font-weight:700;cursor:pointer}
+  .cnt-row .cv .ed{opacity:.5;font-size:10px}
   .cnt-btn{width:30px;height:30px;border-radius:10px;background:var(--card2);font-weight:800;font-size:15px;flex:none}
   .task-row{display:flex;align-items:center;gap:8px;background:var(--card2);border-radius:14px;padding:12px;margin-bottom:8px}
   .task-wrap .subs{background:var(--card2);border-radius:0 0 14px 14px;margin:-4px 0 8px;padding:4px 12px 10px}
@@ -250,6 +251,7 @@
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.8l4.3 4.4L19 7.2"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 6.5h15"/><path d="M9.2 6.5V5.2A1.7 1.7 0 0 1 10.9 3.5h2.2a1.7 1.7 0 0 1 1.7 1.7v1.3"/><path d="M6.7 6.5l.9 12a2 2 0 0 0 2 1.9h4.8a2 2 0 0 0 2-1.9l.9-12"/><path d="M10 10.5v6M14 10.5v6"/></symbol>
   <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l4.6-.9L20 7.7a2 2 0 0 0 0-2.8l-.9-.9a2 2 0 0 0-2.8 0L4.9 15.4z"/><path d="M13.6 6.6l3.8 3.8"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 17 19V9.5"/><path d="M10 13h4"/></symbol>
   <symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r="1.3" fill="currentColor" stroke="none"/><circle cx="9" cy="15" r="1.3" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="12" height="12" rx="2.5"/><path d="M15.5 5.5v-1a2 2 0 0 0-2-2h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h1"/></symbol>
   <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 18.5a4.5 4.5 0 0 0 .4-9A6 6 0 0 0 6.2 11 3.8 3.8 0 0 0 7 18.5z"/><path d="M12 15.5v-4M9.8 13.5l2.2-2 2.2 2"/></symbol>
@@ -407,15 +409,19 @@ var cloud=tg&&tg.CloudStorage?tg.CloudStorage:null;
 var tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 function $(s){return document.querySelector(s);}
 function ic(id){return '<svg class="icn"><use href="#'+id+'"/></svg>';}
-var STORE_KEY="prosto_tracker_v16";
+var STORE_KEY="prosto_tracker_v17";
 var PALETTE=["#64a9dd","#8f6cf0","#6fce8a","#e06c6c","#f2c94c","#f2994a","#4dd0e1","#f06292"];
 var EMOJIS=["🙂","😎","","","🌸","","🎧","","⚡","","🐱","","","🐨","","🐥","",""];
 
 var STR={
 ru:{appName:"Трекер",tasks:"Задачи",habits:"Привычки",goals:"Цели на год",analytics:"Аналитика",today:"Сегодня",week:"Неделя",month:"Месяц",year:"Год",addTask:"Добавить задачу",addHabit:"Добавить привычку",addGoal:"Добавить цель",more:"Ещё",notes:"Заметки",lesson:"Урок дня",gratitude:"Благодарность",thoughts:"Мысли",templates:"Шаблоны",random:"Случайная задача",searchPh:"Поиск...",fAll:"Все",fActive:"Активные",fDone:"Выполненные",noTasksToday:"На сегодня задач нет",noTasksDay:"На этот день задач нет",noHabits:"Привычек пока что нет",noGoals:"Целей на этот год пока нет",nothingFound:"Ничего не найдено",mainSec:"Основные настройки",otherSec:"Другое",dataSec:"Данные",profile:"Профиль",subscription:"Подписка",subFree:"Всё бесплатно",notif:"Уведомления",prefs:"Предпочтения",overdue:"Просроченные задачи",support:"Связаться с поддержкой",terms:"Пользовательское соглашение",privacy:"Политика конфиденциальности",theme:"Тема",thAuto:"Авто",thDark:"Тёмная",thLight:"Светлая",language:"Язык",name:"Имя",email:"Email",timezone:"Часовой пояс",regDate:"Дата регистрации",notSpecified:"Не указан",morning:"Утренняя сводка",evening:"Вечерняя сводка",morningRem:"🌅 Время утренней сводки!",eveningRem:"🌙 Время вечерней сводки!",pTasks:"Задачи",pHabits:"Привычки",pGoals:"Цели",pMenu:"Разделы меню",description:"Описание",important:"Пометка «Важная»",subtasks:"Подзадачи (бета)",overduePref:"Просроченные задачи",moreSec:"Раздел «Ещё»",confetti:"Конфетти при выполнении",smart:"Критерии SMART",goalSubs:"Подцели (бета)",secHabits:"Раздел «Привычки»",secGoals:"Раздел «Цели»",secAnalytics:"Раздел «Аналитика»",date:"Дата",repeat:"Периодичность",notify:"Уведомление",imp:"Важная",tag:"Тег",noTag:"Без тега",startDate:"Дата начала",endDate:"Дата окончания",enterTask:"Введите задачу",enterHabit:"Введите привычку",save:"Сохранить",repOnce:"Однократно",repDaily:"Ежедневно",repWeekly:"Еженедельно",repMonthly:"Ежемесячно",hRepDaily:"Ежедневная",hRepWeekly:"Еженедельная",hRepMonthly:"Ежемесячная",totalTasks:"Всего задач:",completed:"Выполнено:",notCompleted:"Не выполнено:",avgProgress:"Средний прогресс:",prodDay:"Продуктивный день:",totalHabits:"Всего привычек:",marks:"Отметок:",expected:"Ожидалось:",dynamics:"Динамика:",heatmap:"Активность за год",streak:"Серия",bestStreak:"Лучшая серия",days:"дн.",useFreeze:"Заморозить сегодня",water:"Вода",steps:"Шаги",sleep:"Сон",glasses:"стак.",stepsU:"шаг.",hours:"ч.",sync:"Синхронизация (аккаунт)",toCloud:"В облако",fromCloud:"Из облака",lastSync:"Синхронизировано",never:"никогда",serverRem:"Серверные напоминания (код)",copy:"Копировать",copied:"Скопировано",tplTitle:"Шаблоны задач",tplAdded:"Шаблон добавлен ✅",mark:"Отметить",history:"История",entryFor:"Запись за",freeNote:"Все функции доступны бесплатно — подписка не нужна 🎉",vsPrev:"к прошлому периоду",
-editTask:"Редактировать задачу",editHabit:"Редактировать привычку",editGoal:"Редактировать цель",off:"Выкл",remind:"Напоминание",confirmDel:"Удалить?",cancel:"Отмена",delBtn:"Удалить",undo:"Отменить",deleted:"Удалено",planner:"Планер на 7 дней",report:"Отчёт недели",reportNote:"Зажми и удерживай картинку, чтобы сохранить или отправить.",tags:"Теги",addTag:"Добавить тег",tagName:"Название тега",avatar:"Аватар",showOnb:"Показать обучение",sortImp:"Важные",sortAlpha:"А-Я",sortDone:"Сделано",skip:"Пропустить",next:"Далее",start:"Начать 🚀",moved:"Задача перенесена",onb1t:"Привет!",onb1x:"Это Твой Трекер. Задачи, привычки, цели и дневник — всё в одном месте и полностью бесплатно.",onb2t:"Планируй легко",onb2x:"Добавляй задачи, ставь теги и пометку «важная». Календарь покажет прогресс каждого дня.",onb3t:"Держи серию",onb3x:"Отмечай привычки каждый день. Серия мотивирует, а «заморозка» спасёт, когда нужен отдых.",onb4t:"Смотри прогресс",onb4x:"Аналитика, тепловая карта и сравнение с прошлой неделей покажут твои продуктивные дни."},
+editTask:"Редактировать задачу",editHabit:"Редактировать привычку",editGoal:"Редактировать цель",off:"Выкл",remind:"Напоминание",confirmDel:"Удалить?",cancel:"Отмена",delBtn:"Удалить",undo:"Отменить",deleted:"Удалено",planner:"Планер на 7 дней",report:"Отчёт недели",reportNote:"Зажми и удерживай картинку, чтобы сохранить или отправить.",tags:"Теги",addTag:"Добавить тег",tagName:"Название тега",avatar:"Аватар",showOnb:"Показать обучение",sortImp:"Важные",sortAlpha:"А-Я",sortDone:"Сделано",skip:"Пропустить",next:"Далее",start:"Начать 🚀",moved:"Задача перенесена",
+archive:"Архив",toArchive:"В архив",restore:"Вернуть",emptyArchive:"Архив пуст",counterGoal:"Дневная норма",
+onb1t:"Привет!",onb1x:"Это Твой Трекер. Задачи, привычки, цели и дневник — всё в одном месте и полностью бесплатно.",onb2t:"Планируй легко",onb2x:"Добавляй задачи, ставь теги и пометку «важная». Календарь покажет прогресс каждого дня.",onb3t:"Держи серию",onb3x:"Отмечай привычки каждый день. Серия мотивирует, а «заморозка» спасёт, когда нужен отдых.",onb4t:"Смотри прогресс",onb4x:"Аналитика, тепловая карта и сравнение с прошлой неделей покажут твои продуктивные дни."},
 en:{appName:"Tracker",tasks:"Tasks",habits:"Habits",goals:"Year Goals",analytics:"Analytics",today:"Today",week:"Week",month:"Month",year:"Year",addTask:"Add task",addHabit:"Add habit",addGoal:"Add goal",more:"More",notes:"Notes",lesson:"Lesson of the day",gratitude:"Gratitude",thoughts:"Thoughts",templates:"Templates",random:"Random task",searchPh:"Search...",fAll:"All",fActive:"Active",fDone:"Done",noTasksToday:"No tasks for today",noTasksDay:"No tasks for this day",noHabits:"No habits yet",noGoals:"No goals for this year yet",nothingFound:"Nothing found",mainSec:"Main settings",otherSec:"Other",dataSec:"Data",profile:"Profile",subscription:"Subscription",subFree:"All free",notif:"Notifications",prefs:"Preferences",overdue:"Overdue tasks",support:"Contact support",terms:"Terms of use",privacy:"Privacy policy",theme:"Theme",thAuto:"Auto",thDark:"Dark",thLight:"Light",language:"Language",name:"Name",email:"Email",timezone:"Time zone",regDate:"Registration date",notSpecified:"Not specified",morning:"Morning summary",evening:"Evening summary",morningRem:"🌅 Morning summary time!",eveningRem:"🌙 Evening summary time!",pTasks:"Tasks",pHabits:"Habits",pGoals:"Goals",pMenu:"Menu sections",description:"Description",important:"Important mark",subtasks:"Subtasks (beta)",overduePref:"Overdue tasks",moreSec:"“More” section",confetti:"Confetti on completion",smart:"SMART criteria",goalSubs:"Subgoals (beta)",secHabits:"“Habits” section",secGoals:"“Goals” section",secAnalytics:"“Analytics” section",date:"Date",repeat:"Repeat",notify:"Notification",imp:"Important",tag:"Tag",noTag:"No tag",startDate:"Start date",endDate:"End date",enterTask:"Enter a task",enterHabit:"Enter a habit",save:"Save",repOnce:"Once",repDaily:"Daily",repWeekly:"Weekly",repMonthly:"Monthly",hRepDaily:"Daily",hRepWeekly:"Weekly",hRepMonthly:"Monthly",totalTasks:"Total tasks:",completed:"Completed:",notCompleted:"Not completed:",avgProgress:"Average progress:",prodDay:"Productive day:",totalHabits:"Total habits:",marks:"Check-ins:",expected:"Expected:",dynamics:"Dynamics:",heatmap:"Year activity",streak:"Streak",bestStreak:"Best streak",days:"d",useFreeze:"Freeze today",water:"Water",steps:"Steps",sleep:"Sleep",glasses:"gl.",stepsU:"steps",hours:"h",sync:"Sync (account)",toCloud:"Upload",fromCloud:"Download",lastSync:"Synced",never:"never",serverRem:"Server reminders (code)",copy:"Copy",copied:"Copied",tplTitle:"Task templates",tplAdded:"Template added ✅",mark:"Mark",history:"History",entryFor:"Entry for",freeNote:"All features are free — no subscription needed 🎉",vsPrev:"vs previous period",
-editTask:"Edit task",editHabit:"Edit habit",editGoal:"Edit goal",off:"Off",remind:"Reminder",confirmDel:"Delete?",cancel:"Cancel",delBtn:"Delete",undo:"Undo",deleted:"Deleted",planner:"7-day planner",report:"Week report",reportNote:"Long-press the image to save or share.",tags:"Tags",addTag:"Add tag",tagName:"Tag name",avatar:"Avatar",showOnb:"Show tutorial",sortImp:"Important",sortAlpha:"A-Z",sortDone:"Done",skip:"Skip",next:"Next",start:"Start 🚀",moved:"Task moved",onb1t:"Hi!",onb1x:"This is Your Tracker. Tasks, habits, goals and a journal — all in one place and completely free.",onb2t:"Plan with ease",onb2x:"Add tasks, set tags and the “important” mark. The calendar shows the progress of each day.",onb3t:"Keep the streak",onb3x:"Mark habits every day. The streak motivates, and “freeze” saves you when you need a break.",onb4t:"See your progress",onb4x:"Analytics, heatmap and week-over-week comparison show your most productive days."}
+editTask:"Edit task",editHabit:"Edit habit",editGoal:"Edit goal",off:"Off",remind:"Reminder",confirmDel:"Delete?",cancel:"Cancel",delBtn:"Delete",undo:"Undo",deleted:"Deleted",planner:"7-day planner",report:"Week report",reportNote:"Long-press the image to save or share.",tags:"Tags",addTag:"Add tag",tagName:"Tag name",avatar:"Avatar",showOnb:"Show tutorial",sortImp:"Important",sortAlpha:"A-Z",sortDone:"Done",skip:"Skip",next:"Next",start:"Start 🚀",moved:"Task moved",
+archive:"Archive",toArchive:"To archive",restore:"Restore",emptyArchive:"Archive is empty",counterGoal:"Daily goal",
+onb1t:"Hi!",onb1x:"This is Your Tracker. Tasks, habits, goals and a journal — all in one place and completely free.",onb2t:"Plan with ease",onb2x:"Add tasks, set tags and the “important” mark. The calendar shows the progress of each day.",onb3t:"Keep the streak",onb3x:"Mark habits every day. The streak motivates, and “freeze” saves you when you need a break.",onb4t:"See your progress",onb4x:"Analytics, heatmap and week-over-week comparison show your most productive days."}
 };
 function lang(){return state.settings.lang==="en"?"en":"ru";}
 function t(k){var L=lang();return (STR[L]&&STR[L][k])||STR.ru[k]||k;}
@@ -434,6 +440,11 @@ var REP_KEY={once:"repOnce",daily:"repDaily",weekly:"repWeekly",monthly:"repMont
 var H_REPEATS=["daily","weekly","monthly"];
 var H_REP_KEY={daily:"hRepDaily",weekly:"hRepWeekly",monthly:"hRepMonthly"};
 var COUNTERS=[{key:"water",icon:"💧",goal:8,step:1,unit:"glasses"},{key:"steps",icon:"👟",goal:10000,step:1000,unit:"stepsU"},{key:"sleep",icon:"😴",goal:8,step:1,unit:"hours"}];
+function counterGoal(key){
+  var base=COUNTERS.filter(function(x){return x.key===key;})[0];
+  var def=base?base.goal:1;
+  return (state.counterGoals&&state.counterGoals[key]!=null)?state.counterGoals[key]:def;
+}
 var TEMPLATES=[
  {icon:"💼",name:{ru:"Работа",en:"Work"},tasks:{ru:["Проверить почту","Спланировать день","Главная задача дня"],en:["Check email","Plan the day","Main task of the day"]}},
  {icon:"💪",name:{ru:"Тренировка",en:"Workout"},tasks:{ru:["Разминка","Основная тренировка","Растяжка"],en:["Warm-up","Main workout","Stretching"]}},
@@ -441,7 +452,7 @@ var TEMPLATES=[
  {icon:"📚",name:{ru:"Учёба",en:"Study"},tasks:{ru:["Повторить конспекты","Выполнить задание","Читать 20 минут"],en:["Review notes","Do the assignment","Read 20 minutes"]}}
 ];
 var JOURNALS={notes:{title:"notes",ph:{ru:"Введите заметку...",en:"Enter a note..."}},lesson:{title:"lesson",ph:{ru:"Что нового ты узнал(а) сегодня?",en:"What did you learn today?"}},gratitude:{title:"gratitude",ph:{ru:"За что ты благодарен(на) сегодня?",en:"What are you grateful for today?"}},thoughts:{title:"thoughts",ph:{ru:"Запиши свои мысли...",en:"Write down your thoughts..."}}};
-var WORKER_CODE='// Полный код воркера — в отдельном сообщении (КОД ДЛЯ CLOUDFLARE v4).';
+var WORKER_CODE='// Полный код воркера — в отдельном сообщении (КОД ДЛЯ CLOUDFLARE v6).';
 
 var today=new Date();
 function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
@@ -467,6 +478,8 @@ var state={
   tasks:[],habits:[],goals:[],
   journals:{notes:[],lesson:[],gratitude:[],thoughts:[]},
   counters:{water:{},steps:{},sleep:{}},
+  counterGoals:{},
+  archive:{goals:[],habits:[]},
   freezes:[],remLast:"",syncAt:0,onboarded:false,updatedAt:0
 };
 
@@ -476,6 +489,10 @@ function initProfile(){
   if(!state.profile.tz){try{state.profile.tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"Europe/Moscow";}catch(e){state.profile.tz="Europe/Moscow";}}
   if(!state.profile.registeredAt)state.profile.registeredAt=iso(today);
   if(!state.counters)state.counters={water:{},steps:{},sleep:{}};
+  if(!state.counterGoals)state.counterGoals={};
+  if(!state.archive)state.archive={goals:[],habits:[]};
+  if(!state.archive.goals)state.archive.goals=[];
+  if(!state.archive.habits)state.archive.habits=[];
   if(!state.freezes)state.freezes=[];
   if(!state.journals)state.journals={notes:[],lesson:[],gratitude:[],thoughts:[]};
   if(!state.tags)state.tags=[{id:"work",name:"Работа",color:"#64a9dd"},{id:"study",name:"Учёба",color:"#8f6cf0"},{id:"home",name:"Дом",color:"#6fce8a"},{id:"health",name:"Здоровье",color:"#e06c6c"},{id:"other",name:"Другое",color:"#f2c94c"}];
@@ -622,8 +639,8 @@ function renderTasks(){
     chips+='<button class="chip'+(view.tagFilter===tg2.id?" active":"")+'" data-tag="'+tg2.id+'"><span class="tagdot" style="background:'+tg2.color+'"></span>'+esc(tg2.name)+"</button>";}
   $("#taskChips").innerHTML=chips;
   var k=iso(today),cHtml="";
-  for(var c=0;c<COUNTERS.length;c++){var cc=COUNTERS[c],map=state.counters[cc.key]||{},v=map[k]||0;
-    cHtml+='<div class="cnt-row"><span class="ci">'+cc.icon+'</span><span class="cn">'+t(cc.key)+'</span><div class="bar"><i style="width:'+Math.min(100,Math.round(v/cc.goal*100))+'%"></i></div><span class="cv">'+v+"/"+cc.goal+" "+t(cc.unit)+'</span><button class="cnt-btn" data-cnt="'+cc.key+':-">−</button><button class="cnt-btn" data-cnt="'+cc.key+':+">+</button></div>';}
+  for(var c=0;c<COUNTERS.length;c++){var cc=COUNTERS[c],map=state.counters[cc.key]||{},v=map[k]||0,goal=counterGoal(cc.key);
+    cHtml+='<div class="cnt-row"><span class="ci">'+cc.icon+'</span><span class="cn">'+t(cc.key)+'</span><div class="bar"><i style="width:'+Math.min(100,Math.round(v/goal*100))+'%"></i></div><span class="cv" data-cgoal="'+cc.key+'" title="'+t("counterGoal")+'">'+v+"/"+goal+" "+t(cc.unit)+' <span class="ed">✎</span></span><button class="cnt-btn" data-cnt="'+cc.key+':-">−</button><button class="cnt-btn" data-cnt="'+cc.key+':+">+</button></div>';}
   $("#countersCard").innerHTML=cHtml;
   var y=view.calMonth.getFullYear(),m=view.calMonth.getMonth();
   $("#calTitle").textContent=mF()[m]+" "+y;
@@ -681,7 +698,7 @@ function renderHabits(){
     var mon=startOfWeek(view.period),days=[];for(var d=0;d<7;d++)days.push(addDays(mon,d));
     var html='<div class="wd-head">'+days.map(function(dd,i){return "<span>"+wd()[i]+"<br>"+dd.getDate()+"</span>";}).join("")+"</div>";
     for(var h=0;h<habits.length;h++){var hb=habits[h];
-      html+='<div class="h-row"><div class="h-name"><span class="hn">'+esc(hb.name)+'</span><button class="mini-del" data-hedit="'+hb.id+'">'+ic("i-pencil")+"</button>"+(hb.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(hb.desc)+"</span>":"")+'</div><div class="h-dots">';
+      html+='<div class="h-row"><div class="h-name"><span class="hn">'+(hb.remind?'<span class="t-ic rem">'+ic("i-clock")+"</span>":"")+esc(hb.name)+'</span><button class="mini-del" data-hedit="'+hb.id+'">'+ic("i-pencil")+"</button>"+(hb.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(hb.desc)+"</span>":"")+'</div><div class="h-dots">';
       for(var di=0;di<7;di++){var day=days[di],kk=iso(day);
         html+='<button class="dot'+(hb.logs.indexOf(kk)>=0?" on":"")+((day>today||!habitActiveOn(hb,kk))?" future":"")+'" data-hid="'+hb.id+'" data-date="'+kk+'">'+day.getDate()+"</button>";}
       html+="</div></div>";}
@@ -690,7 +707,7 @@ function renderHabits(){
     var y=view.period.getFullYear(),m2=view.period.getMonth(),dim=new Date(y,m2+1,0).getDate();
     var isCur=y===today.getFullYear()&&m2===today.getMonth(),out="";
     for(var hh=0;hh<habits.length;hh++){var h2=habits[hh],n=habitMarksInMonth(h2,y,m2),doneToday=h2.logs.indexOf(iso(today))>=0;
-      out+='<div class="h-row"><div class="h-name"><span class="hn">'+esc(h2.name)+'</span><button class="mini-del" data-hedit="'+h2.id+'">'+ic("i-pencil")+"</button>"+(h2.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(h2.desc)+"</span>":"")+'</div><div class="h-month"><div class="bar"><i style="width:'+Math.round(n/dim*100)+'%"></i></div><span class="cnt" style="color:var(--muted);font-size:12px">'+n+"/"+dim+"</span>"+
+      out+='<div class="h-row"><div class="h-name"><span class="hn">'+(h2.remind?'<span class="t-ic rem">'+ic("i-clock")+"</span>":"")+esc(h2.name)+'</span><button class="mini-del" data-hedit="'+h2.id+'">'+ic("i-pencil")+"</button>"+(h2.desc&&state.settings.habitsDesc?'<span class="cnt">'+esc(h2.desc)+"</span>":"")+'</div><div class="h-month"><div class="bar"><i style="width:'+Math.round(n/dim*100)+'%"></i></div><span class="cnt" style="color:var(--muted);font-size:12px">'+n+"/"+dim+"</span>"+
         (isCur&&habitActiveOn(h2,iso(today))?'<button class="mark-btn'+(doneToday?" off":"")+'" data-hid="'+h2.id+'">'+(doneToday?"✅":t("mark"))+"</button>":"")+"</div></div>";}
     body.innerHTML=out;
   }
@@ -703,7 +720,7 @@ function renderGoals(){
   if(!list.length){body.innerHTML='<div class="empty" style="color:var(--accent)">'+ic("i-target")+'<span style="color:var(--muted)">'+t("noGoals")+"</span></div>";return;}
   var out="";
   for(var i=0;i<list.length;i++){var g=list[i],pct=Math.min(100,Math.round(g.progress/Math.max(1,g.target)*100));
-    var html='<div class="goal"><div class="g-head"><span class="star">'+ic("i-star")+'</span><div class="tt">'+esc(g.title)+'</div><button class="mini-del" data-gedit="'+g.id+'">'+ic("i-pencil")+'</button><button class="mini-del" data-gdel="'+g.id+'">'+ic("i-trash")+"</button></div>";
+    var html='<div class="goal"><div class="g-head"><span class="star">'+ic("i-star")+'</span><div class="tt">'+esc(g.title)+'</div><button class="mini-del" data-gedit="'+g.id+'">'+ic("i-pencil")+'</button><button class="mini-del" data-garch="'+g.id+'">'+ic("i-archive")+'</button><button class="mini-del" data-gdel="'+g.id+'">'+ic("i-trash")+"</button></div>";
     if(g.desc&&state.settings.goalsDesc)html+='<div class="g-desc">'+esc(g.desc)+"</div>";
     if(g.smart&&state.settings.goalsSmart)html+='<div class="g-desc">'+esc(g.smart)+"</div>";
     html+='<div class="g-prog"><div class="bar"><i style="width:'+pct+'%"></i></div><span class="num">'+g.progress+"/"+g.target+"</span></div>";
@@ -806,7 +823,8 @@ var SCREENS={
       row("i-star","#8f6cf0",t("subscription"),t("subFree"),"open","subs")+
       row("i-bell","#e06c6c",t("notif"),"","open","notif")+
       row("i-sliders","#6fce8a",t("prefs"),"","open","prefs")+
-      row("i-tag","#f2c94c",t("tags"),"","open","tags")+"</div>"+
+      row("i-tag","#f2c94c",t("tags"),"","open","tags")+
+      row("i-archive","#8f6cf0",t("archive"),"","open","archive")+"</div>"+
       (od?'<div class="sec-title">'+t("pTasks")+'</div><div class="list-card">'+od+"</div>":"")+
       '<div class="sec-title">'+t("dataSec")+'</div><div class="list-card">'+row("i-cloud","#3f8ec7",t("sync"),"","open","sync")+"</div>"+
       '<div class="sec-title">'+t("otherSec")+'</div><div class="list-card">'+
@@ -844,6 +862,22 @@ var SCREENS={
       '<label>'+t("tags")+'</label><div class="swatches">'+PALETTE.map(function(c){return '<button data-tcol="'+c+'" class="'+(c===tagDraft.color?"sel":"")+'" style="background:'+c+'"></button>';}).join("")+"</div></div>"+
       '<button class="save-btn" id="tagSave">'+t("save")+"</button>"+
       (tg2?'<button class="wide-btn" id="tagDel" style="background:var(--danger);color:#fff">'+ic("i-trash")+t("delBtn")+"</button>":"")};},
+  archive:function(){
+    var g=state.archive.goals||[],h=state.archive.habits||[];
+    if(!g.length&&!h.length)return{title:t("archive"),html:'<div class="card"><div class="empty">'+ic("i-archive")+t("emptyArchive")+"</div></div>"};
+    var html="";
+    if(g.length){html+='<div class="sec-title">'+t("goals")+'</div><div class="list-card">'+g.map(function(x){return '<div class="list-row"><span class="lt">'+esc(x.title)+'</span><button class="mark-btn" data-rgoal="'+x.id+'">'+t("restore")+"</button></div>";}).join("")+"</div>";}
+    if(h.length){html+='<div class="sec-title">'+t("habits")+'</div><div class="list-card">'+h.map(function(x){return '<div class="list-row"><span class="lt">'+esc(x.name)+'</span><button class="mark-btn" data-rhabit="'+x.id+'">'+t("restore")+"</button></div>";}).join("")+"</div>";}
+    return{title:t("archive"),html:html};
+  },
+  editCounter:function(key){
+    var base=COUNTERS.filter(function(x){return x.key===key;})[0];
+    var cur=counterGoal(key);
+    return{title:t("counterGoal"),html:
+      '<div class="ov-title-big">'+(base?base.icon+" ":"")+t(key)+"</div>"+
+      '<div class="form-card"><label style="margin-top:0">'+t("counterGoal")+'</label><input type="number" id="cgInput" min="1" max="1000000" value="'+cur+'"></div>'+
+      '<button class="save-btn" id="cgSave">'+t("save")+"</button>"};
+  },
   edit:function(field){
     var labels={name:t("name"),email:"Email",tz:t("timezone")};
     var vals={name:state.profile.name,email:state.profile.email,tz:state.profile.tz};
@@ -907,9 +941,13 @@ var SCREENS={
       '<button class="list-row" id="hbStartRow"><div class="lt">'+t("startDate")+'</div><div class="val-pill">'+fmtDayLong(d.start)+"</div></button>"+
       '<button class="list-row" id="hbEndRow"><div class="lt">'+t("endDate")+'</div><div class="val-pill">'+(d.end?fmtDayLong(d.end):t("notSpecified"))+"</div>"+(d.end?'<button class="clr" id="hbEndClear">'+ic("i-close")+"</button>":"")+"</button>"+
       '<button class="list-row" id="hbRepeatRow"><div class="lt">'+t("repeat")+'</div><div class="val-pill">'+t(H_REP_KEY[d.repeat])+"</div></button>"+
+      '<button class="list-row" id="hbRemRow"><div class="lt">'+t("remind")+'</div><div class="val-pill">'+(d.remind||t("off"))+"</div>"+(d.remind?'<button class="clr" id="hbRemClr">'+ic("i-close")+"</button>":"")+"</button>"+
       '<div class="list-row"><div class="lt">'+t("notify")+"</div>"+sw("hbNotify",d.notify)+"</div></div>"+
       '<div class="note">'+ic("i-star")+"<span>"+t("freeNote")+"</span></div>"+
-      '<input type="date" class="hidden-date" id="hbStartInput" value="'+d.start+'"><input type="date" class="hidden-date" id="hbEndInput" value="'+(d.end||"")+'">'+
+      '<input type="date" class="hidden-date" id="hbStartInput" value="'+d.start+'">'+
+      '<input type="date" class="hidden-date" id="hbEndInput" value="'+(d.end||"")+'">'+
+      '<input type="time" class="hidden-date" id="hbRemInput" value="'+(d.remind||"")+'">'+
+      (d.editingId?'<button class="wide-btn" id="hbArch" style="background:var(--card2)">'+ic("i-archive")+" "+t("toArchive")+"</button>":"")+
       '<button class="save-btn" id="hbSave">'+t("save")+"</button>"};},
   addGoal:function(){
     var d=goalDraft||{};
@@ -936,13 +974,22 @@ function renderOverlay(){
   if(cur.indexOf("journal:")===0){name="journal";param=cur.split(":")[1];}
   else if(cur.indexOf("edit:")===0){name="edit";param=cur.split(":")[1];}
   else if(cur.indexOf("editTag:")===0){name="editTag";param=cur.split(":")[1];}
-  var s=(name==="journal")?SCREENS.journal(param):(name==="edit")?SCREENS.edit(param):(name==="editTag")?SCREENS.editTag(param):SCREENS[name]();
+  else if(cur.indexOf("editCounter:")===0){name="editCounter";param=cur.split(":")[1];}
+  var s=(name==="journal")?SCREENS.journal(param):(name==="edit")?SCREENS.edit(param):(name==="editTag")?SCREENS.editTag(param):(name==="editCounter")?SCREENS.editCounter(param):SCREENS[name]();
   $("#ovTitle").textContent=s.title;
   $("#ovBody").innerHTML=s.html;
 
   if(name==="edit"){
     $("#editInput").addEventListener("input",function(e){editDraft.value=e.target.value;});
     $("#editSave").addEventListener("click",function(){state.profile[editDraft.field]=editDraft.value.trim();persist();backScreen();renderAll();toast("OK");});
+  }
+  if(name==="editCounter"){
+    $("#cgSave").addEventListener("click",function(){
+      var v=Math.max(1,parseInt($("#cgInput").value,10)||1);
+      if(!state.counterGoals)state.counterGoals={};
+      state.counterGoals[param]=v;
+      persist();backScreen();renderAll();toast("✅");
+    });
   }
   if(name==="avatarScreen"){
     var eb=$("#ovBody").querySelectorAll("[data-emo]");
@@ -1000,13 +1047,23 @@ function renderOverlay(){
     var pick=function(b,i,cb){$(b).addEventListener("click",function(){var inp=$(i);try{if(inp.showPicker)inp.showPicker();else inp.classList.remove("hidden-date");}catch(e){inp.classList.remove("hidden-date");}});$(i).addEventListener("change",function(e){if(e.target.value){cb(e.target.value);renderOverlay();}});};
     pick("#hbStartRow","#hbStartInput",function(v){habitDraft.start=v;});
     pick("#hbEndRow","#hbEndInput",function(v){habitDraft.end=v;});
-    var clr=$("#hbEndClear");if(clr)clr.addEventListener("click",function(e){e.stopPropagation();habitDraft.end="";renderOverlay();});
+    pick("#hbRemRow","#hbRemInput",function(v){habitDraft.remind=v;});
+    var hrc=$("#hbRemClr");if(hrc)hrc.addEventListener("click",function(e){e.stopPropagation();habitDraft.remind="";renderOverlay();});
     $("#hbRepeatRow").addEventListener("click",function(){habitDraft.repeat=H_REPEATS[(H_REPEATS.indexOf(habitDraft.repeat)+1)%H_REPEATS.length];haptic("light");renderOverlay();});
+    var ha=$("#hbArch");
+    if(ha)ha.addEventListener("click",function(){
+      var ex=state.habits.filter(function(x){return x.id===habitDraft.editingId;})[0];
+      if(!ex)return;
+      state.habits=state.habits.filter(function(x){return x.id!==ex.id;});
+      state.archive.habits.push(ex);
+      persist();backScreen();renderAll();toast("🗂 "+t("archive"));
+      showUndo(function(){state.archive.habits=state.archive.habits.filter(function(x){return x.id!==ex.id;});state.habits.push(ex);});
+    });
     $("#hbSave").addEventListener("click",function(){
       var n=habitDraft.name.trim();if(!n){toast(t("enterHabit"));return;}
       if(habitDraft.editingId){var ex=state.habits.filter(function(x){return x.id===habitDraft.editingId;})[0];
-        if(ex){ex.name=n;ex.desc=habitDraft.desc||"";ex.start=habitDraft.start;ex.end=habitDraft.end;ex.repeat=habitDraft.repeat;ex.notify=habitDraft.notify;}}
-      else state.habits.unshift({id:uid(),name:n,desc:habitDraft.desc||"",start:habitDraft.start,end:habitDraft.end,repeat:habitDraft.repeat,notify:habitDraft.notify,logs:[],createdAt:Date.now()});
+        if(ex){ex.name=n;ex.desc=habitDraft.desc||"";ex.start=habitDraft.start;ex.end=habitDraft.end;ex.repeat=habitDraft.repeat;ex.notify=habitDraft.notify;ex.remind=habitDraft.remind||"";}}
+      else state.habits.unshift({id:uid(),name:n,desc:habitDraft.desc||"",start:habitDraft.start,end:habitDraft.end,repeat:habitDraft.repeat,notify:habitDraft.notify,remind:habitDraft.remind||"",logs:[],createdAt:Date.now()});
       persist();backScreen();renderAll();haptic("success");
     });
   }
@@ -1077,17 +1134,33 @@ $("#ovBody").addEventListener("click",function(e){
   }
   var et=e.target.closest("[data-etag]");
   if(et){openScreen("editTag:"+et.getAttribute("data-etag"));return;}
+  var rgo=e.target.closest("[data-rgoal]");
+  if(rgo){
+    var gid=rgo.getAttribute("data-rgoal");
+    var arr=state.archive.goals||[];
+    var g=arr.filter(function(x){return x.id===gid;})[0];
+    if(g){state.archive.goals=arr.filter(function(x){return x.id!==gid;});state.goals.push(g);persist();renderOverlay();renderAll();toast("✅");}
+    return;
+  }
+  var rha=e.target.closest("[data-rhabit]");
+  if(rha){
+    var hid=rha.getAttribute("data-rhabit");
+    var arr2=state.archive.habits||[];
+    var h=arr2.filter(function(x){return x.id===hid;})[0];
+    if(h){state.archive.habits=arr2.filter(function(x){return x.id!==hid;});state.habits.push(h);persist();renderOverlay();renderAll();toast("✅");}
+    return;
+  }
   var pd=e.target.closest("[data-pdone]");
   if(pd){var pp=pd.getAttribute("data-pdone").split("|");var tk=state.tasks.filter(function(x){return x.id===pp[0];})[0];
     if(tk){var k2=pp[1];if((tk.doneDates||[]).indexOf(k2)>=0)tk.doneDates=tk.doneDates.filter(function(x){return x!==k2;});else tk.doneDates.push(k2);persist();renderOverlay();haptic("light");}return;}
   var jdel=e.target.closest("[data-jdel]");
   if(jdel){
     var jp=jdel.getAttribute("data-jdel").split(":");
-    var arr=state.journals[jp[0]]||[];
-    var en=arr.filter(function(x){return x.id===jp[1];})[0];
+    var arr3=state.journals[jp[0]]||[];
+    var en=arr3.filter(function(x){return x.id===jp[1];})[0];
     if(!en)return;
-    var idx=arr.indexOf(en);
-    safeDel(function(){arr.splice(idx,1);},function(){arr.splice(Math.min(idx,arr.length),0,en);});
+    var idx=arr3.indexOf(en);
+    safeDel(function(){arr3.splice(idx,1);},function(){arr3.splice(Math.min(idx,arr3.length),0,en);});
     return;
   }
   var tpl=e.target.closest("[data-tpl]");
@@ -1140,13 +1213,18 @@ $("#taskChips").addEventListener("click",function(e){
   var tg2=e.target.closest("[data-tag]");if(tg2){view.tagFilter=tg2.getAttribute("data-tag");renderTasks();}
 });
 $("#countersCard").addEventListener("click",function(e){
-  var b=e.target.closest("[data-cnt]");if(!b)return;
-  var p=b.getAttribute("data-cnt").split(":");var key=p[0],dir=p[1];
-  var c=COUNTERS.filter(function(x){return x.key===key;})[0];if(!c)return;
-  if(!state.counters[key])state.counters[key]={};
-  var k=iso(today),v=state.counters[key][k]||0;
-  v=Math.max(0,v+(dir==="+"?c.step:-c.step));
-  state.counters[key][k]=v;persist();renderTasks();haptic("light");
+  var b=e.target.closest("[data-cnt]");
+  if(b){
+    var p=b.getAttribute("data-cnt").split(":");var key=p[0],dir=p[1];
+    var c=COUNTERS.filter(function(x){return x.key===key;})[0];if(!c)return;
+    if(!state.counters[key])state.counters[key]={};
+    var k=iso(today),v=state.counters[key][k]||0;
+    v=Math.max(0,v+(dir==="+"?c.step:-c.step));
+    state.counters[key][k]=v;persist();renderTasks();haptic("light");
+    return;
+  }
+  var cg=e.target.closest("[data-cgoal]");
+  if(cg){openScreen("editCounter:"+cg.getAttribute("data-cgoal"));}
 });
 $("#moveDateInput").addEventListener("change",function(e){
   if(!view.moveId||!e.target.value)return;
@@ -1187,7 +1265,7 @@ $("#randomBtn").addEventListener("click",function(){
 $("#tplBtn").addEventListener("click",function(){openScreen("templates");});
 $("#plannerBtn").addEventListener("click",function(){openScreen("planner");});
 $("#addTaskBtn").addEventListener("click",function(){taskDraft={editingId:null,date:view.selectedDate,text:"",desc:"",subsText:"",repeat:"once",notify:false,important:false,tag:view.tagFilter||"",remind:""};openScreen("addTask");});
-$("#addHabitBtn").addEventListener("click",function(){habitDraft={editingId:null,name:"",desc:"",start:iso(today),end:"",repeat:"daily",notify:false};openScreen("addHabit");});
+$("#addHabitBtn").addEventListener("click",function(){habitDraft={editingId:null,name:"",desc:"",start:iso(today),end:"",repeat:"daily",notify:false,remind:""};openScreen("addHabit");});
 $("#moreBtn").addEventListener("click",function(){view.moreOpen=!view.moreOpen;$("#morePanel").classList.toggle("hidden",!view.moreOpen);$("#moreBtn").classList.toggle("open",view.moreOpen);haptic("light");});
 $("#morePanel").addEventListener("click",function(e){var b=e.target.closest("[data-journal]");if(!b)return;openScreen("journal:"+b.getAttribute("data-journal"));});
 $("#segWeek").addEventListener("click",function(){view.habitsMode="week";view.period=startOfWeek(view.period);view.habCalMonth=monthStart(view.period);renderAll();});
@@ -1195,7 +1273,7 @@ $("#segMonth").addEventListener("click",function(){view.habitsMode="month";view.
 $("#habitsBody").addEventListener("click",function(e){
   var he=e.target.closest("[data-hedit]");
   if(he){var hb=state.habits.find(function(x){return x.id===he.getAttribute("data-hedit");});if(!hb)return;
-    habitDraft={editingId:hb.id,name:hb.name,desc:hb.desc||"",start:hb.start||iso(today),end:hb.end||"",repeat:hb.repeat||"daily",notify:hb.notify||false};
+    habitDraft={editingId:hb.id,name:hb.name,desc:hb.desc||"",start:hb.start||iso(today),end:hb.end||"",repeat:hb.repeat||"daily",notify:hb.notify||false,remind:hb.remind||""};
     openScreen("addHabit");return;}
   var dot=e.target.closest(".dot");
   if(dot){if(dot.classList.contains("future"))return;
@@ -1228,13 +1306,24 @@ $("#goalsBody").addEventListener("click",function(e){
   if(ge){var g0=state.goals.find(function(x){return x.id===ge.getAttribute("data-gedit");});if(!g0)return;
     goalDraft={editingId:g0.id,title:g0.title,desc:g0.desc||"",smart:g0.smart||"",target:g0.target,subs:g0.subs||[]};
     openScreen("addGoal");return;}
+  var garch=e.target.closest("[data-garch]");
+  if(garch){
+    var id=garch.getAttribute("data-garch");
+    var g=state.goals.find(function(x){return x.id===id;});if(!g)return;
+    var idx=state.goals.indexOf(g);
+    state.goals.splice(idx,1);
+    state.archive.goals.push(g);
+    persist();renderGoals();toast("🗂 "+t("archive"));
+    showUndo(function(){state.archive.goals=state.archive.goals.filter(function(x){return x.id!==id;});state.goals.push(g);});
+    return;
+  }
   var gdel=e.target.closest("[data-gdel]");
-  if(gdel){var id=gdel.getAttribute("data-gdel");var g1=state.goals.find(function(x){return x.id===id;});var idx=state.goals.indexOf(g1);
-    safeDel(function(){state.goals.splice(idx,1);},function(){state.goals.splice(Math.min(idx,state.goals.length),0,g1);});
+  if(gdel){var id2=gdel.getAttribute("data-gdel");var g1=state.goals.find(function(x){return x.id===id2;});var idx2=state.goals.indexOf(g1);
+    safeDel(function(){state.goals.splice(idx2,1);},function(){state.goals.splice(Math.min(idx2,state.goals.length),0,g1);});
     return;}
   var plus=e.target.closest("[data-gplus]"),minus=e.target.closest("[data-gminus]"),sub=e.target.closest("[data-sub]");
-  if(plus||minus){var id2=plus?plus.getAttribute("data-gplus"):minus.getAttribute("data-gminus");
-    var g=state.goals.find(function(x){return x.id===id2;});if(!g)return;
+  if(plus||minus){var id3=plus?plus.getAttribute("data-gplus"):minus.getAttribute("data-gminus");
+    var g=state.goals.find(function(x){return x.id===id3;});if(!g)return;
     g.progress=Math.max(0,Math.min(g.target,g.progress+(plus?1:-1)));
     if(g.progress>=g.target&&!g.celebrated){g.celebrated=true;if(state.settings.goalsConfetti)confetti();}
     persist();renderGoals();haptic("success");return;}
@@ -1296,11 +1385,10 @@ if(!state.onboarded)showOnb();
 <script>
 /* =====================================================
    СИНХРОНИЗАЦИЯ v3 — данные привязаны к Telegram-аккаунту
-   (без JSON-файлов: всё хранится в облаке под твоим Telegram-ID)
+   + напоминания привычек попадают в сводки воркера
    ===================================================== */
 var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
 (function () {
-  // ---- отправка изменений на сервер (с задержкой, чтобы не спамить) ----
   var pushTimer = null;
   function queuePush() {
     clearTimeout(pushTimer);
@@ -1313,11 +1401,9 @@ var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
       }).catch(function () {});
     }, 1500);
   }
-  // встраиваемся в persist() — каждое сохранение улетает в облако аккаунта
   var _origPersist = persist;
   persist = function () { _origPersist(); queuePush(); };
 
-  // ---- загрузка данных аккаунта при старте (любое устройство) ----
   function pull() {
     if (!tg || !tg.initData) return;
     fetch(WORKER_URL + "/load", {
@@ -1346,7 +1432,6 @@ var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
     else if (tries > 10) clearInterval(wait);
   }, 500);
 
-  // ---- статистика для сводок (утро/вечер) ----
   function todayKey() {
     var d = new Date();
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -1368,6 +1453,12 @@ var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
     var reminders = [];
     state.tasks.forEach(function (t) {
       if (t.remind && occursOn(t, k) && (t.doneDates || []).indexOf(k) < 0) reminders.push({ time: t.remind, text: t.text });
+    });
+    // напоминания привычек (фича 17)
+    state.habits.forEach(function (h) {
+      if (h.remind && (!h.start || h.start <= k) && (!h.end || h.end >= k) && h.logs.indexOf(k) < 0) {
+        reminders.push({ time: h.remind, text: "🔥 " + h.name });
+      }
     });
     return {
       tasks_done: tasksDone.length, tasks_total: tasksToday.length,
