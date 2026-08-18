@@ -407,14 +407,14 @@ var cloud=tg&&tg.CloudStorage?tg.CloudStorage:null;
 var tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 function $(s){return document.querySelector(s);}
 function ic(id){return '<svg class="icn"><use href="#'+id+'"/></svg>';}
-var STORE_KEY="prosto_tracker_v15";
+var STORE_KEY="prosto_tracker_v16";
 var PALETTE=["#64a9dd","#8f6cf0","#6fce8a","#e06c6c","#f2c94c","#f2994a","#4dd0e1","#f06292"];
-var EMOJIS=["🙂","😎","🤓","","🌸","","🎧","","⚡","","🐱","🐶","","🐨","","🐥","",""];
+var EMOJIS=["🙂","😎","","","🌸","","🎧","","⚡","","🐱","","","🐨","","🐥","",""];
 
 var STR={
-ru:{appName:"Трекер",tasks:"Задачи",habits:"Привычки",goals:"Цели на год",analytics:"Аналитика",today:"Сегодня",week:"Неделя",month:"Месяц",year:"Год",addTask:"Добавить задачу",addHabit:"Добавить привычку",addGoal:"Добавить цель",more:"Ещё",notes:"Заметки",lesson:"Урок дня",gratitude:"Благодарность",thoughts:"Мысли",templates:"Шаблоны",random:"Случайная задача",searchPh:"Поиск...",fAll:"Все",fActive:"Активные",fDone:"Выполненные",noTasksToday:"На сегодня задач нет",noTasksDay:"На этот день задач нет",noHabits:"Привычек пока что нет",noGoals:"Целей на этот год пока нет",nothingFound:"Ничего не найдено",mainSec:"Основные настройки",otherSec:"Другое",dataSec:"Данные",profile:"Профиль",subscription:"Подписка",subFree:"Всё бесплатно",notif:"Уведомления",prefs:"Предпочтения",overdue:"Просроченные задачи",support:"Связаться с поддержкой",terms:"Пользовательское соглашение",privacy:"Политика конфиденциальности",theme:"Тема",thAuto:"Авто",thDark:"Тёмная",thLight:"Светлая",language:"Язык",name:"Имя",email:"Email",timezone:"Часовой пояс",regDate:"Дата регистрации",notSpecified:"Не указан",morning:"Утренняя сводка",evening:"Вечерняя сводка",morningRem:"🌅 Время утренней сводки!",eveningRem:"🌙 Время вечерней сводки!",pTasks:"Задачи",pHabits:"Привычки",pGoals:"Цели",pMenu:"Разделы меню",description:"Описание",important:"Пометка «Важная»",subtasks:"Подзадачи (бета)",overduePref:"Просроченные задачи",moreSec:"Раздел «Ещё»",confetti:"Конфетти при выполнении",smart:"Критерии SMART",goalSubs:"Подцели (бета)",secHabits:"Раздел «Привычки»",secGoals:"Раздел «Цели»",secAnalytics:"Раздел «Аналитика»",date:"Дата",repeat:"Периодичность",notify:"Уведомление",imp:"Важная",tag:"Тег",noTag:"Без тега",startDate:"Дата начала",endDate:"Дата окончания",enterTask:"Введите задачу",enterHabit:"Введите привычку",save:"Сохранить",repOnce:"Однократно",repDaily:"Ежедневно",repWeekly:"Еженедельно",repMonthly:"Ежемесячно",hRepDaily:"Ежедневная",hRepWeekly:"Еженедельная",hRepMonthly:"Ежемесячная",totalTasks:"Всего задач:",completed:"Выполнено:",notCompleted:"Не выполнено:",avgProgress:"Средний прогресс:",prodDay:"Продуктивный день:",totalHabits:"Всего привычек:",marks:"Отметок:",expected:"Ожидалось:",dynamics:"Динамика:",heatmap:"Активность за год",streak:"Серия",bestStreak:"Лучшая серия",days:"дн.",useFreeze:"Заморозить сегодня",water:"Вода",steps:"Шаги",sleep:"Сон",glasses:"стак.",stepsU:"шаг.",hours:"ч.",sync:"Синхронизация (Telegram Cloud)",toCloud:"В облако",fromCloud:"Из облака",lastSync:"Синхронизировано",never:"никогда",serverRem:"Серверные напоминания (код)",copy:"Копировать",copied:"Скопировано",tplTitle:"Шаблоны задач",tplAdded:"Шаблон добавлен ✅",mark:"Отметить",history:"История",entryFor:"Запись за",freeNote:"Все функции доступны бесплатно — подписка не нужна 🎉",vsPrev:"к прошлому периоду",
+ru:{appName:"Трекер",tasks:"Задачи",habits:"Привычки",goals:"Цели на год",analytics:"Аналитика",today:"Сегодня",week:"Неделя",month:"Месяц",year:"Год",addTask:"Добавить задачу",addHabit:"Добавить привычку",addGoal:"Добавить цель",more:"Ещё",notes:"Заметки",lesson:"Урок дня",gratitude:"Благодарность",thoughts:"Мысли",templates:"Шаблоны",random:"Случайная задача",searchPh:"Поиск...",fAll:"Все",fActive:"Активные",fDone:"Выполненные",noTasksToday:"На сегодня задач нет",noTasksDay:"На этот день задач нет",noHabits:"Привычек пока что нет",noGoals:"Целей на этот год пока нет",nothingFound:"Ничего не найдено",mainSec:"Основные настройки",otherSec:"Другое",dataSec:"Данные",profile:"Профиль",subscription:"Подписка",subFree:"Всё бесплатно",notif:"Уведомления",prefs:"Предпочтения",overdue:"Просроченные задачи",support:"Связаться с поддержкой",terms:"Пользовательское соглашение",privacy:"Политика конфиденциальности",theme:"Тема",thAuto:"Авто",thDark:"Тёмная",thLight:"Светлая",language:"Язык",name:"Имя",email:"Email",timezone:"Часовой пояс",regDate:"Дата регистрации",notSpecified:"Не указан",morning:"Утренняя сводка",evening:"Вечерняя сводка",morningRem:"🌅 Время утренней сводки!",eveningRem:"🌙 Время вечерней сводки!",pTasks:"Задачи",pHabits:"Привычки",pGoals:"Цели",pMenu:"Разделы меню",description:"Описание",important:"Пометка «Важная»",subtasks:"Подзадачи (бета)",overduePref:"Просроченные задачи",moreSec:"Раздел «Ещё»",confetti:"Конфетти при выполнении",smart:"Критерии SMART",goalSubs:"Подцели (бета)",secHabits:"Раздел «Привычки»",secGoals:"Раздел «Цели»",secAnalytics:"Раздел «Аналитика»",date:"Дата",repeat:"Периодичность",notify:"Уведомление",imp:"Важная",tag:"Тег",noTag:"Без тега",startDate:"Дата начала",endDate:"Дата окончания",enterTask:"Введите задачу",enterHabit:"Введите привычку",save:"Сохранить",repOnce:"Однократно",repDaily:"Ежедневно",repWeekly:"Еженедельно",repMonthly:"Ежемесячно",hRepDaily:"Ежедневная",hRepWeekly:"Еженедельная",hRepMonthly:"Ежемесячная",totalTasks:"Всего задач:",completed:"Выполнено:",notCompleted:"Не выполнено:",avgProgress:"Средний прогресс:",prodDay:"Продуктивный день:",totalHabits:"Всего привычек:",marks:"Отметок:",expected:"Ожидалось:",dynamics:"Динамика:",heatmap:"Активность за год",streak:"Серия",bestStreak:"Лучшая серия",days:"дн.",useFreeze:"Заморозить сегодня",water:"Вода",steps:"Шаги",sleep:"Сон",glasses:"стак.",stepsU:"шаг.",hours:"ч.",sync:"Синхронизация (аккаунт)",toCloud:"В облако",fromCloud:"Из облака",lastSync:"Синхронизировано",never:"никогда",serverRem:"Серверные напоминания (код)",copy:"Копировать",copied:"Скопировано",tplTitle:"Шаблоны задач",tplAdded:"Шаблон добавлен ✅",mark:"Отметить",history:"История",entryFor:"Запись за",freeNote:"Все функции доступны бесплатно — подписка не нужна 🎉",vsPrev:"к прошлому периоду",
 editTask:"Редактировать задачу",editHabit:"Редактировать привычку",editGoal:"Редактировать цель",off:"Выкл",remind:"Напоминание",confirmDel:"Удалить?",cancel:"Отмена",delBtn:"Удалить",undo:"Отменить",deleted:"Удалено",planner:"Планер на 7 дней",report:"Отчёт недели",reportNote:"Зажми и удерживай картинку, чтобы сохранить или отправить.",tags:"Теги",addTag:"Добавить тег",tagName:"Название тега",avatar:"Аватар",showOnb:"Показать обучение",sortImp:"Важные",sortAlpha:"А-Я",sortDone:"Сделано",skip:"Пропустить",next:"Далее",start:"Начать 🚀",moved:"Задача перенесена",onb1t:"Привет!",onb1x:"Это Твой Трекер. Задачи, привычки, цели и дневник — всё в одном месте и полностью бесплатно.",onb2t:"Планируй легко",onb2x:"Добавляй задачи, ставь теги и пометку «важная». Календарь покажет прогресс каждого дня.",onb3t:"Держи серию",onb3x:"Отмечай привычки каждый день. Серия мотивирует, а «заморозка» спасёт, когда нужен отдых.",onb4t:"Смотри прогресс",onb4x:"Аналитика, тепловая карта и сравнение с прошлой неделей покажут твои продуктивные дни."},
-en:{appName:"Tracker",tasks:"Tasks",habits:"Habits",goals:"Year Goals",analytics:"Analytics",today:"Today",week:"Week",month:"Month",year:"Year",addTask:"Add task",addHabit:"Add habit",addGoal:"Add goal",more:"More",notes:"Notes",lesson:"Lesson of the day",gratitude:"Gratitude",thoughts:"Thoughts",templates:"Templates",random:"Random task",searchPh:"Search...",fAll:"All",fActive:"Active",fDone:"Done",noTasksToday:"No tasks for today",noTasksDay:"No tasks for this day",noHabits:"No habits yet",noGoals:"No goals for this year yet",nothingFound:"Nothing found",mainSec:"Main settings",otherSec:"Other",dataSec:"Data",profile:"Profile",subscription:"Subscription",subFree:"All free",notif:"Notifications",prefs:"Preferences",overdue:"Overdue tasks",support:"Contact support",terms:"Terms of use",privacy:"Privacy policy",theme:"Theme",thAuto:"Auto",thDark:"Dark",thLight:"Light",language:"Language",name:"Name",email:"Email",timezone:"Time zone",regDate:"Registration date",notSpecified:"Not specified",morning:"Morning summary",evening:"Evening summary",morningRem:"🌅 Morning summary time!",eveningRem:"🌙 Evening summary time!",pTasks:"Tasks",pHabits:"Habits",pGoals:"Goals",pMenu:"Menu sections",description:"Description",important:"Important mark",subtasks:"Subtasks (beta)",overduePref:"Overdue tasks",moreSec:"“More” section",confetti:"Confetti on completion",smart:"SMART criteria",goalSubs:"Subgoals (beta)",secHabits:"“Habits” section",secGoals:"“Goals” section",secAnalytics:"“Analytics” section",date:"Date",repeat:"Repeat",notify:"Notification",imp:"Important",tag:"Tag",noTag:"No tag",startDate:"Start date",endDate:"End date",enterTask:"Enter a task",enterHabit:"Enter a habit",save:"Save",repOnce:"Once",repDaily:"Daily",repWeekly:"Weekly",repMonthly:"Monthly",hRepDaily:"Daily",hRepWeekly:"Weekly",hRepMonthly:"Monthly",totalTasks:"Total tasks:",completed:"Completed:",notCompleted:"Not completed:",avgProgress:"Average progress:",prodDay:"Productive day:",totalHabits:"Total habits:",marks:"Check-ins:",expected:"Expected:",dynamics:"Dynamics:",heatmap:"Year activity",streak:"Streak",bestStreak:"Best streak",days:"d",useFreeze:"Freeze today",water:"Water",steps:"Steps",sleep:"Sleep",glasses:"gl.",stepsU:"steps",hours:"h",sync:"Sync (Telegram Cloud)",toCloud:"Upload",fromCloud:"Download",lastSync:"Synced",never:"never",serverRem:"Server reminders (code)",copy:"Copy",copied:"Copied",tplTitle:"Task templates",tplAdded:"Template added ✅",mark:"Mark",history:"History",entryFor:"Entry for",freeNote:"All features are free — no subscription needed 🎉",vsPrev:"vs previous period",
+en:{appName:"Tracker",tasks:"Tasks",habits:"Habits",goals:"Year Goals",analytics:"Analytics",today:"Today",week:"Week",month:"Month",year:"Year",addTask:"Add task",addHabit:"Add habit",addGoal:"Add goal",more:"More",notes:"Notes",lesson:"Lesson of the day",gratitude:"Gratitude",thoughts:"Thoughts",templates:"Templates",random:"Random task",searchPh:"Search...",fAll:"All",fActive:"Active",fDone:"Done",noTasksToday:"No tasks for today",noTasksDay:"No tasks for this day",noHabits:"No habits yet",noGoals:"No goals for this year yet",nothingFound:"Nothing found",mainSec:"Main settings",otherSec:"Other",dataSec:"Data",profile:"Profile",subscription:"Subscription",subFree:"All free",notif:"Notifications",prefs:"Preferences",overdue:"Overdue tasks",support:"Contact support",terms:"Terms of use",privacy:"Privacy policy",theme:"Theme",thAuto:"Auto",thDark:"Dark",thLight:"Light",language:"Language",name:"Name",email:"Email",timezone:"Time zone",regDate:"Registration date",notSpecified:"Not specified",morning:"Morning summary",evening:"Evening summary",morningRem:"🌅 Morning summary time!",eveningRem:"🌙 Evening summary time!",pTasks:"Tasks",pHabits:"Habits",pGoals:"Goals",pMenu:"Menu sections",description:"Description",important:"Important mark",subtasks:"Subtasks (beta)",overduePref:"Overdue tasks",moreSec:"“More” section",confetti:"Confetti on completion",smart:"SMART criteria",goalSubs:"Subgoals (beta)",secHabits:"“Habits” section",secGoals:"“Goals” section",secAnalytics:"“Analytics” section",date:"Date",repeat:"Repeat",notify:"Notification",imp:"Important",tag:"Tag",noTag:"No tag",startDate:"Start date",endDate:"End date",enterTask:"Enter a task",enterHabit:"Enter a habit",save:"Save",repOnce:"Once",repDaily:"Daily",repWeekly:"Weekly",repMonthly:"Monthly",hRepDaily:"Daily",hRepWeekly:"Weekly",hRepMonthly:"Monthly",totalTasks:"Total tasks:",completed:"Completed:",notCompleted:"Not completed:",avgProgress:"Average progress:",prodDay:"Productive day:",totalHabits:"Total habits:",marks:"Check-ins:",expected:"Expected:",dynamics:"Dynamics:",heatmap:"Year activity",streak:"Streak",bestStreak:"Best streak",days:"d",useFreeze:"Freeze today",water:"Water",steps:"Steps",sleep:"Sleep",glasses:"gl.",stepsU:"steps",hours:"h",sync:"Sync (account)",toCloud:"Upload",fromCloud:"Download",lastSync:"Synced",never:"never",serverRem:"Server reminders (code)",copy:"Copy",copied:"Copied",tplTitle:"Task templates",tplAdded:"Template added ✅",mark:"Mark",history:"History",entryFor:"Entry for",freeNote:"All features are free — no subscription needed 🎉",vsPrev:"vs previous period",
 editTask:"Edit task",editHabit:"Edit habit",editGoal:"Edit goal",off:"Off",remind:"Reminder",confirmDel:"Delete?",cancel:"Cancel",delBtn:"Delete",undo:"Undo",deleted:"Deleted",planner:"7-day planner",report:"Week report",reportNote:"Long-press the image to save or share.",tags:"Tags",addTag:"Add tag",tagName:"Tag name",avatar:"Avatar",showOnb:"Show tutorial",sortImp:"Important",sortAlpha:"A-Z",sortDone:"Done",skip:"Skip",next:"Next",start:"Start 🚀",moved:"Task moved",onb1t:"Hi!",onb1x:"This is Your Tracker. Tasks, habits, goals and a journal — all in one place and completely free.",onb2t:"Plan with ease",onb2x:"Add tasks, set tags and the “important” mark. The calendar shows the progress of each day.",onb3t:"Keep the streak",onb3x:"Mark habits every day. The streak motivates, and “freeze” saves you when you need a break.",onb4t:"See your progress",onb4x:"Analytics, heatmap and week-over-week comparison show your most productive days."}
 };
 function lang(){return state.settings.lang==="en"?"en":"ru";}
@@ -441,7 +441,7 @@ var TEMPLATES=[
  {icon:"📚",name:{ru:"Учёба",en:"Study"},tasks:{ru:["Повторить конспекты","Выполнить задание","Читать 20 минут"],en:["Review notes","Do the assignment","Read 20 minutes"]}}
 ];
 var JOURNALS={notes:{title:"notes",ph:{ru:"Введите заметку...",en:"Enter a note..."}},lesson:{title:"lesson",ph:{ru:"Что нового ты узнал(а) сегодня?",en:"What did you learn today?"}},gratitude:{title:"gratitude",ph:{ru:"За что ты благодарен(на) сегодня?",en:"What are you grateful for today?"}},thoughts:{title:"thoughts",ph:{ru:"Запиши свои мысли...",en:"Write down your thoughts..."}}};
-var WORKER_CODE='// Полный код воркера — в отдельном сообщении (КОД ДЛЯ CLOUDFLARE).';
+var WORKER_CODE='// Полный код воркера — в отдельном сообщении (КОД ДЛЯ CLOUDFLARE v4).';
 
 var today=new Date();
 function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
@@ -821,6 +821,7 @@ var SCREENS={
     return{title:t("sync"),html:'<div class="list-card"><div class="list-row"><div class="lt">'+t("lastSync")+'</div><div class="val">'+last+"</div></div>"+
       '<button class="list-row" data-act="syncUp"><span class="li" style="background:#3f8ec7">'+ic("i-cloud")+'</span><span class="lt">'+t("toCloud")+"</span></button>"+
       '<button class="list-row" data-act="syncDown"><span class="li" style="background:#6fce8a">'+ic("i-cloud")+'</span><span class="lt">'+t("fromCloud")+"</span></button></div>"+
+      '<div class="note">'+ic("i-star")+"<span>Данные привязаны к твоему Telegram-аккаунту и автоматически подтягиваются на любом устройстве.</span></div>"+
       '<div class="sec-title">'+t("serverRem")+'</div><div class="card"><pre class="code">'+esc(WORKER_CODE)+"</pre></div>"};},
   profile:function(){
     var reg=loc({day:"numeric",month:"long",year:"numeric"}).format(fromISO(state.profile.registeredAt||iso(today)));
@@ -874,7 +875,7 @@ var SCREENS={
     var url=buildReport();
     return {title:t("report"),html:'<div class="card"><img style="width:100%;border-radius:12px;display:block" src="'+url+'"></div><div class="note">'+ic("i-star")+"<span>"+t("reportNote")+"</span></div>"};},
   terms:function(){return{title:t("terms"),html:'<div class="card doc"><p>'+t("terms")+".</p><p>"+t("freeNote")+"</p></div>"};},
-  privacy:function(){return{title:t("privacy"),html:'<div class="card doc"><p>'+t("privacy")+".</p><p>localStorage + Telegram CloudStorage.</p></div>"};},
+  privacy:function(){return{title:t("privacy"),html:'<div class="card doc"><p>'+t("privacy")+".</p><p>localStorage + Telegram CloudStorage + облако аккаунта.</p></div>"};},
   templates:function(){
     var L=lang();
     return{title:t("tplTitle"),html:'<div class="list-card">'+TEMPLATES.map(function(tp,i){return '<button class="list-row" data-tpl="'+i+'"><span class="li" style="background:#3f8ec7">'+tp.icon+'</span><span class="lt">'+esc(tp.name[L])+'<div class="val">'+tp.tasks[L].join(" · ")+"</div></span></button>";}).join("")+"</div>"};},
@@ -1294,13 +1295,58 @@ if(!state.onboarded)showOnb();
 
 <script>
 /* =====================================================
-   СИНХРОНИЗАЦИЯ v2 — настройки + статистика ВСЕХ разделов + напоминания
-   (этот блок в index.html идёт последним, перед </body>)
+   СИНХРОНИЗАЦИЯ v3 — данные привязаны к Telegram-аккаунту
+   (без JSON-файлов: всё хранится в облаке под твоим Telegram-ID)
    ===================================================== */
 var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
 (function () {
-  var lastSig = null;
+  // ---- отправка изменений на сервер (с задержкой, чтобы не спамить) ----
+  var pushTimer = null;
+  function queuePush() {
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(function () {
+      if (!tg || !tg.initData) return;
+      fetch(WORKER_URL + "/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ initData: tg.initData, state: state })
+      }).catch(function () {});
+    }, 1500);
+  }
+  // встраиваемся в persist() — каждое сохранение улетает в облако аккаунта
+  var _origPersist = persist;
+  persist = function () { _origPersist(); queuePush(); };
 
+  // ---- загрузка данных аккаунта при старте (любое устройство) ----
+  function pull() {
+    if (!tg || !tg.initData) return;
+    fetch(WORKER_URL + "/load", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ initData: tg.initData })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (j && j.ok && j.state && (j.state.updatedAt || 0) > (state.updatedAt || 0)) {
+        var remote = j.state;
+        if (remote.settings) remote.settings = Object.assign({}, state.settings, remote.settings);
+        state = remote;
+        initProfile();
+        _origPersist();
+        applyI18n(); applyTheme(); renderAll();
+        toast("☁️ Данные загружены из аккаунта");
+      }
+    })
+    .catch(function () {});
+  }
+  var tries = 0;
+  var wait = setInterval(function () {
+    tries++;
+    if (tg && tg.initData) { clearInterval(wait); pull(); }
+    else if (tries > 10) clearInterval(wait);
+  }, 500);
+
+  // ---- статистика для сводок (утро/вечер) ----
   function todayKey() {
     var d = new Date();
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
@@ -1331,9 +1377,9 @@ var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
       reminders: reminders
     };
   }
-
+  var lastSig = null;
   setInterval(function () {
-    if (!tg || !tg.initData) return; // работает только внутри Telegram
+    if (!tg || !tg.initData) return;
     var stats = calcStats();
     var sig = JSON.stringify([
       state.settings.morningOn, state.settings.morningTime,
@@ -1341,7 +1387,6 @@ var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
       state.profile.tz, stats
     ]);
     if (sig === lastSig) return;
-    var isFirst = (lastSig === null);
     lastSig = sig;
     fetch(WORKER_URL + "/settings", {
       method: "POST",
@@ -1349,12 +1394,10 @@ var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
       body: JSON.stringify({
         initData: tg.initData,
         tz: state.profile.tz,
-        morning_on:   state.settings.morningOn,  morning_time: state.settings.morningTime,
-        evening_on:   state.settings.eveningOn,  evening_time: state.settings.eveningTime,
+        morning_on: state.settings.morningOn,  morning_time: state.settings.morningTime,
+        evening_on: state.settings.eveningOn,  evening_time: state.settings.eveningTime,
         stats: stats
       })
-    }).then(function (r) { return r.json(); }).then(function (j) {
-      if (j && j.ok && !isFirst) toast("⏰ Данные синхронизированы с сервером");
     }).catch(function () {});
   }, 3000);
 })();
