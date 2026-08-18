@@ -1,4 +1,19 @@
-<!DOCTYPE html>
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -17,7 +32,7 @@
   .icn{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;display:inline-block;vertical-align:middle}
   .round .icn{width:16px;height:16px;stroke-width:2.4}
   .nav-btn .icn{width:20px;height:20px;stroke-width:2}
-  .segment .icn{width:16px;height:16px;stroke-width:2}
+  .segment .icn{width:20px;height:20px;stroke-width:2}
   .li .icn{width:16px;height:16px;stroke-width:2}
   .arr .icn{width:16px;height:16px;stroke-width:2.2}
   .wide-btn .icn{width:20px;height:20px;stroke-width:2}
@@ -43,6 +58,7 @@
   .icon-btn:active{background:var(--card2)}
   .topbar{display:flex;align-items:center;gap:8px;padding:4px 14px 12px}
   .avatar{width:38px;height:38px;border-radius:50%;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;overflow:hidden;cursor:pointer;color:var(--text)}
+  .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
   .round{background:var(--card2);width:34px;height:34px;flex:none;display:flex;align-items:center;justify-content:center}
   .round.calOn{background:var(--accent);color:#0d1720}
   .pill{flex:1;max-width:190px;margin:0 auto;background:var(--card2);border-radius:14px;padding:7px 10px;text-align:center;line-height:1.25}
@@ -404,12 +420,13 @@
 <script>
 "use strict";
 var CONFIG={APP_NAME:"Трекер",FOOTER:"@uTasklyBot",SUPPORT_URL:""};
+var WORKER_URL="https://tracker-reminders.asiya30092013.workers.dev";
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
 var cloud=tg&&tg.CloudStorage?tg.CloudStorage:null;
 var tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 function $(s){return document.querySelector(s);}
 function ic(id){return '<svg class="icn"><use href="#'+id+'"/></svg>';}
-var STORE_KEY="prosto_tracker_v17";
+var STORE_KEY="prosto_tracker_v18";
 var PALETTE=["#64a9dd","#8f6cf0","#6fce8a","#e06c6c","#f2c94c","#f2994a","#4dd0e1","#f06292"];
 var EMOJIS=["🙂","😎","","","🌸","","🎧","","⚡","","🐱","","","🐨","","🐥","",""];
 
@@ -452,7 +469,7 @@ var TEMPLATES=[
  {icon:"📚",name:{ru:"Учёба",en:"Study"},tasks:{ru:["Повторить конспекты","Выполнить задание","Читать 20 минут"],en:["Review notes","Do the assignment","Read 20 minutes"]}}
 ];
 var JOURNALS={notes:{title:"notes",ph:{ru:"Введите заметку...",en:"Enter a note..."}},lesson:{title:"lesson",ph:{ru:"Что нового ты узнал(а) сегодня?",en:"What did you learn today?"}},gratitude:{title:"gratitude",ph:{ru:"За что ты благодарен(на) сегодня?",en:"What are you grateful for today?"}},thoughts:{title:"thoughts",ph:{ru:"Запиши свои мысли...",en:"Write down your thoughts..."}}};
-var WORKER_CODE='// Полный код воркера — в отдельном сообщении (КОД ДЛЯ CLOUDFLARE v6).';
+var WORKER_CODE='// Полный код воркера — в отдельном сообщении (КОД ДЛЯ CLOUDFLARE v7 с /avatar).';
 
 var today=new Date();
 function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
@@ -473,7 +490,7 @@ function monthWeeks(y,m){var first=new Date(y,m,1),last=new Date(y,m+1,0);var wS
 
 var state={
   settings:{tasksDesc:false,tasksImportant:true,tasksSubtasks:false,tasksOverdue:false,showMore:true,tasksConfetti:true,habitsDesc:false,habitsConfetti:true,goalsDesc:false,goalsSmart:false,goalsSubgoals:false,goalsConfetti:true,showHabits:true,showGoals:true,showAnalytics:true,morningOn:false,morningTime:"08:00",eveningOn:false,eveningTime:"20:00",theme:"auto",lang:"ru"},
-  profile:{name:"",email:"",tz:"",registeredAt:"",emoji:""},
+  profile:{name:"",email:"",tz:"",registeredAt:"",emoji:"",avatarUrl:""},
   tags:null,
   tasks:[],habits:[],goals:[],
   journals:{notes:[],lesson:[],gratitude:[],thoughts:[]},
@@ -484,7 +501,8 @@ var state={
 };
 
 function initProfile(){
-  if(!state.profile)state.profile={name:"",email:"",tz:"",registeredAt:"",emoji:""};
+  if(!state.profile)state.profile={name:"",email:"",tz:"",registeredAt:"",emoji:"",avatarUrl:""};
+  if(!state.profile.avatarUrl)state.profile.avatarUrl="";
   if(!state.profile.name&&tgUser)state.profile.name=((tgUser.first_name||"")+(tgUser.last_name?" "+tgUser.last_name:"")).trim();
   if(!state.profile.tz){try{state.profile.tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"Europe/Moscow";}catch(e){state.profile.tz="Europe/Moscow";}}
   if(!state.profile.registeredAt)state.profile.registeredAt=iso(today);
@@ -526,7 +544,25 @@ function applyTheme(){
   if(th==="auto"){try{th=(tg&&tg.colorScheme)||(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");}catch(e){th="dark";}}
   document.documentElement.setAttribute("data-theme",th==="light"?"light":"dark");
 }
-function refreshAvatar(){var a=$("#avatarBtn");a.textContent=state.profile.emoji||(state.profile.name?state.profile.name.charAt(0).toUpperCase():"🙂");}
+// Аватар: фото из Telegram, иначе буква/эмодзи
+window.avatarFail=function(){var a=$("#avatarBtn");a.textContent=state.profile.emoji||(state.profile.name?state.profile.name.charAt(0).toUpperCase():"🙂");};
+function refreshAvatar(){
+  var a=$("#avatarBtn");
+  var url=state.profile.avatarUrl||"";
+  if(!url&&tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.photo_url)url=tg.initDataUnsafe.user.photo_url;
+  if(url){a.innerHTML='<img src="'+url+'" alt="" onerror="avatarFail()">';}
+  else{a.textContent=state.profile.emoji||(state.profile.name?state.profile.name.charAt(0).toUpperCase():"🙂");}
+}
+function loadAvatar(){
+  if(state.profile.avatarUrl){refreshAvatar();return;}
+  if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.photo_url){state.profile.avatarUrl=tg.initDataUnsafe.user.photo_url;persist();refreshAvatar();return;}
+  if(tg&&tg.initData){
+    fetch(WORKER_URL+"/avatar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({initData:tg.initData})})
+      .then(function(r){return r.json();})
+      .then(function(j){if(j&&j.ok&&j.url){state.profile.avatarUrl=j.url;persist();refreshAvatar();}})
+      .catch(function(){});
+  }
+}
 
 function occursOn(tk,key){
   if(key<tk.date)return false;
@@ -844,7 +880,7 @@ var SCREENS={
   profile:function(){
     var reg=loc({day:"numeric",month:"long",year:"numeric"}).format(fromISO(state.profile.registeredAt||iso(today)));
     return{title:t("profile"),html:'<div class="ov-title-big">'+t("profile")+"</div>"+
-      profileRow(t("avatar"),state.profile.emoji||"🙂","avatar")+
+      profileRow(t("avatar"),state.profile.avatarUrl?"✅":(state.profile.emoji||"🙂"),"avatar")+
       profileRow(t("name"),state.profile.name,"name")+
       profileRow("Email",state.profile.email,"email")+
       profileRow(t("timezone"),state.profile.tz,"tz")+
@@ -993,7 +1029,7 @@ function renderOverlay(){
   }
   if(name==="avatarScreen"){
     var eb=$("#ovBody").querySelectorAll("[data-emo]");
-    for(var i=0;i<eb.length;i++)eb[i].addEventListener("click",function(e){state.profile.emoji=e.currentTarget.getAttribute("data-emo");persist();renderAll();renderOverlay();haptic("light");});
+    for(var i=0;i<eb.length;i++)eb[i].addEventListener("click",function(e){state.profile.emoji=e.currentTarget.getAttribute("data-emo");state.profile.avatarUrl="";persist();renderAll();renderOverlay();haptic("light");});
   }
   if(name==="tags"){$("#addTagBtn").addEventListener("click",function(){openScreen("editTag:");});}
   if(name==="editTag"){
@@ -1379,6 +1415,7 @@ loadState();
 applyTheme();
 applyI18n();
 renderAll();
+loadAvatar();
 if(!state.onboarded)showOnb();
 </script>
 
@@ -1386,8 +1423,8 @@ if(!state.onboarded)showOnb();
 /* =====================================================
    СИНХРОНИЗАЦИЯ v3 — данные привязаны к Telegram-аккаунту
    + напоминания привычек попадают в сводки воркера
+   (WORKER_URL уже определён в основном скрипте)
    ===================================================== */
-var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
 (function () {
   var pushTimer = null;
   function queuePush() {
@@ -1454,7 +1491,6 @@ var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
     state.tasks.forEach(function (t) {
       if (t.remind && occursOn(t, k) && (t.doneDates || []).indexOf(k) < 0) reminders.push({ time: t.remind, text: t.text });
     });
-    // напоминания привычек (фича 17)
     state.habits.forEach(function (h) {
       if (h.remind && (!h.start || h.start <= k) && (!h.end || h.end >= k) && h.logs.indexOf(k) < 0) {
         reminders.push({ time: h.remind, text: "🔥 " + h.name });
@@ -1495,3 +1531,27 @@ var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
 </script>
 </body>
 </html>
+
+
+              <script>
+                                  // ---- АВАТАР пользователя через Bot API ----
+    if (request.method === "POST" && url.pathname === "/avatar") {
+      try {
+        var bu = await tgUserFromInitData(env, (await request.json()).initData || "");
+        if (!bu || !bu.id) return json({ ok: false });
+        var photos = await tg(env, "getUserProfilePhotos", { user_id: bu.id, limit: 1 });
+        if (photos.ok && photos.result.total_count > 0) {
+          var sizes = photos.result.photos[0];
+          var file_id = sizes[sizes.length - 1].file_id;
+          var f = await tg(env, "getFile", { file_id: file_id });
+          if (f.ok) return json({ ok: true, url: "https://api.telegram.org/file/bot" + env.BOT_TOKEN + "/" + f.result.file_path });
+        }
+        return json({ ok: false });
+      } catch (e) { return json({ ok: false, error: e.message }); }
+    }
+
+
+              </script>
+                        </body>
+                        </html>
+                    
