@@ -1,19 +1,4 @@
-
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body {
-                  background-color: white; /* Ensure the iframe has a white background */
-                }
-
-                
-              </style>
-                        </head>
-                        <body>
-                            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -426,9 +411,11 @@ var cloud=tg&&tg.CloudStorage?tg.CloudStorage:null;
 var tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 function $(s){return document.querySelector(s);}
 function ic(id){return '<svg class="icn"><use href="#'+id+'"/></svg>';}
-var STORE_KEY="prosto_tracker_v18";
+// Хранилище ТЕПЕРЬ уникально для каждого Telegram-аккаунта
+var USER_ID=(tgUser&&tgUser.id)?String(tgUser.id):"";
+var STORE_KEY="prosto_tracker_v20"+(USER_ID?"_"+USER_ID:"");
 var PALETTE=["#64a9dd","#8f6cf0","#6fce8a","#e06c6c","#f2c94c","#f2994a","#4dd0e1","#f06292"];
-var EMOJIS=["🙂","😎","","","🌸","","🎧","","⚡","","🐱","","","🐨","","🐥","",""];
+var EMOJIS=["🙂","😎","","","","","🎧","","⚡","","🐱","","","🐨","","🐥","",""];
 
 var STR={
 ru:{appName:"Трекер",tasks:"Задачи",habits:"Привычки",goals:"Цели на год",analytics:"Аналитика",today:"Сегодня",week:"Неделя",month:"Месяц",year:"Год",addTask:"Добавить задачу",addHabit:"Добавить привычку",addGoal:"Добавить цель",more:"Ещё",notes:"Заметки",lesson:"Урок дня",gratitude:"Благодарность",thoughts:"Мысли",templates:"Шаблоны",random:"Случайная задача",searchPh:"Поиск...",fAll:"Все",fActive:"Активные",fDone:"Выполненные",noTasksToday:"На сегодня задач нет",noTasksDay:"На этот день задач нет",noHabits:"Привычек пока что нет",noGoals:"Целей на этот год пока нет",nothingFound:"Ничего не найдено",mainSec:"Основные настройки",otherSec:"Другое",dataSec:"Данные",profile:"Профиль",subscription:"Подписка",subFree:"Всё бесплатно",notif:"Уведомления",prefs:"Предпочтения",overdue:"Просроченные задачи",support:"Связаться с поддержкой",terms:"Пользовательское соглашение",privacy:"Политика конфиденциальности",theme:"Тема",thAuto:"Авто",thDark:"Тёмная",thLight:"Светлая",language:"Язык",name:"Имя",email:"Email",timezone:"Часовой пояс",regDate:"Дата регистрации",notSpecified:"Не указан",morning:"Утренняя сводка",evening:"Вечерняя сводка",morningRem:"🌅 Время утренней сводки!",eveningRem:"🌙 Время вечерней сводки!",pTasks:"Задачи",pHabits:"Привычки",pGoals:"Цели",pMenu:"Разделы меню",description:"Описание",important:"Пометка «Важная»",subtasks:"Подзадачи (бета)",overduePref:"Просроченные задачи",moreSec:"Раздел «Ещё»",confetti:"Конфетти при выполнении",smart:"Критерии SMART",goalSubs:"Подцели (бета)",secHabits:"Раздел «Привычки»",secGoals:"Раздел «Цели»",secAnalytics:"Раздел «Аналитика»",date:"Дата",repeat:"Периодичность",notify:"Уведомление",imp:"Важная",tag:"Тег",noTag:"Без тега",startDate:"Дата начала",endDate:"Дата окончания",enterTask:"Введите задачу",enterHabit:"Введите привычку",save:"Сохранить",repOnce:"Однократно",repDaily:"Ежедневно",repWeekly:"Еженедельно",repMonthly:"Ежемесячно",hRepDaily:"Ежедневная",hRepWeekly:"Еженедельная",hRepMonthly:"Ежемесячная",totalTasks:"Всего задач:",completed:"Выполнено:",notCompleted:"Не выполнено:",avgProgress:"Средний прогресс:",prodDay:"Продуктивный день:",totalHabits:"Всего привычек:",marks:"Отметок:",expected:"Ожидалось:",dynamics:"Динамика:",heatmap:"Активность за год",streak:"Серия",bestStreak:"Лучшая серия",days:"дн.",useFreeze:"Заморозить сегодня",water:"Вода",steps:"Шаги",sleep:"Сон",glasses:"стак.",stepsU:"шаг.",hours:"ч.",sync:"Синхронизация (аккаунт)",toCloud:"В облако",fromCloud:"Из облака",lastSync:"Синхронизировано",never:"никогда",serverRem:"Серверные напоминания (код)",copy:"Копировать",copied:"Скопировано",tplTitle:"Шаблоны задач",tplAdded:"Шаблон добавлен ✅",mark:"Отметить",history:"История",entryFor:"Запись за",freeNote:"Все функции доступны бесплатно — подписка не нужна 🎉",vsPrev:"к прошлому периоду",
@@ -544,7 +531,6 @@ function applyTheme(){
   if(th==="auto"){try{th=(tg&&tg.colorScheme)||(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");}catch(e){th="dark";}}
   document.documentElement.setAttribute("data-theme",th==="light"?"light":"dark");
 }
-// Аватар: фото из Telegram, иначе буква/эмодзи
 window.avatarFail=function(){var a=$("#avatarBtn");a.textContent=state.profile.emoji||(state.profile.name?state.profile.name.charAt(0).toUpperCase():"🙂");};
 function refreshAvatar(){
   var a=$("#avatarBtn");
@@ -1531,27 +1517,3 @@ if(!state.onboarded)showOnb();
 </script>
 </body>
 </html>
-
-
-              <script>
-                                  // ---- АВАТАР пользователя через Bot API ----
-    if (request.method === "POST" && url.pathname === "/avatar") {
-      try {
-        var bu = await tgUserFromInitData(env, (await request.json()).initData || "");
-        if (!bu || !bu.id) return json({ ok: false });
-        var photos = await tg(env, "getUserProfilePhotos", { user_id: bu.id, limit: 1 });
-        if (photos.ok && photos.result.total_count > 0) {
-          var sizes = photos.result.photos[0];
-          var file_id = sizes[sizes.length - 1].file_id;
-          var f = await tg(env, "getFile", { file_id: file_id });
-          if (f.ok) return json({ ok: true, url: "https://api.telegram.org/file/bot" + env.BOT_TOKEN + "/" + f.result.file_path });
-        }
-        return json({ ok: false });
-      } catch (e) { return json({ ok: false, error: e.message }); }
-    }
-
-
-              </script>
-                        </body>
-                        </html>
-                    
