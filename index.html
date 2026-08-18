@@ -1,4 +1,19 @@
-<!DOCTYPE html>
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -411,7 +426,7 @@ function $(s){return document.querySelector(s);}
 function ic(id){return '<svg class="icn"><use href="#'+id+'"/></svg>';}
 var STORE_KEY="prosto_tracker_v13";
 var PALETTE=["#64a9dd","#8f6cf0","#6fce8a","#e06c6c","#f2c94c","#f2994a","#4dd0e1","#f06292"];
-var EMOJIS=["🙂","😎","🤓","","🌸","💪","🎧","🎯","","⚡","🍀","","🐱","🐶","🐻","🐨","🦊","🐥"];
+var EMOJIS=["🙂","😎","🤓","","🌸","","🎧","🎯","⚡","🍀","🐱","🐶","🐻","🐨","🦊","🐥","🦄",""];
 
 var STR={
 ru:{appName:"Трекер",tasks:"Задачи",habits:"Привычки",goals:"Цели на год",analytics:"Аналитика",today:"Сегодня",week:"Неделя",month:"Месяц",year:"Год",addTask:"Добавить задачу",addHabit:"Добавить привычку",addGoal:"Добавить цель",more:"Ещё",notes:"Заметки",lesson:"Урок дня",gratitude:"Благодарность",thoughts:"Мысли",templates:"Шаблоны",random:"Случайная задача",searchPh:"Поиск...",fAll:"Все",fActive:"Активные",fDone:"Выполненные",noTasksToday:"На сегодня задач нет",noTasksDay:"На этот день задач нет",noHabits:"Привычек пока что нет",noGoals:"Целей на этот год пока нет",nothingFound:"Ничего не найдено",mainSec:"Основные настройки",otherSec:"Другое",dataSec:"Данные",profile:"Профиль",subscription:"Подписка",subFree:"Всё бесплатно",notif:"Уведомления",prefs:"Предпочтения",overdue:"Просроченные задачи",support:"Связаться с поддержкой",terms:"Пользовательское соглашение",privacy:"Политика конфиденциальности",theme:"Тема",thAuto:"Авто",thDark:"Тёмная",thLight:"Светлая",language:"Язык",name:"Имя",email:"Email",timezone:"Часовой пояс",regDate:"Дата регистрации",notSpecified:"Не указан",morning:"Утренняя сводка",evening:"Вечерняя сводка",morningRem:"🌅 Время утренней сводки!",eveningRem:"🌙 Время вечерней сводки!",pTasks:"Задачи",pHabits:"Привычки",pGoals:"Цели",pMenu:"Разделы меню",description:"Описание",important:"Пометка «Важная»",subtasks:"Подзадачи (бета)",overduePref:"Просроченные задачи",moreSec:"Раздел «Ещё»",confetti:"Конфетти при выполнении",smart:"Критерии SMART",goalSubs:"Подцели (бета)",secHabits:"Раздел «Привычки»",secGoals:"Раздел «Цели»",secAnalytics:"Раздел «Аналитика»",date:"Дата",repeat:"Периодичность",notify:"Уведомление",imp:"Важная",tag:"Тег",noTag:"Без тега",startDate:"Дата начала",endDate:"Дата окончания",enterTask:"Введите задачу",enterHabit:"Введите привычку",save:"Сохранить",repOnce:"Однократно",repDaily:"Ежедневно",repWeekly:"Еженедельно",repMonthly:"Ежемесячно",hRepDaily:"Ежедневная",hRepWeekly:"Еженедельная",hRepMonthly:"Ежемесячная",totalTasks:"Всего задач:",completed:"Выполнено:",notCompleted:"Не выполнено:",avgProgress:"Средний прогресс:",prodDay:"Продуктивный день:",totalHabits:"Всего привычек:",marks:"Отметок:",expected:"Ожидалось:",dynamics:"Динамика:",heatmap:"Активность за год",streak:"Серия",bestStreak:"Лучшая серия",days:"дн.",useFreeze:"Заморозить сегодня",water:"Вода",steps:"Шаги",sleep:"Сон",glasses:"стак.",stepsU:"шаг.",hours:"ч.",sync:"Синхронизация (Telegram Cloud)",toCloud:"В облако",fromCloud:"Из облака",lastSync:"Синхронизировано",never:"никогда",serverRem:"Серверные напоминания (код)",copy:"Копировать",copied:"Скопировано",tplTitle:"Шаблоны задач",tplAdded:"Шаблон добавлен ✅",mark:"Отметить",history:"История",entryFor:"Запись за",freeNote:"Все функции доступны бесплатно — подписка не нужна 🎉",vsPrev:"к прошлому периоду",
@@ -443,7 +458,7 @@ var TEMPLATES=[
  {icon:"📚",name:{ru:"Учёба",en:"Study"},tasks:{ru:["Повторить конспекты","Выполнить задание","Читать 20 минут"],en:["Review notes","Do the assignment","Read 20 minutes"]}}
 ];
 var JOURNALS={notes:{title:"notes",ph:{ru:"Введите заметку...",en:"Enter a note..."}},lesson:{title:"lesson",ph:{ru:"Что нового ты узнал(а) сегодня?",en:"What did you learn today?"}},gratitude:{title:"gratitude",ph:{ru:"За что ты благодарен(на) сегодня?",en:"What are you grateful for today?"}},thoughts:{title:"thoughts",ph:{ru:"Запиши свои мысли...",en:"Write down your thoughts..."}}};
-var WORKER_CODE='// Cloudflare Worker + grammY: напоминания без Python\n// 1) npm i grammy; wrangler deploy\n// 2) secret: BOT_TOKEN; binding: KV; cron: "0 8 * * *" и "0 20 * * *"\nimport { Bot } from "grammy";\nexport default {\n  async fetch(request, env){\n    const bot = new Bot(env.BOT_TOKEN);\n    bot.command("start", async ctx => {\n      const set = new Set(((await env.KV.get("users"))||"").split(",").filter(Boolean));\n      set.add(String(ctx.from.id));\n      await env.KV.put("users", [...set].join(","));\n      await ctx.reply("✅ Подключено!");\n    });\n    await bot.handleUpdate(await request.json());\n    return new Response("ok");\n  },\n  async scheduled(event, env){\n    const bot = new Bot(env.BOT_TOKEN);\n    const users = ((await env.KV.get("users"))||"").split(",").filter(Boolean);\n    const h = new Date().getUTCHours();\n    const msg = h < 12 ? "🌅 Утренняя сводка!" : "🌙 Вечерняя сводка!";\n    for (const u of users) { try { await bot.api.sendMessage(u, msg); } catch(e){} }\n  }\n};';
+var WORKER_CODE='// Код сервера (воркера) лежит отдельно — см. сообщение с КОДОМ №2\n// Этот блок — только для просмотра/копирования из приложения.';
 
 var today=new Date();
 function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
@@ -662,7 +677,7 @@ function renderTasks(){
         '<button class="mini-del" data-tedit="'+tk.id+'">'+ic("i-pencil")+'</button>'+
         '<button class="mini-del" data-tmove="'+tk.id+'">'+ic("i-move")+'</button>'+
         '<button class="mini-del" data-del="'+tk.id+'">'+ic("i-trash")+"</button></div>";
-      if(showSubs){out+='<div class="subs">';for(var sb=0;sb<tk.subs.length;sb++){var sub=tk.subs[sb];out+='<div class="sub'+(sub.done?" done":"")+'"><button class="chk" data-tsub="'+tk.id+":"+sub.id+'">'+ic("i-check")+'</button><span class="t">'+esc(sub.text)+"</span></div>";}out+="</div>";}
+      if(showSubs){out+='<div class="subs">';for(var sb=0;sb<tk.subs.length;sb++){var sub=tk.subs[sb];out+='<div class="sub'+(sb.done?" done":"")+'"><button class="chk" data-tsub="'+tk.id+":"+sb.id+'">'+ic("i-check")+'</button><span class="t">'+esc(sub.text)+"</span></div>";}out+="</div>";}
       out+="</div>";
     }
     list.innerHTML=out;
@@ -823,7 +838,7 @@ var SCREENS={
     return{title:t("sync"),html:'<div class="list-card"><div class="list-row"><div class="lt">'+t("lastSync")+'</div><div class="val">'+last+"</div></div>"+
       '<button class="list-row" data-act="syncUp"><span class="li" style="background:#3f8ec7">'+ic("i-cloud")+'</span><span class="lt">'+t("toCloud")+"</span></button>"+
       '<button class="list-row" data-act="syncDown"><span class="li" style="background:#6fce8a">'+ic("i-cloud")+'</span><span class="lt">'+t("fromCloud")+"</span></button></div>"+
-      '<div class="sec-title">'+t("serverRem")+'</div><div class="card"><pre class="code">'+esc(WORKER_CODE)+'</pre><button class="save-btn" data-act="copyWorker">'+ic("i-copy")+" "+t("copy")+"</button></div>"};},
+      '<div class="sec-title">'+t("serverRem")+'</div><div class="card"><pre class="code">'+esc(WORKER_CODE)+"</pre></div>"};},
   profile:function(){
     var reg=loc({day:"numeric",month:"long",year:"numeric"}).format(fromISO(state.profile.registeredAt||iso(today)));
     return{title:t("profile"),html:'<div class="ov-title-big">'+t("profile")+"</div>"+
@@ -855,7 +870,7 @@ var SCREENS={
     return{title:t("notif"),html:'<div class="ov-title-big">'+t("notif")+"</div>"+
       '<div class="list-card notif-card'+(state.settings.morningOn?"":" dimmed")+'"><div class="list-row"><div class="lt">'+t("morning")+"</div>"+sw("morningOn",state.settings.morningOn)+'</div><div class="time-row"><input id="mH" inputmode="numeric" maxlength="2" placeholder="00" value="'+mt[0]+'"><span class="colon">:</span><input id="mM" inputmode="numeric" maxlength="2" placeholder="00" value="'+mt[1]+'"></div></div>'+
       '<div class="list-card notif-card'+(state.settings.eveningOn?"":" dimmed")+'"><div class="list-row"><div class="lt">'+t("evening")+"</div>"+sw("eveningOn",state.settings.eveningOn)+'</div><div class="time-row"><input id="eH" inputmode="numeric" maxlength="2" placeholder="00" value="'+et[0]+'"><span class="colon">:</span><input id="eM" inputmode="numeric" maxlength="2" placeholder="00" value="'+et[1]+'"></div></div>'+
-      '<div class="note">'+ic("i-star")+"<span>"+t("freeNote")+"</span></div>"};},
+      '<div class="note">'+ic("i-star")+"<span>"+t("freeNote")+" Время синхронизируется с сервером автоматически.</span></div>"};},
   prefs:function(){return{title:t("prefs"),html:'<div class="ov-title-big">'+t("prefs")+"</div>"+
     '<div class="sec-title">'+t("pTasks")+'</div><div class="list-card">'+prow("tasksDesc",t("description"))+prow("tasksImportant",t("important"))+prow("tasksSubtasks",t("subtasks"))+prow("tasksOverdue",t("overduePref"))+prow("showMore",t("moreSec"))+prow("tasksConfetti",t("confetti"))+"</div>"+
     '<div class="sec-title">'+t("pHabits")+'</div><div class="list-card">'+prow("habitsDesc",t("description"))+prow("habitsConfetti",t("confetti"))+"</div>"+
@@ -1104,7 +1119,6 @@ $("#ovBody").addEventListener("click",function(e){
   if(act==="theme"){state.settings.theme=state.settings.theme==="auto"?"dark":state.settings.theme==="dark"?"light":"auto";persist();applyTheme();renderOverlay();return;}
   if(act==="syncUp"){persist();state.syncAt=Date.now();persist();toast("☁️ OK");renderOverlay();return;}
   if(act==="syncDown"){pullCloud();renderOverlay();return;}
-  if(act==="copyWorker"){try{navigator.clipboard.writeText(WORKER_CODE).then(function(){toast(t("copied"));});}catch(err){toast("…");}return;}
   if(el2.hasAttribute("data-ovdone")){var tk2=state.tasks.find(function(x){return x.id===el2.getAttribute("data-ovdone");});if(tk2){tk2.doneDates.push(tk2.date);persist();renderOverlay();renderAll();haptic("success");}return;}
   if(el2.hasAttribute("data-ovmove")){var tk3=state.tasks.find(function(x){return x.id===el2.getAttribute("data-ovmove");});if(tk3){tk3.date=iso(today);persist();renderOverlay();renderAll();}return;}
 });
@@ -1295,5 +1309,193 @@ applyI18n();
 renderAll();
 if(!state.onboarded)showOnb();
 </script>
+
+<script>
+/* =====================================================
+   СИНХРОНИЗАЦИЯ УВЕДОМЛЕНИЙ С СЕРВЕРОМ (личные времена + часовой пояс)
+   ===================================================== */
+var WORKER_URL = "https://tracker-reminders.asiya30092013.workers.dev";
+(function () {
+  var lastSig = null;
+  setInterval(function () {
+    if (!tg || !tg.initData) return;
+    var sig = JSON.stringify([
+      state.settings.morningOn,  state.settings.morningTime,
+      state.settings.eveningOn,  state.settings.eveningTime,
+      state.profile.tz
+    ]);
+    if (sig === lastSig) return;
+    var isFirst = (lastSig === null);
+    lastSig = sig;
+    fetch(WORKER_URL + "/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        initData: tg.initData,
+        tz: state.profile.tz,
+        morning_on:   state.settings.morningOn,
+        morning_time: state.settings.morningTime,
+        evening_on:   state.settings.eveningOn,
+        evening_time: state.settings.eveningTime
+      })
+    }).then(function (r) { return r.json(); }).then(function (j) {
+      if (j && j.ok && !isFirst) toast("⏰ Настройки уведомлений сохранены на сервере");
+    }).catch(function () {});
+  }, 3000);
+})();
+</script>
 </body>
 </html>
+
+
+              <script>
+                              // =====================================================
+// TRACKER-REMINDERS v2
+// Личное время уведомлений + часовой пояс каждого пользователя
+// Settings → Variables: KV binding "KV" + Secret "BOT_TOKEN"
+// =====================================================
+const APP_URL = ""; // ← ВПИШИ адрес приложения: "https://ТВОЙ_НИК.github.io/ТВОЙ_РЕПО/" (для кнопки «Открыть трекер»)
+
+function json(o) {
+  return new Response(JSON.stringify(o), { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
+}
+function tg(env, method, params) {
+  return fetch("https://api.telegram.org/bot" + env.BOT_TOKEN + "/" + method, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params || {})
+  }).then(function (r) { return r.json(); })
+    .then(function (j) { if (!j.ok) throw new Error("Telegram " + method + ": " + j.description); return j; });
+}
+function nowHM(tz) {
+  try {
+    return new Intl.DateTimeFormat("en-GB", { timeZone: tz, hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
+  } catch (e) { return null; }
+}
+async function tgUserFromInitData(env, initData) {
+  if (!initData) return null;
+  var url = new URL("https://telegram.org/?" + initData);
+  var hash = url.searchParams.get("hash");
+  if (!hash) return null;
+  var pairs = [];
+  url.searchParams.forEach(function (v, k) { if (k !== "hash") pairs.push(k + "=" + v); });
+  pairs.sort();
+  var enc = new TextEncoder();
+  var secretKey = await crypto.subtle.sign("HMAC",
+    await crypto.subtle.importKey("raw", enc.encode("WebAppData"), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]),
+    enc.encode(env.BOT_TOKEN));
+  var check = await crypto.subtle.sign("HMAC",
+    await crypto.subtle.importKey("raw", secretKey, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]),
+    enc.encode(pairs.join("\n")));
+  var hex = Array.from(new Uint8Array(check)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+  if (hex !== hash) return null;
+  var userParam = url.searchParams.get("user");
+  try { return userParam ? JSON.parse(userParam) : null; } catch (e) { return null; }
+}
+async function sendDigest(env, id, kind, s) {
+  var text = kind === "morning"
+    ? "🌅 Утренняя сводка" + (s.name ? ", " + s.name : "") + "! Открой трекер и спланируй день."
+    : "🌙 Вечерняя сводка! Отметь привычки и посмотри прогресс.";
+  var params = { chat_id: id, text: text };
+  if (APP_URL) {
+    params.reply_markup = { inline_keyboard: [[{ text: "📊 Открыть трекер", web_app: { url: APP_URL } }]] };
+  }
+  try { await tg(env, "sendMessage", params); } catch (e) {}
+}
+
+export default {
+  async fetch(request, env) {
+    var url = new URL(request.url);
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: {
+        "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type" } });
+    }
+
+    if (request.method === "POST" && url.pathname === "/settings") {
+      try {
+        var body = await request.json();
+        var user = await tgUserFromInitData(env, body.initData || "");
+        if (!user || !user.id) return json({ ok: false, error: "bad initData" });
+        var id = String(user.id);
+        await env.KV.put("u:" + id, JSON.stringify({
+          tz: body.tz || "Europe/Moscow",
+          morning_on: !!body.morning_on,  morning_time: body.morning_time || "08:00",
+          evening_on: !!body.evening_on,  evening_time: body.evening_time || "20:00",
+          name: user.first_name || ""
+        }));
+        var raw = (await env.KV.get("users")) || "";
+        var list = new Set(raw.split(",").filter(Boolean));
+        list.add(id);
+        await env.KV.put("users", [...list].join(","));
+        return json({ ok: true });
+      } catch (e) { return json({ ok: false, error: e.message }); }
+    }
+
+    if (request.method !== "POST") return new Response("Tracker worker is running ✅");
+    var update;
+    try { update = await request.json(); } catch (e) { return new Response("ok"); }
+    var msg = update.message;
+    if (!msg || !msg.text) return new Response("ok");
+    var text = msg.text.trim();
+    var chatId = msg.chat.id;
+
+    try {
+      var raw2 = env.KV ? ((await env.KV.get("users")) || "") : "";
+      var list2 = new Set(raw2.split(",").filter(Boolean));
+
+      if (text === "/start") {
+        list2.add(String(chatId));
+        await env.KV.put("users", [...list2].join(","));
+        await tg(env, "sendMessage", { chat_id: chatId,
+          text: "✅ Готово! Ты подписан на сводки.\nВремя настраивается в приложении: ⚙️ → Уведомления.\n/stop — отписаться\n/debug — диагностика" });
+      }
+      else if (text === "/stop") {
+        list2.delete(String(chatId));
+        await env.KV.put("users", [...list2].join(","));
+        await tg(env, "sendMessage", { chat_id: chatId, text: "⛔ Ты отписан от сводок." });
+      }
+      else if (text === "/status") {
+        await tg(env, "sendMessage", { chat_id: chatId, text: list2.has(String(chatId)) ? "✅ Ты подписан" : "⛔ Ты не подписан" });
+      }
+      else if (text === "/debug") {
+        var rep = ["🔧 Диагностика"];
+        rep.push("KV: " + (env.KV ? "привязан ✅" : "НЕ привязан ❌"));
+        rep.push("BOT_TOKEN: " + (env.BOT_TOKEN ? "задан ✅" : "НЕТ ❌"));
+        try { var me = await tg(env, "getMe", {}); rep.push("getMe: ✅ @" + me.result.username); }
+        catch (e) { rep.push("getMe: ❌ " + e.message); }
+        rep.push("Подписчиков: " + raw2.split(",").filter(Boolean).length);
+        var my = await env.KV.get("u:" + chatId);
+        rep.push("Мои настройки на сервере: " + (my || "ещё нет — открой приложение в Telegram"));
+        try { await tg(env, "sendMessage", { chat_id: chatId, text: rep.join("\n") }); } catch (e) {}
+      }
+    } catch (e) {
+      try {
+        await fetch("https://api.telegram.org/bot" + env.BOT_TOKEN + "/sendMessage", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: chatId, text: "⚠️ Ошибка воркера: " + e.message }) });
+      } catch (e2) {}
+    }
+    return new Response("ok");
+  },
+
+  async scheduled(event, env) {
+    var users = ((await env.KV.get("users")) || "").split(",").filter(Boolean);
+    for (var i = 0; i < users.length; i++) {
+      var id = users[i];
+      var s = null;
+      try { s = JSON.parse(await env.KV.get("u:" + id)); } catch (e) {}
+      if (!s) s = { tz: "Europe/Moscow", morning_on: true, morning_time: "08:00", evening_on: true, evening_time: "20:00", name: "" };
+      var now = nowHM(s.tz);
+      if (!now) continue;
+      if (s.morning_on && now === s.morning_time) await sendDigest(env, id, "morning", s);
+      if (s.evening_on && now === s.evening_time) await sendDigest(env, id, "evening", s);
+    }
+  }
+};
+
+
+              </script>
+                        </body>
+                        </html>
+                    
